@@ -153,7 +153,7 @@ public class Plugin : BaseUnityPlugin
 
             if (DebugEnabled)
             {
-                Log.LogMessage($"Fixed DudBee {dudBeesCount}");
+                Log.LogInfo($"Fixed DudBee {dudBeesCount}");
             }
         }
     }
@@ -172,7 +172,7 @@ public class Plugin : BaseUnityPlugin
 
             if (DebugEnabled)
             {
-                Log.LogMessage($"Fixed DudGardenTree {dudTreeCount}");
+                Log.LogInfo($"Fixed DudGardenTree {dudTreeCount}");
             }
         }
     }
@@ -191,7 +191,7 @@ public class Plugin : BaseUnityPlugin
 
             if (DebugEnabled)
             {
-                Log.LogMessage($"Fixed DudGardenBush {dudBushCount}");
+                Log.LogInfo($"Fixed DudGardenBush {dudBushCount}");
             }
         }
     }
