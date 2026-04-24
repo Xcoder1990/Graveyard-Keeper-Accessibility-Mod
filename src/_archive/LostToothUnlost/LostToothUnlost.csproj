@@ -1,6 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Version>0.1.1</Version>
+        <!-- Archived 2026-04: project preserved for historical reference, not built. -->
+        <NoBuild>true</NoBuild>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
