@@ -197,21 +197,19 @@ public static class Patches
             Plugin.AlreadyDone.Contains(item_gui) || item_gui.id_empty)
             return;
 
-        foreach (var tooltip in new[] { item_gui.x1, item_gui.x2 })
+        var container = item_gui.container;
+        if (container != null && container.tooltip != null && container.tooltip.has_info)
         {
-            if (tooltip != null && tooltip.tooltip != null && tooltip.tooltip.has_info)
-            {
-                var itemEarnings = Plugin.GetItemEarnings(item_gui.item);
-                tooltip.tooltip.AddData(new BubbleWidgetSeparatorData());
+            var itemEarnings = Plugin.GetItemEarnings(item_gui.item);
+            container.tooltip.AddData(new BubbleWidgetSeparatorData());
 
-                tooltip.tooltip.AddData(new BubbleWidgetTextData(
-                    Lang.Get("GerrysPrice"),
-                    UITextStyles.TextStyle.Usual, NGUIText.Alignment.Left));
-                tooltip.tooltip.AddData(new BubbleWidgetSeparatorData());
-                tooltip.tooltip.AddData(new BubbleWidgetTextData(
-                    $"{Trading.FormatMoney(itemEarnings, true)}",
-                    UITextStyles.TextStyle.TinyDescription, NGUIText.Alignment.Left));
-            }
+            container.tooltip.AddData(new BubbleWidgetTextData(
+                Lang.Get("GerrysPrice"),
+                UITextStyles.TextStyle.Usual, NGUIText.Alignment.Left));
+            container.tooltip.AddData(new BubbleWidgetSeparatorData());
+            container.tooltip.AddData(new BubbleWidgetTextData(
+                $"{Trading.FormatMoney(itemEarnings, true)}",
+                UITextStyles.TextStyle.TinyDescription, NGUIText.Alignment.Left));
         }
 
         Plugin.AlreadyDone.Add(item_gui);
