@@ -13,4 +13,5 @@
     </PropertyGroup>
 
     <Import Project="zip.target" Condition="('$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release-Upload') And Exists('$(MSBuildThisFileDirectory)zip.target')" />
+    <Import Project="mirror.target" Condition="Exists('$(MSBuildThisFileDirectory)mirror.target')" />
 </Project>

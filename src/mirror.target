@@ -1,0 +1,20 @@
+<Project>
+    <!-- After every Build, mirror the entire mod output folder ($(OutputPath)\**) to the GOG
+         BepInEx plugins folder, so the same Steam-built DLL + lang files + assets can be tested
+         against either game install with no rebuild. Skipped for verify builds (Storefront=gog)
+         and for machines that don't have GogBepInExPluginsPath defined or installed. -->
+    <Target Name="MirrorToGogPlugins" AfterTargets="Build"
+            Condition="'$(Storefront)' == 'steam' AND '$(GogBepInExPluginsPath)' != '' AND Exists('$(GogBepInExPluginsPath)')">
+        <PropertyGroup>
+            <_GogModDir>$(GogBepInExPluginsPath)\$(MSBuildProjectName)</_GogModDir>
+        </PropertyGroup>
+        <ItemGroup>
+            <_MirrorFiles Include="$(OutputPath)\**\*.*"
+                          Exclude="$(OutputPath)\**\*.zip;$(OutputPath)\**\*.vortex_backup;$(OutputPath)\**\*.vortex_new;$(OutputPath)\SaveBackup\**\*.*;$(OutputPath)\_dump\**\*.*" />
+        </ItemGroup>
+        <MakeDir Directories="$(_GogModDir)" />
+        <Copy SourceFiles="@(_MirrorFiles)"
+              DestinationFiles="@(_MirrorFiles->'$(_GogModDir)\%(RecursiveDir)%(Filename)%(Extension)')"
+              SkipUnchangedFiles="true" />
+    </Target>
+</Project>

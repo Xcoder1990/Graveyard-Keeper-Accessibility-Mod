@@ -7,6 +7,14 @@
     <!-- NexusMods Upload Target (reads NexusGroupId from csproj + NexusModsApiKey from Environment.props) -->
     <Import Project="upload.target" Condition="Exists('upload.target')" />
 
+    <!-- Storefront switch: 'steam' (default) builds against libs/steam/Assembly-CSharp*.dll
+         and deploys to both BepInExPluginsPath and GogBepInExPluginsPath via mirror.target.
+         'gog' is a verify-only build (-p:Storefront=gog): references libs/gog/Assembly-CSharp*.dll,
+         redirects OutputPath to obj/verify-gog/, suppresses mirror + zip. -->
+    <PropertyGroup>
+        <Storefront Condition="'$(Storefront)' == ''">steam</Storefront>
+    </PropertyGroup>
+
     <PropertyGroup>
         <Description>$(MSBuildProjectName)</Description>
         <TargetFramework>net481</TargetFramework>
@@ -26,6 +34,7 @@
         <PathMap>$(MSBuildProjectDirectory)=.</PathMap>
         <Deterministic>true</Deterministic>
         <OutputPath>$(BepInExPluginsPath)\$(MSBuildProjectName)</OutputPath>
+        <OutputPath Condition="'$(Storefront)' == 'gog'">obj\verify-gog\</OutputPath>
     </PropertyGroup>
 
     <ItemDefinitionGroup>
@@ -82,13 +91,16 @@
         </Reference>
     </ItemGroup>
 
-    <!-- Common game/Unity references (exclude CustomTextures which has its own extensive set) -->
+    <!-- Common game/Unity references (exclude CustomTextures which has its own extensive set).
+         Assembly-CSharp + firstpass live under libs/$(Storefront)/ because they genuinely differ
+         between Steam (v1407) and GOG (v1405). Everything else is metadata-identical and lives
+         at libs/ root. -->
     <ItemGroup Condition="'$(MSBuildProjectName)' != 'CustomTextures'">
         <Reference Include="Assembly-CSharp">
-            <HintPath>..\..\libs\Assembly-CSharp.dll</HintPath>
+            <HintPath>..\..\libs\$(Storefront)\Assembly-CSharp.dll</HintPath>
         </Reference>
         <Reference Include="Assembly-CSharp-firstpass">
-            <HintPath>..\..\libs\Assembly-CSharp-firstpass.dll</HintPath>
+            <HintPath>..\..\libs\$(Storefront)\Assembly-CSharp-firstpass.dll</HintPath>
         </Reference>
         <Reference Include="com.unity.multiplayer-hlapi.Runtime">
             <HintPath>..\..\libs\com.unity.multiplayer-hlapi.Runtime.dll</HintPath>

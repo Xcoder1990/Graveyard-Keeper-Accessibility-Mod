@@ -17,10 +17,10 @@
       <HintPath>..\..\libs\AmplifyColor.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\libs\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\libs\$(Storefront)\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\libs\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\..\libs\$(Storefront)\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.multiplayer-hlapi.Runtime">
       <HintPath>..\..\libs\com.unity.multiplayer-hlapi.Runtime.dll</HintPath>

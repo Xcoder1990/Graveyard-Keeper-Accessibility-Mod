@@ -1,5 +1,5 @@
 <Project>
-    <Target Name="ZipOutputPath" AfterTargets="Build">
+    <Target Name="ZipOutputPath" AfterTargets="Build" Condition="'$(Storefront)' != 'gog'">
         <PropertyGroup>
             <StagingDir>$(TEMP)\GYK_staging\$(MSBuildProjectName)</StagingDir>
             <PluginDir>$(StagingDir)\plugins\$(MSBuildProjectName)</PluginDir>
