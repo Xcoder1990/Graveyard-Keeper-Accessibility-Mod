@@ -2,6 +2,7 @@
 
 ## 1.4.11 | 18 April 2026
 
+- Fixed tools wearing out faster than vanilla when gathering clay, stone, wood, and ore
 - Fixed Chinese translations not loading
 - Repair crafts (soul machines, broken buildings, etc.) no longer use the Craft Speed Multiplier — the per-frame energy cost could exceed your max energy, making some repairs impossible without infinite energy
 - Settings pane redone with clearer section headings and fuller descriptions for every option

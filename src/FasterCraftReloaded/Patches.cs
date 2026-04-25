@@ -37,14 +37,21 @@ public static class Patches
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.DoAction))]
-    public static void WorldGameObject_DoAction(WorldGameObject other_obj, ref float delta_time)
+    public static void WorldGameObject_DoAction(WorldGameObject __instance, WorldGameObject other_obj, ref float delta_time)
     {
         if (!Plugin.IncreaseBuildAndDestroySpeed.Value) return;
         if (other_obj == null || !other_obj.is_player) return;
 
+        // HP-based resources (clay, stone, wood, ore, enemies) decrement the player's
+        // tool durability inside HPActionComponent.DoAction proportional to delta_time.
+        // Multiplying delta_time here would multiply per-swing tool wear while wasting
+        // the extra HP damage past the deposit's drop threshold.
+        var hp = __instance != null ? __instance.components?.hp : null;
+        if (hp != null && hp.enabled) return;
+
         if (Plugin.DebugEnabled)
         {
-            var key = other_obj.obj_id;
+            var key = __instance?.obj_id ?? "null";
             if (key != _lastPlayerDoActionKey)
             {
                 Helpers.Log($"[Build] Applying x{Plugin.BuildAndDestroySpeed.Value} to player action on {key}");
