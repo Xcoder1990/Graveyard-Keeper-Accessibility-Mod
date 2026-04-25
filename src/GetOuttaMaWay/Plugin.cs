@@ -123,6 +123,10 @@ public class Plugin : BaseUnityPlugin
 
         foreach (var npc in allNpc)
         {
+            // WorldMap._npcs can hold destroyed entries; Unity's overloaded == catches
+            // both real null and fake-null (destroyed native object) so member access
+            // doesn't throw NRE on get_name().
+            if (!npc) continue;
             var name = npc.name;
             if (name.StartsWith(NpcPrefix))
             {
