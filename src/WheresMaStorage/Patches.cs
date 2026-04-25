@@ -445,8 +445,11 @@ public static class Patches
         }
 
         // Bags remain in Fields.Mi so shared-inventory crafting still reads items inside them —
-        // this only hides the inline BagInventoryWidget rows from the panel UI.
-        if (Plugin.HideBagWidgets.Value)
+        // this only hides the inline BagInventoryWidget rows from the panel UI. Skip when
+        // Fields.UsingBag is true (set by InventoryGUI.OpenBag prefix): otherwise the bag's
+        // own popup panel — which is also an InventoryPanelGUI whose multi_inventory contains
+        // the bag inventory we're meant to display — gets stripped and renders empty.
+        if (Plugin.HideBagWidgets.Value && !Fields.UsingBag)
         {
             multi_inventory.all.RemoveAll(a => a?.data?.is_bag == true);
         }
@@ -553,9 +556,12 @@ public static class Patches
     public static IEnumerable<CodeInstruction> DropResGameObject_ProcessDropCollectorRangeCheck(
         IEnumerable<CodeInstruction> instructions)
     {
+        // The game's IL stores 3.24 as ldc.r4 (single-precision float), not ldc.r8.
+        // The C# decompiler renders the comparison as (double)num > 3.2399997711181641
+        // for readability, but the actual comparison happens at float precision.
         var matcher = new CodeMatcher(instructions);
         var vanillaThreshold = matcher.MatchForward(false,
-            new CodeMatch(i => i.opcode == OpCodes.Ldc_R8 && i.operand is double d && Math.Abs(d - 3.2399997711181641) < 1e-9));
+            new CodeMatch(i => i.opcode == OpCodes.Ldc_R4 && i.operand is float f && Math.Abs(f - 3.24f) < 1e-5f));
 
         if (!vanillaThreshold.IsValid)
         {
@@ -563,20 +569,20 @@ public static class Patches
             return instructions;
         }
 
-        // Replace: ldc.r8 3.24
-        // With:    ldarg.1 (collector_wgo)  ;  ldc.r8 3.24  ;  call GetMagnetRangeSq
+        // Replace: ldc.r4 3.24
+        // With:    ldarg.1 (collector_wgo)  ;  ldc.r4 3.24  ;  call GetMagnetRangeSq
         matcher
             .RemoveInstruction()
             .Insert(
                 new CodeInstruction(OpCodes.Ldarg_1),
-                new CodeInstruction(OpCodes.Ldc_R8, 3.2399997711181641),
+                new CodeInstruction(OpCodes.Ldc_R4, 3.24f),
                 new CodeInstruction(OpCodes.Call,
                     AccessTools.Method(typeof(Patches), nameof(GetMagnetRangeSq))));
 
         return matcher.InstructionEnumeration();
     }
 
-    private static double GetMagnetRangeSq(WorldGameObject collector_wgo, double vanillaSq)
+    private static float GetMagnetRangeSq(WorldGameObject collector_wgo, float vanillaSq)
     {
         if (collector_wgo == null || !collector_wgo.is_player) return vanillaSq;
         var r = Plugin.PlayerLootMagnetRange.Value;

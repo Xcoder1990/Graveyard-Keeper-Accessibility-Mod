@@ -319,11 +319,22 @@ public class Plugin : BaseUnityPlugin
                 new AcceptableValueRange<int>(1, 30),
                 new ConfigurationManagerAttributes {Order = 97, DispName = "    └ Near-House Dump Zone Radius (tiles)"}));
 
-        PlayerLootMagnetRange = Config.Bind(GameplaySection, "Player Loot Magnet Range", 1.8f,
+        PlayerLootMagnetRange = Config.Bind(GameplaySection, "Player Loot Magnet Range", 2.0f,
             new ConfigDescription(
-                "How close you have to be (in tiles) for nearby loot to fly toward you and auto-pickup. Vanilla is 1.8 tiles — crank it up to sweep up drops from further away.",
-                new AcceptableValueRange<float>(1.8f, 20f),
+                "How close you have to be (in tiles) for nearby loot to fly toward you and auto-pickup. Vanilla is 1.8 tiles — slide upward in 0.25-tile steps to sweep up drops from further away.",
+                new AcceptableValueRange<float>(2.0f, 20f),
                 new ConfigurationManagerAttributes {Order = 95, DispName = "Player Loot Magnet Range (tiles)"}));
+        // Snap the slider to a 0.25-tile grid. The guard prevents the assignment
+        // from re-firing SettingChanged into infinite recursion. Also called once
+        // immediately to migrate any pre-existing off-grid persisted value.
+        void SnapMagnetRange()
+        {
+            var v = PlayerLootMagnetRange.Value;
+            var stepped = Mathf.Round(v / 0.25f) * 0.25f;
+            if (Mathf.Abs(v - stepped) > 1e-4f) PlayerLootMagnetRange.Value = stepped;
+        }
+        PlayerLootMagnetRange.SettingChanged += (_, _) => SnapMagnetRange();
+        SnapMagnetRange();
 
         // ── UI ──
         HideStockpileWidgets = Config.Bind(UISection, "Hide Stockpile Widgets", true,
