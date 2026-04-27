@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.10 | 20 April 2026
+## 1.3.10 | 27 April 2026
 
 - Fixed vendor tier progress freezing when inflation or deflation was turned off. The level-up bar now advances with every buy and sell even when prices are locked to the base rate, so shops continue to upgrade through your playthrough
 - Removed a side effect where shops would aggressively over-restock at end of day while the mod was active — restock cadence now matches the base game
