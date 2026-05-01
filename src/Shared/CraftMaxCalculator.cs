@@ -134,7 +134,7 @@ internal static class CraftMaxCalculator
 
         var m1 = craftable.Count > 0 ? craftable.Min() : 0;
         var multiMin = sameItemHandled ? 0 : Mathf.Max(bCraftable, sCraftable, gCraftable);
-        var min = multiMin <= 0 ? m1 : System.Math.Min(m1, multiMin);
+        var min = multiMin <= 0 ? m1 : Math.Min(m1, multiMin);
 
         info.Min = min;
         info.IsMultiQualCraft = isMultiQualCraft;

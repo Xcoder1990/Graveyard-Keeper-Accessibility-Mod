@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using BepInEx.Configuration;
-using BepInEx.Logging;
 
 namespace Shared;
 
@@ -13,9 +12,9 @@ namespace Shared;
 // Each mod DLL compiles its own copy of this file — there are no cross-mod statics.
 // Call from Plugin.Awake BEFORE InitConfiguration so the new Bind() picks up the
 // migrated value on first read.
-public static class ConfigMigration
+internal static class ConfigMigration
 {
-    public sealed class KeyRename
+    internal sealed class KeyRename
     {
         public string Section { get; }
         public string OldKey { get; }
@@ -32,7 +31,7 @@ public static class ConfigMigration
     }
 
     // Section header rename: "[Old Section]" → "[New Section]". Idempotent.
-    public static void MigrateRenamedSections(ConfigFile cfg, ManualLogSource log, IDictionary<string, string> renames)
+    internal static void MigrateRenamedSections(ConfigFile cfg, TimestampedLogger log, IDictionary<string, string> renames)
     {
         if (renames == null || renames.Count == 0) return;
         var path = cfg.ConfigFilePath;
@@ -77,7 +76,7 @@ public static class ConfigMigration
     // Key rename inside a known section. Optional value transform for polarity flips
     // (e.g. invert a bool when "Disable Foo" becomes "Foo"). Idempotent — if the new
     // key is already present and the old key isn't, the file isn't touched.
-    public static void MigrateRenamedKeys(ConfigFile cfg, ManualLogSource log, params KeyRename[] renames)
+    internal static void MigrateRenamedKeys(ConfigFile cfg, TimestampedLogger log, params KeyRename[] renames)
     {
         if (renames == null || renames.Length == 0) return;
         var path = cfg.ConfigFilePath;
@@ -143,6 +142,6 @@ public static class ConfigMigration
 
     // Convenience: invert a "true"/"false" string. Use for polarity-flip key renames
     // like "Disable Foo = true" → "Foo = false".
-    public static string InvertBool(string value) =>
+    internal static string InvertBool(string value) =>
         string.Equals(value, "true", StringComparison.OrdinalIgnoreCase) ? "false" : "true";
 }

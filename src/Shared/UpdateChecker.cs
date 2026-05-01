@@ -96,7 +96,7 @@ internal static class UpdateChecker
         }
         catch (Exception ex)
         {
-            BepInEx.Logging.Logger.CreateLogSource(LogSourceName).LogError($"Register failed: {ex}");
+            new TimestampedLogger(BepInEx.Logging.Logger.CreateLogSource(LogSourceName)).LogError($"Register failed: {ex}");
         }
     }
 
@@ -212,7 +212,7 @@ internal static class UpdateChecker
     {
         var dict = new Dictionary<string, UpdateCheckerManifestEntry>();
         if (string.IsNullOrEmpty(body)) return dict;
-        var log = BepInEx.Logging.Logger.CreateLogSource(LogSourceName);
+        var log = new TimestampedLogger(BepInEx.Logging.Logger.CreateLogSource(LogSourceName));
         try
         {
             var parsed = JsonConvert.DeserializeObject<UpdateCheckerManifest>(body);
@@ -237,7 +237,7 @@ internal static class UpdateChecker
 
 internal class UpdateCheckerCoordinator : MonoBehaviour
 {
-    private static readonly ManualLogSource Log = BepInEx.Logging.Logger.CreateLogSource(UpdateChecker.LogSourceName);
+    private static readonly TimestampedLogger Log = new(BepInEx.Logging.Logger.CreateLogSource(UpdateChecker.LogSourceName));
     private static bool _hasRun;
 
     private IEnumerator Start()

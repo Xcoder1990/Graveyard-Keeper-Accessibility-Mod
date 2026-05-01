@@ -40,7 +40,7 @@ internal static class UpdateCheckerUI
     private const string LabelName = "GYK_UpdateLabel";
     private const int MaxVisibleEntries = 10;
 
-    private static readonly ManualLogSource Log = BepInEx.Logging.Logger.CreateLogSource(UpdateChecker.LogSourceName);
+    private static readonly TimestampedLogger Log = new(BepInEx.Logging.Logger.CreateLogSource(UpdateChecker.LogSourceName));
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MainMenuGUI), nameof(MainMenuGUI.Open), typeof(bool))]

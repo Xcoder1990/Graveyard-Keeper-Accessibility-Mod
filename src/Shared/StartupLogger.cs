@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using BepInEx;
 using BepInEx.Bootstrap;
+using BepInEx.Logging;
 using HarmonyLib;
 using MonoMod.Utils;
 using UnityEngine;
@@ -57,6 +60,9 @@ internal static class StartupLogger
 
             log.LogInfo($"------------------------------------------");
             log.LogInfo($"  Total: {Chainloader.PluginInfos.Count} plugins");
+            log.LogInfo("------------------------------------------");
+            log.LogInfo("  Plugin configurations:");
+            LogPluginConfigs(log);
             log.LogInfo("==========================================");
 
             if (!Chainloader.ConfigHideBepInExGOs.Value)
@@ -72,9 +78,57 @@ internal static class StartupLogger
 
             BepInEx.Logging.Logger.Sources.Remove(log);
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             BepInEx.Logging.Logger.CreateLogSource("GYK Mods").LogError($"StartupLogger failed: {ex}");
+        }
+    }
+
+    private static void LogPluginConfigs(ManualLogSource log)
+    {
+        foreach (var plugin in Chainloader.PluginInfos.Values.OrderBy(p => p.Metadata.Name))
+        {
+            try
+            {
+                if (plugin.Instance is not { } instance)
+                {
+                    log.LogInfo($"  [{plugin.Metadata.Name}] (instance not available)");
+                    continue;
+                }
+
+                var config = instance.Config;
+                if (config == null || config.Keys.Count == 0)
+                {
+                    log.LogInfo($"  [{plugin.Metadata.Name}] (no config entries)");
+                    continue;
+                }
+
+                log.LogInfo($"  [{plugin.Metadata.Name}]");
+                var grouped = config.Keys
+                    .GroupBy(k => k.Section)
+                    .OrderBy(g => g.Key);
+                foreach (var section in grouped)
+                {
+                    log.LogInfo($"    {section.Key}");
+                    foreach (var key in section.OrderBy(k => k.Key))
+                    {
+                        object value;
+                        try
+                        {
+                            value = config[key].BoxedValue;
+                        }
+                        catch (Exception ex)
+                        {
+                            value = $"<error reading value: {ex.Message}>";
+                        }
+                        log.LogInfo($"      {key.Key} = {value}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogInfo($"  [{plugin.Metadata.Name}] (config dump failed: {ex.Message})");
+            }
         }
     }
 

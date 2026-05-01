@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -16,9 +17,9 @@ internal static class Lang
     private static string _langDir;
     private static string _prefix;
     private static string _currentLang;
-    private static ManualLogSource _log;
+    private static TimestampedLogger _log;
 
-    internal static void Init(System.Reflection.Assembly modAssembly, ManualLogSource log)
+    internal static void Init(Assembly modAssembly, TimestampedLogger log)
     {
         _log = log;
         _langDir = Path.Combine(Path.GetDirectoryName(modAssembly.Location)!, "lang");
@@ -127,7 +128,7 @@ internal static class Lang
             _log?.LogInfo($"[Lang] Loaded {dict.Count} keys from {Path.GetFileName(path)}");
             return dict;
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             _log?.LogError($"[Lang] Failed to read {Path.GetFileName(path)}: {ex.Message}");
             return new Dictionary<string, string>();
