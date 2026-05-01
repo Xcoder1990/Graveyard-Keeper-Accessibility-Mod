@@ -17,14 +17,8 @@ public static class Patches
     public static void CraftComponent_ReallyUpdateComponent(CraftComponent __instance, ref float delta_time)
     {
         if (__instance?.current_craft == null) return;
-        if (!Plugin.BoostGrowSpeedWhenRaining.Value)
-        {
-            return;
-        }
-        if (!EnvironmentEngine.me.is_rainy)
-        {
-            return;
-        }
+        if (!Plugin.BoostGrowSpeedWhenRaining.Value) return;
+        if (!EnvironmentEngine.me.is_rainy) return;
 
         var craftId = __instance.current_craft.id;
         string[] refugee = ["garden", "planting", "refugee", "grow"];
@@ -40,37 +34,50 @@ public static class Patches
             }
             delta_time *= 2f;
         }
-        else
+        else if (Plugin.DebugEnabled)
         {
-            if (Plugin.DebugEnabled)
-            {
-                Helpers.Log($"[RainBoost] skip craft '{craftId}': not a recognised garden/vineyard/refugee planting craft");
-            }
+            Helpers.Log($"[RainBoost] skip craft '{craftId}': not a recognised garden/vineyard/refugee planting craft");
         }
     }
 
-    // ── Per-instance ledger hooks ───────────────────────────────────────────
+    // ── Seed ledger hooks ───────────────────────────────────────────────────
     //
-    // Spend  = CraftReally postfix gated on __result == true (failed starts
-    //          return false and must not be logged as plants).
-    // Yield  = ProcessFinishedCraft postfix for craft-driven flows
-    //          (zombie/vineyard/refugee). Player gardens harvest by direct
-    //          interaction with the *_ready bed and don't go through a craft,
-    //          so DropItems postfix covers that path. The two paths can't
-    //          double-count: ProcessFinishedCraft's internal wgo.DropItems
-    //          call has wgo.obj_id matching the desk/vineyard/refugee bed,
-    //          which never matches the "garden_*_ready" filter on DropItems.
+    // Counting strategy:
+    //   • SPEND: hook CraftReally — reads craft.needs (the seed amount the game
+    //     is actually about to consume, multiplied by the craft amount).
+    //   • HARVEST: hook DropItems — reads the *actual* dropped items, whose
+    //     `value` field holds the rolled count (Random.Range(min, max+1) from
+    //     ResModificator.ProcessItemsListBeforeDrop). craft.output[i].value
+    //     would be the un-rolled template (vanilla number) and would
+    //     under-count the boost.
+    //   • DropItems harvest source: if the wgo has a current_craft that is a
+    //     tracked plant craft, the drops belong to that craft. Otherwise, if
+    //     the wgo is a player-garden ready bed, the drops belong to that bed.
 
     internal static bool IsTrackedPlantCraft(string craftId)
     {
         if (string.IsNullOrEmpty(craftId)) return false;
-        // Mirrors the filters used by Helpers.Apply (player gardens via
-        // ObjectDefinition; the other three via CraftDefinition).
         if (craftId.StartsWith("garden") && (craftId.Contains("planting") || craftId.EndsWith("growing"))) return true;
         if (craftId.Contains("grow_desk_planting")) return true;
         if (craftId.Contains("grow_vineyard_planting")) return true;
         if (craftId.StartsWith("refugee_garden")) return true;
         return false;
+    }
+
+    private static int SumSeedQty(IEnumerable<Item> items, out string firstSeedId)
+    {
+        firstSeedId = null;
+        if (items == null) return 0;
+        var total = 0;
+        foreach (var it in items)
+        {
+            if (it?.id == null) continue;
+            if (!it.id.Contains("seed")) continue;
+            if (it.value <= 0) continue;
+            firstSeedId ??= it.id;
+            total += it.value;
+        }
+        return total;
     }
 
     [HarmonyPostfix]
@@ -79,62 +86,20 @@ public static class Patches
     {
         if (!__result) return;
         if (!Plugin.TrackPlantCycles.Value) return;
-        if (craft == null || __instance == null) return;
+        if (craft == null || __instance == null || __instance.wgo == null) return;
         if (!IsTrackedPlantCraft(craft.id)) return;
-        if (__instance.wgo == null) return;
-        if (craft.needs == null || craft.needs.Count == 0) return;
 
-        var seedNeeds = new List<(string id, int qty)>(craft.needs.Count);
+        var spent = SumSeedQty(craft.needs, out var seedId);
+        if (spent == 0) return;
         var perCraft = Math.Max(amount, 1);
-        foreach (var n in craft.needs)
-        {
-            if (n?.id == null) continue;
-            if (!n.id.Contains("seed")) continue;
-            seedNeeds.Add((n.id, n.value * perCraft));
-        }
-        if (seedNeeds.Count == 0) return;
 
         try
         {
-            Ledger.RecordSpend(__instance.wgo, craft.id, seedNeeds);
+            Ledger.RecordSpend(__instance.wgo, craft.id, seedId, spent * perCraft);
         }
         catch (Exception ex)
         {
             LogHelper.Error($"[Ledger] CraftReally hook failed: {ex.Message}");
-        }
-    }
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(CraftComponent), nameof(CraftComponent.ProcessFinishedCraft))]
-    public static void CraftComponent_ProcessFinishedCraft_Postfix(CraftComponent __instance)
-    {
-        if (!Plugin.TrackPlantCycles.Value) return;
-        if (__instance == null || __instance.wgo == null) return;
-        var craft = __instance.current_craft;
-        if (craft == null) return;
-        if (!IsTrackedPlantCraft(craft.id)) return;
-        if (craft.output == null || craft.output.Count == 0) return;
-
-        // Player-garden planting crafts have empty seed output (their harvest
-        // comes from the future ready-bed's drop_items, hooked via
-        // WorldGameObject.DropItems below). Bail before touching the ledger.
-        var seedYields = new List<(string id, int qty)>();
-        foreach (var o in craft.output)
-        {
-            if (o?.id == null) continue;
-            if (!o.id.Contains("seed")) continue;
-            if (o.value <= 0) continue;
-            seedYields.Add((o.id, o.value));
-        }
-        if (seedYields.Count == 0) return;
-
-        try
-        {
-            Ledger.RecordHarvest(__instance.wgo, seedYields, craft.id);
-        }
-        catch (Exception ex)
-        {
-            LogHelper.Error($"[Ledger] ProcessFinishedCraft hook failed: {ex.Message}");
         }
     }
 
@@ -144,27 +109,38 @@ public static class Patches
     {
         if (!Plugin.TrackPlantCycles.Value) return;
         if (__instance == null || items == null || items.Count == 0) return;
-        var objId = __instance.obj_id;
-        if (string.IsNullOrEmpty(objId)) return;
-        // Strict filter: only player-garden ready-state drops. ProcessFinishedCraft
-        // also calls wgo.DropItems internally for craft-driven harvests, but the
-        // wgo there is a grow_desk / vineyard / refugee bed whose obj_id doesn't
-        // match this pattern, so the craft hook above stays the sole source.
-        if (!(objId.StartsWith("garden") && objId.EndsWith("ready"))) return;
 
-        var seedYields = new List<(string id, int qty)>();
-        foreach (var it in items)
+        var harvested = SumSeedQty(items, out var harvestSeedId);
+        if (harvested == 0) return;
+
+        // Determine the source of this drop:
+        //  (a) Inside ProcessFinishedCraft, the wgo's CraftComponent still
+        //      points at the just-finished craft. If it's a tracked plant
+        //      craft, attribute the drop to that craft's id.
+        //  (b) Otherwise, a player-garden ready bed dropping its harvest on
+        //      interaction. obj_id matches "garden_X_ready[_N]".
+        string sourceId = null;
+        var currentCraftId = __instance.components?.craft?.current_craft?.id;
+        if (!string.IsNullOrEmpty(currentCraftId) && IsTrackedPlantCraft(currentCraftId))
         {
-            if (it?.id == null) continue;
-            if (!it.id.Contains("seed")) continue;
-            if (it.value <= 0) continue;
-            seedYields.Add((it.id, it.value));
+            sourceId = currentCraftId;
         }
-        if (seedYields.Count == 0) return;
+        else
+        {
+            var objId = __instance.obj_id;
+            if (string.IsNullOrEmpty(objId)) return;
+            // Mirror the game's own player-garden-ready check
+            // (WorldGameObject.cs:1521).
+            if (!objId.Contains("garden_") || !objId.Contains("_ready")) return;
+            if (objId.Contains("grow_desk")) return;
+            if (objId.Contains("vineyard")) return;
+            if (objId.StartsWith("refugee_")) return;
+            sourceId = objId;
+        }
 
         try
         {
-            Ledger.RecordHarvest(__instance, seedYields);
+            Ledger.RecordHarvest(__instance, sourceId, harvestSeedId, harvested);
         }
         catch (Exception ex)
         {

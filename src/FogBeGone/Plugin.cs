@@ -32,6 +32,7 @@ public class Plugin : BaseUnityPlugin
             new ConfigMigration.KeyRename(GeneralSection, "Disable Rain", "Remove Rain"));
         InitConfiguration();
         UpdateChecker.Register(Info, CheckForUpdates);
+        SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 

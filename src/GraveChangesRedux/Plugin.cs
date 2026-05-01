@@ -21,7 +21,7 @@ public class Plugin : BaseUnityPlugin
     private static readonly Dictionary<string,SmartExpression> ObjDefBackups = new();
 
     private static readonly string[] SkipThese = ["grave_empty", "_place", "place_", "grave_corp", "grave_exhume", "grave_ground"];
-    private static TimestampedLogger LOG { get; set; }
+    private static TimestampedLogger Log { get; set; }
     private static ConfigEntry<bool> Debug { get; set; }
     internal static bool DebugEnabled;
     private static ConfigEntry<bool> ModifyGraves { get; set; }
@@ -30,8 +30,8 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-        LOG = new TimestampedLogger(Logger);
-        LogHelper.Log = LOG;
+        Log = new TimestampedLogger(Logger);
+        LogHelper.Log = Log;
         MigrateRenamedSections();
 
         Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
@@ -58,6 +58,7 @@ public class Plugin : BaseUnityPlugin
             new ConfigurationManagerAttributes { Order = 0 }));
 
         UpdateChecker.Register(Info, CheckForUpdates);
+        SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
@@ -75,7 +76,7 @@ public class Plugin : BaseUnityPlugin
         }
         catch (Exception ex)
         {
-            LOG.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
+            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
             return;
         }
 
@@ -96,11 +97,11 @@ public class Plugin : BaseUnityPlugin
         }
         catch (Exception ex)
         {
-            LOG.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
+            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
             return;
         }
 
-        LOG.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
+        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
         Config.Reload();
     }
 
@@ -114,7 +115,7 @@ public class Plugin : BaseUnityPlugin
             {
                 if (DebugEnabled)
                 {
-                    LOG.LogInfo($"ITEM: Skipping {itemDef.id} - {itemDef.quality}");
+                    Log.LogInfo($"ITEM: Skipping {itemDef.id} - {itemDef.quality}");
                 }
                 continue;
             }
@@ -126,7 +127,7 @@ public class Plugin : BaseUnityPlugin
                 itemDef.quality = MaxQualityValue;
                 if (DebugEnabled)
                 {
-                    LOG.LogInfo($"ITEM: Set quality of {itemDef.id} to {MaxQualityValue}");
+                    Log.LogInfo($"ITEM: Set quality of {itemDef.id} to {MaxQualityValue}");
                 }
             }
             else
@@ -141,7 +142,7 @@ public class Plugin : BaseUnityPlugin
             {
                 if (DebugEnabled)
                 {
-                    LOG.LogInfo($"OBJECT: Skipping {objDef.id} - {objDef.quality.GetRawExpressionString()}");
+                    Log.LogInfo($"OBJECT: Skipping {objDef.id} - {objDef.quality.GetRawExpressionString()}");
                 }
                 continue;
             }
@@ -153,7 +154,7 @@ public class Plugin : BaseUnityPlugin
                 objDef.quality = MaxQualityExpression;
                 if (DebugEnabled)
                 {
-                    LOG.LogInfo($"OBJECT: Set quality of {objDef.id} to {MaxQualityValue}");
+                    Log.LogInfo($"OBJECT: Set quality of {objDef.id} to {MaxQualityValue}");
                 }
             }
             else

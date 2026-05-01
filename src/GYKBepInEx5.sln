@@ -87,6 +87,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvictChurchVisitors", "_arc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GYKHelper", "_archive\GYKHelper\GYKHelper.csproj", "{CD83FC00-EDC7-44E4-A845-87EC73D207FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBalanceDumper", "GameBalanceDumper\GameBalanceDumper.csproj", "{1164718D-4B80-4B75-984C-33C219C77D2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -252,6 +254,10 @@ Global
 		{CD83FC00-EDC7-44E4-A845-87EC73D207FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD83FC00-EDC7-44E4-A845-87EC73D207FA}.Release-Upload|Any CPU.ActiveCfg = Debug|Any CPU
 		{CD83FC00-EDC7-44E4-A845-87EC73D207FA}.Release-Upload|Any CPU.Build.0 = Debug|Any CPU
+		{1164718D-4B80-4B75-984C-33C219C77D2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1164718D-4B80-4B75-984C-33C219C77D2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1164718D-4B80-4B75-984C-33C219C77D2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1164718D-4B80-4B75-984C-33C219C77D2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

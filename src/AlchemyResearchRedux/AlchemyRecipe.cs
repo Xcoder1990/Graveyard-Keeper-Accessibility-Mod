@@ -1,4 +1,4 @@
-﻿namespace AlchemyResearchRedux
+namespace AlchemyResearchRedux
 {
     public class AlchemyRecipe
     {
@@ -25,7 +25,7 @@
                 KnownRecipes.Add(recipe);
                 if (Plugin.DebugEnabled)
                 {
-                    Plugin.LOG.LogInfo($"Added recipe: [{recipe.Ingredient1}, {recipe.Ingredient2}, {recipe.Ingredient3}] -> {recipe.Result}");
+                    Plugin.Log.LogInfo($"Added recipe: [{recipe.Ingredient1}, {recipe.Ingredient2}, {recipe.Ingredient3}] -> {recipe.Result}");
                 }
             }
             SaveRecipesToFile();

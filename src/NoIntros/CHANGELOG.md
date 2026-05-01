@@ -1,9 +1,10 @@
 # Changelog
 
-## 2.2.10 | 30 April 2026
+## 2.2.10 | 1 May 2026
 
 - Log messages now include timestamps for easier bug reporting
 - Mod settings are now logged at startup for easier bug reporting
+- Setting changes are now logged for easier bug reporting
 
 ## 2.2.9 | 27 April 2026
 

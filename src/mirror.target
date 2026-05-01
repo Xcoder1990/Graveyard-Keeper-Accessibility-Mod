@@ -10,7 +10,7 @@
         </PropertyGroup>
         <ItemGroup>
             <_MirrorFiles Include="$(OutputPath)\**\*.*"
-                          Exclude="$(OutputPath)\**\*.zip;$(OutputPath)\**\*.vortex_backup;$(OutputPath)\**\*.vortex_new;$(OutputPath)\SaveBackup\**\*.*;$(OutputPath)\_dump\**\*.*" />
+                          Exclude="$(OutputPath)\**\*.zip;$(OutputPath)\**\*.csv;$(OutputPath)\**\*.vortex_backup;$(OutputPath)\**\*.vortex_new;$(OutputPath)\SaveBackup\**\*.*;$(OutputPath)\_dump\**\*.*" />
         </ItemGroup>
         <MakeDir Directories="$(_GogModDir)" />
         <Copy SourceFiles="@(_MirrorFiles)"

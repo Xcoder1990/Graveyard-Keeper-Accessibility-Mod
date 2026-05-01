@@ -189,6 +189,38 @@ public static class Patches
             return;
         }
 
+        if (Plugin.ModifyZombieBrewerySpeed.Value && wgoId.Contains("mf_zombie_brewing"))
+        {
+            delta_time *= Plugin.ZombieBrewerySpeedMultiplier.Value;
+            LogReallyUpdate(wgoId, craftId, $"zbrewery-x{Plugin.ZombieBrewerySpeedMultiplier.Value}",
+                $"[ZombieBrewery] {wgoId} craft={craftId} — applying x{Plugin.ZombieBrewerySpeedMultiplier.Value}");
+            return;
+        }
+
+        if (Plugin.ModifyZombieWinemakingSpeed.Value && wgoId.Contains("mf_zombie_winemaking"))
+        {
+            delta_time *= Plugin.ZombieWinemakingSpeedMultiplier.Value;
+            LogReallyUpdate(wgoId, craftId, $"zwine-x{Plugin.ZombieWinemakingSpeedMultiplier.Value}",
+                $"[ZombieWinemaking] {wgoId} craft={craftId} — applying x{Plugin.ZombieWinemakingSpeedMultiplier.Value}");
+            return;
+        }
+
+        if (Plugin.ModifyZombieCraftingTableSpeed.Value && wgoId.Contains("zombie_crafting_table"))
+        {
+            delta_time *= Plugin.ZombieCraftingTableSpeedMultiplier.Value;
+            LogReallyUpdate(wgoId, craftId, $"zcraft-x{Plugin.ZombieCraftingTableSpeedMultiplier.Value}",
+                $"[ZombieCraftingTable] {wgoId} craft={craftId} — applying x{Plugin.ZombieCraftingTableSpeedMultiplier.Value}");
+            return;
+        }
+
+        if (Plugin.ModifyWaterPumpSpeed.Value && wgoId.Contains("well_pump"))
+        {
+            delta_time *= Plugin.WaterPumpSpeedMultiplier.Value;
+            LogReallyUpdate(wgoId, craftId, $"wpump-x{Plugin.WaterPumpSpeedMultiplier.Value}",
+                $"[WaterPump] {wgoId} craft={craftId} — applying x{Plugin.WaterPumpSpeedMultiplier.Value}");
+            return;
+        }
+
         if (Exclude.Any(wgoId.ToLowerInvariant().Contains))
         {
             LogReallyUpdate(wgoId, craftId, "excluded",

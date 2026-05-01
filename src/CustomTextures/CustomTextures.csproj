@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
     <Compile Include="..\Shared\TimestampedLogger.cs" Link="TimestampedLogger.cs"/>
+    <Compile Include="..\Shared\SettingsChangeLogger.cs" Link="SettingsChangeLogger.cs"/>
   </ItemGroup>
 <ItemGroup>
     <Reference Include="Accessibility">

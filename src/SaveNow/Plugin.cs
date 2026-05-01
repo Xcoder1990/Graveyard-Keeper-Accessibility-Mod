@@ -130,6 +130,7 @@ public class Plugin : BaseUnityPlugin
         UpdateSaveData();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }

@@ -1,0 +1,19 @@
+[size=4][b]Game Balance Dumper[/b][/size]
+
+A developer/diagnostic mod. On game start it dumps the entire vanilla [b]GameBalance[/b] data store to JSON files for inspection and cross-version diffing.
+
+[size=3][b]What it dumps[/b][/size]
+Every list and dictionary on [b]GameBalance[/b] — items, objects, crafts, quests, techs, perks, vendors, bodies, souls, grave requirements, work definitions, and the rest. One JSON file per field, plus an [b]_index.json[/b] summary listing every dumped field with its element count.
+
+[size=3][b]Where it writes[/b][/size]
+[b]BepInEx/plugins/GameBalanceDumper/dump/[/b]
+
+[size=3][b]Pristine data[/b][/size]
+The dumper runs at [b]Priority.First[/b] on [b]GameBalance.LoadGameBalance[/b], so it captures the data [i]before[/i] other balance-modifying mods (EconomyReloaded, FasterCraftReloaded, AlchemyResearchRedux, GiveMeMoar, GraveChangesRedux, etc.) mutate it.
+
+[size=3][b]Configuration[/b][/size]
+[list]
+[*][b]Enabled[/b] — master switch
+[*][b]Pretty Print[/b] — indented JSON (on) vs minified (off)
+[*][b]Check for Updates[/b] — Nexus update notice on the main menu
+[/list]

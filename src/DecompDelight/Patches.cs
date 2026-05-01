@@ -1,4 +1,4 @@
-﻿namespace DecompDelight;
+namespace DecompDelight;
 
 [HarmonyPatch]
 internal static class Patches
@@ -28,7 +28,7 @@ internal static class Patches
 
         if (element is ElementMaps.Element.None && Plugin.DebugEnabled)
         {
-            Plugin.LOG.LogInfo($"Decompose output for '{itemId}' is '{decomposeOutput}' -> Element: {element}");
+            Plugin.Log.LogInfo($"Decompose output for '{itemId}' is '{decomposeOutput}' -> Element: {element}");
         }
 
         Utils.AddToTooltip(__result, element);

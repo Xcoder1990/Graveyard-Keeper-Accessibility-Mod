@@ -15,7 +15,7 @@ public class Plugin : BaseUnityPlugin
 
     private const string Donkey = "donkey";
     private const string NpcPrefix = "[wgo] ";
-    internal static TimestampedLogger LOG { get; private set; }
+    internal static TimestampedLogger Log { get; private set; }
     internal static bool DebugEnabled;
     private static ConfigEntry<bool> Debug { get; set; }
     private static ConfigEntry<bool> NpcCollision { get; set; }
@@ -26,7 +26,7 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-        LOG = new TimestampedLogger(Logger);
+        Log = new TimestampedLogger(Logger);
         MigrateRenamedSections();
 
         Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
@@ -60,6 +60,7 @@ public class Plugin : BaseUnityPlugin
                 new ConfigurationManagerAttributes {Order = 0}));
 
         UpdateChecker.Register(Info, CheckForUpdates);
+        SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
         SceneManager.sceneLoaded += (_, _) => GameStartedPlaying();
     }
@@ -78,7 +79,7 @@ public class Plugin : BaseUnityPlugin
         }
         catch (Exception ex)
         {
-            LOG.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
+            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
             return;
         }
 
@@ -99,11 +100,11 @@ public class Plugin : BaseUnityPlugin
         }
         catch (Exception ex)
         {
-            LOG.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
+            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
             return;
         }
 
-        LOG.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
+        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
         Config.Reload();
     }
 
@@ -117,7 +118,7 @@ public class Plugin : BaseUnityPlugin
 
         if (!playerCollider)
         {
-            LOG.LogWarning("Player collider not found!");
+            Log.LogWarning("Player collider not found!");
             return;
         }
 

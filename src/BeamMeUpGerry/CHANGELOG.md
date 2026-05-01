@@ -1,9 +1,10 @@
 # Changelog
 
-## 3.1.6 | 30 April 2026
+## 3.1.6 | 1 May 2026
 
 - Log messages now include timestamps for easier bug reporting
 - Mod settings are now logged at startup for easier bug reporting
+- Setting changes are now logged for easier bug reporting
 
 ## 3.1.5 | 27 April 2026
 

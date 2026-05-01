@@ -39,6 +39,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<float> RedTechPointMultiplier { get; private set; }
     internal static ConfigEntry<float> GreenTechPointMultiplier { get; private set; }
     internal static ConfigEntry<float> BlueTechPointMultiplier { get; private set; }
+    internal static ConfigEntry<float> WaterOutputMultiplier { get; private set; }
 
     // ── Categories ── (gates which item groups the Resource Multiplier touches)
     internal static ConfigEntry<bool> MultiplySticks { get; private set; }
@@ -55,7 +56,6 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<float>  CraftOutputMultiplier { get; private set; }
     internal static ConfigEntry<bool>   CraftExcludeToolsAndEquipment { get; private set; }
     internal static ConfigEntry<bool>   CraftExcludeProgressionCrafts { get; private set; }
-
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     internal static TimestampedLogger Log { get; private set; }
@@ -68,6 +68,7 @@ public class Plugin : BaseUnityPlugin
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
@@ -182,6 +183,12 @@ public class Plugin : BaseUnityPlugin
                 new AcceptableValueRange<float>(0.1f, 50f),
                 new ConfigurationManagerAttributes {Order = 92}));
 
+        WaterOutputMultiplier = Config.Bind(MultipliersSection, "Water Output Multiplier", 1f,
+            new ConfigDescription(
+                "Multiplies the water you get from wells — both auto-pumped water flowing into your upgraded home well's inventory and water you take by hand from any well (basic or upgraded). 1 = vanilla. Higher values let breweries and other water-heavy crafts keep up. Independent of the Multiply Miscellaneous toggle.",
+                new AcceptableValueRange<float>(1f, 50f),
+                new ConfigurationManagerAttributes {Order = 91}));
+
         // ── 3. Categories ──
         MultiplySticks = Config.Bind(CategoriesSection, "Multiply Sticks", true,
             new ConfigDescription(
@@ -260,6 +267,7 @@ public class Plugin : BaseUnityPlugin
         CraftOutputMultiplier.SettingChanged         += OnCraftOutputSettingChanged;
         CraftExcludeToolsAndEquipment.SettingChanged += OnCraftOutputSettingChanged;
         CraftExcludeProgressionCrafts.SettingChanged += OnCraftOutputSettingChanged;
+        WaterOutputMultiplier.SettingChanged         += OnCraftOutputSettingChanged;
 
         // ── 5. Updates ──
         CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,

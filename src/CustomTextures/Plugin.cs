@@ -27,6 +27,7 @@ namespace CustomTextures
             DumpSprites = Config.Bind("01. General", "Dump Sprites", false,
                 new ConfigDescription("When enabled, exports all sprites encountered via SpriteAtlas as PNG files to a _dump folder inside the CustomTextures folder. Disable after collecting sprites."));
             LoadCustomTextures();
+            SettingsChangeLogger.Register(Config, Log);
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
         }
 

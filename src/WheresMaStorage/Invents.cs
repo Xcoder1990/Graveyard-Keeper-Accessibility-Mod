@@ -18,6 +18,27 @@ public static class Invents
         }
         if (Plugin.DebugEnabled) Helpers.Log($"[LoadInventories] snapshot positions={Fields.InventoryPositions.Count} from WorldMap._objs={WorldMap._objs.Count}");
 
+        if (Plugin.DebugEnabled)
+        {
+            var wellSb = new StringBuilder("[LoadInventories] all WGOs with 'well' in obj_id or obj_def.id: ");
+            var wellsFound = 0;
+            foreach (var wgo in WorldMap._objs)
+            {
+                if (wgo == null || wgo.obj_def == null) continue;
+                var oid = wgo.obj_id ?? string.Empty;
+                var did = wgo.obj_def.id ?? string.Empty;
+                if (!oid.Contains("well") && !did.Contains("well")) continue;
+                var zid = wgo.GetMyWorldZoneId();
+                var invSize = wgo.obj_def.inventory_size;
+                var openInMi = wgo.obj_def.open_in_multiinventory;
+                var waterCount = wgo.data?.GetTotalCount("water", true) ?? 0;
+                wellSb.Append($"{oid}(def={did}, zone='{zid}', invSize={invSize}, openInMi={openInMi}, water={waterCount}) | ");
+                wellsFound++;
+            }
+            if (wellsFound == 0) wellSb.Append("(none)");
+            Helpers.Log(wellSb.ToString());
+        }
+
         var playerInventory = new Inventory(MainGame.me.player);
         Fields.Mi.AddInventory(playerInventory, 0);
         Helpers.ApplyPlayerInventorySize();
@@ -228,9 +249,15 @@ public static class Invents
 
         if (requester.Contains("refugee_builddesk") || requester.Contains("storage_builddesk") || requesterInQuarry)
         {
-            if (Plugin.DebugEnabled) Helpers.Log($"[GetMiInventory] triggering reload (requester={requester} zone={zone})");
-            MainGame.me.StartCoroutine(LoadInventories());
-            MainGame.me.StartCoroutine(LoadWildernessInventories());
+            // Gate on the same in-flight/freshness invariant Helpers.RunWmsTasks uses. Without
+            // this, a quarry-zoned worker (e.g. a stone-cutter zombie) re-spawns LoadInventories
+            // every craft tick, walking WorldMap._objs from scratch each time.
+            if (!Fields.InventoriesLoaded && Fields.LoadInventoriesCoroutine == null)
+            {
+                if (Plugin.DebugEnabled) Helpers.Log($"[GetMiInventory] triggering reload (requester={requester} zone={zone})");
+                Fields.LoadInventoriesCoroutine = MainGame.me.StartCoroutine(LoadInventories());
+                MainGame.me.StartCoroutine(LoadWildernessInventories());
+            }
         }
 
         // Lazy-merge wilderness into the shared cache. LoadWildernessInventories runs
@@ -372,10 +399,10 @@ public static class Invents
             return orig;
         }
 
-        if (objId.Contains("storage_builddesk"))
+        if (objId.Contains("storage_builddesk") && !Fields.InventoriesLoaded && Fields.LoadInventoriesCoroutine == null)
         {
             if (Plugin.DebugEnabled) Helpers.Log($"[GetMi] storage_builddesk interaction → triggering LoadInventories");
-            MainGame.me.StartCoroutine(LoadInventories());
+            Fields.LoadInventoriesCoroutine = MainGame.me.StartCoroutine(LoadInventories());
         }
 
         var isSpecialObject = isZombie || objId.StartsWith("mf_") || Fields.GratitudeCraft;

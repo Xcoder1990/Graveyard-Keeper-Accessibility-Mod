@@ -1,9 +1,10 @@
 # Changelog
 
-## 1.9.8 | 30 April 2026
+## 1.9.8 | 1 May 2026
 
 - Fixed the HUD staying hidden after Gerry's empty-trunk visit
 - Log messages now include timestamps for easier bug reporting
+- Setting changes are now logged for easier bug reporting
 
 ## 1.9.7 | 27 April 2026
 

@@ -85,6 +85,11 @@ public static class Patches
     // Snapshot of each craft's pre-mutation output values, keyed by "craft.id|output-index".
     // Used to restore vanilla values before re-applying when the user changes a craft setting.
     private static readonly Dictionary<string, int> CraftOutputSnapshots = new(StringComparer.Ordinal);
+
+    // Separate snapshot for water entries in craft.output_to_wgo (water_pumping etc.), keyed by
+    // "craft.id|wgo|output-index". Scoped to the WaterOutputMultiplier feature — vanilla
+    // CraftOutputMultiplier doesn't touch output_to_wgo, so it has no snapshot store of its own.
+    private static readonly Dictionary<string, int> CraftWaterToWgoSnapshots = new(StringComparer.Ordinal);
     private static bool _craftOutputApplied;
 
     [HarmonyPostfix]
@@ -108,6 +113,7 @@ public static class Patches
     {
         if (GameBalance.me == null) return;
         CraftOutputSnapshots.Clear();
+        CraftWaterToWgoSnapshots.Clear();
 
         foreach (var craft in GameBalance.me.craft_data)
         {
@@ -120,11 +126,17 @@ public static class Patches
                 if (output.id is "r" or "g" or "b") continue;
                 CraftOutputSnapshots[$"{craft.id}|{i}"] = output.value;
             }
+            for (var i = 0; i < craft.output_to_wgo.Count; i++)
+            {
+                var output = craft.output_to_wgo[i];
+                if (output == null || output.id != "water") continue;
+                CraftWaterToWgoSnapshots[$"{craft.id}|wgo|{i}"] = output.value;
+            }
         }
 
         if (Plugin.DebugEnabled)
         {
-            Helpers.Log($"[CraftSnapshot] captured {CraftOutputSnapshots.Count} output values across {GameBalance.me.craft_data.Count} craft definitions");
+            Helpers.Log($"[CraftSnapshot] captured {CraftOutputSnapshots.Count} output values and {CraftWaterToWgoSnapshots.Count} water output_to_wgo values across {GameBalance.me.craft_data.Count} craft definitions");
         }
     }
 
@@ -132,6 +144,7 @@ public static class Patches
     {
         if (GameBalance.me == null) return;
         var restored = 0;
+        var restoredWater = 0;
         foreach (var craft in GameBalance.me.craft_data)
         {
             if (craft == null || string.IsNullOrEmpty(craft.id)) continue;
@@ -141,11 +154,17 @@ public static class Patches
                 craft.output[i].value = original;
                 restored++;
             }
+            for (var i = 0; i < craft.output_to_wgo.Count; i++)
+            {
+                if (!CraftWaterToWgoSnapshots.TryGetValue($"{craft.id}|wgo|{i}", out var original)) continue;
+                craft.output_to_wgo[i].value = original;
+                restoredWater++;
+            }
         }
 
         if (Plugin.DebugEnabled)
         {
-            Helpers.Log($"[CraftSnapshot] restored {restored} output values");
+            Helpers.Log($"[CraftSnapshot] restored {restored} output values, {restoredWater} water output_to_wgo values");
         }
     }
 
@@ -154,21 +173,26 @@ public static class Patches
         if (GameBalance.me == null) return;
 
         var globalMulti = Plugin.CraftOutputMultiplier.Value;
+        var waterMulti = Plugin.WaterOutputMultiplier.Value;
         var excludeTools = Plugin.CraftExcludeToolsAndEquipment.Value;
         var excludeProgression = Plugin.CraftExcludeProgressionCrafts.Value;
 
-        if (Mathf.Approximately(globalMulti, 1f))
+        var globalActive = !Mathf.Approximately(globalMulti, 1f);
+        var waterActive = !Mathf.Approximately(waterMulti, 1f);
+
+        if (!globalActive && !waterActive)
         {
             _craftOutputApplied = true;
             if (Plugin.DebugEnabled)
             {
-                Helpers.Log("[CraftApply] global=1.0 — nothing to multiply");
+                Helpers.Log("[CraftApply] global=1.0 and water=1.0 — nothing to multiply");
             }
             return;
         }
 
         var mutatedCrafts = 0;
         var mutatedOutputs = 0;
+        var mutatedWaterOutputs = 0;
         var skippedProgression = 0;
         var skippedToolLike = 0;
 
@@ -182,34 +206,55 @@ public static class Patches
                 continue;
             }
 
-            var multi = globalMulti;
-
             var craftMutated = false;
-            for (var i = 0; i < craft.output.Count; i++)
+
+            if (globalActive)
             {
-                var output = craft.output[i];
-                if (output == null || string.IsNullOrEmpty(output.id)) continue;
-                if (output.id is "r" or "g" or "b") continue;
-
-                if (excludeTools && IsToolLikeOutput(output.id))
+                for (var i = 0; i < craft.output.Count; i++)
                 {
-                    skippedToolLike++;
-                    continue;
-                }
+                    var output = craft.output[i];
+                    if (output == null || string.IsNullOrEmpty(output.id)) continue;
+                    if (output.id is "r" or "g" or "b") continue;
 
-                if (!CraftOutputSnapshots.TryGetValue($"{craft.id}|{i}", out var baseValue))
+                    if (excludeTools && IsToolLikeOutput(output.id))
+                    {
+                        skippedToolLike++;
+                        continue;
+                    }
+
+                    if (!CraftOutputSnapshots.TryGetValue($"{craft.id}|{i}", out var baseValue))
+                    {
+                        baseValue = output.value;
+                    }
+
+                    var scaled = Mathf.Max(1, Mathf.RoundToInt(baseValue * globalMulti));
+                    if (scaled == output.value) continue;
+
+                    output.value = scaled;
+                    mutatedOutputs++;
+                    craftMutated = true;
+                }
+            }
+
+            if (waterActive)
+            {
+                for (var i = 0; i < craft.output_to_wgo.Count; i++)
                 {
-                    // New output that appeared after snapshot (shouldn't happen with our
-                    // LoadGameBalance postfix, but be defensive).
-                    baseValue = output.value;
+                    var output = craft.output_to_wgo[i];
+                    if (output == null || output.id != "water") continue;
+
+                    if (!CraftWaterToWgoSnapshots.TryGetValue($"{craft.id}|wgo|{i}", out var baseValue))
+                    {
+                        baseValue = output.value;
+                    }
+
+                    var scaled = Mathf.Max(1, Mathf.RoundToInt(baseValue * waterMulti));
+                    if (scaled == output.value) continue;
+
+                    output.value = scaled;
+                    mutatedWaterOutputs++;
+                    craftMutated = true;
                 }
-
-                var scaled = Mathf.Max(1, Mathf.RoundToInt(baseValue * multi));
-                if (scaled == output.value) continue;
-
-                output.value = scaled;
-                mutatedOutputs++;
-                craftMutated = true;
             }
 
             if (craftMutated) mutatedCrafts++;
@@ -219,7 +264,7 @@ public static class Patches
 
         if (Plugin.DebugEnabled || mutatedCrafts > 0)
         {
-            Helpers.Log($"[CraftApply] global={globalMulti}, excludeTools={excludeTools}, excludeProgression={excludeProgression} → mutatedCrafts={mutatedCrafts}, mutatedOutputs={mutatedOutputs}, skipped(progression={skippedProgression}, toolLike={skippedToolLike})");
+            Helpers.Log($"[CraftApply] global={globalMulti}, water={waterMulti}, excludeTools={excludeTools}, excludeProgression={excludeProgression} → mutatedCrafts={mutatedCrafts}, mutatedOutputs={mutatedOutputs}, mutatedWaterOutputs={mutatedWaterOutputs}, skipped(progression={skippedProgression}, toolLike={skippedToolLike})");
         }
     }
 
@@ -351,6 +396,27 @@ public static class Patches
                 Helpers.Log($"[Drop] SinShard multi={sinMulti} — no change");
             }
             return;
+        }
+
+        // Water has a dedicated multiplier (WaterOutputMultiplier) so users can dial up wells
+        // and breweries without flipping the broader Misc category (which also covers alcohol,
+        // eggs, milk, etc.). Catches hand-pumped water from basic and upgraded wells; auto-pump
+        // output (output_to_wgo) is already scaled at GameBalance.LoadGameBalance time.
+        if (id == "water")
+        {
+            var waterMulti = Plugin.WaterOutputMultiplier.Value;
+            if (waterMulti > 1f)
+            {
+                var original = drop_item.value;
+                drop_item.value = Mathf.Max(1, Mathf.RoundToInt(original * waterMulti));
+                if (Plugin.DebugEnabled)
+                {
+                    Helpers.Log($"[Drop] Water '{id}' {original}×{waterMulti} → {drop_item.value}");
+                }
+                return;
+            }
+            // WaterOutputMultiplier == 1 → fall through; if MultiplyMisc is on, water still
+            // gets scaled by ResourceMultiplier as before for backward compat.
         }
 
         // Sticks have their own dedicated toggle — keeps the "exclude sticks so they don't

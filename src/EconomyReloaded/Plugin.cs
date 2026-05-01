@@ -26,6 +26,7 @@ public class Plugin : BaseUnityPlugin
         InitConfiguration();
         ApplyLegacyMigration(legacy);
         UpdateChecker.Register(Info, CheckForUpdates);
+        SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 

@@ -24,30 +24,30 @@ public static class Patches
     {
         if (!Plugin.DropHeaviesAwayFromPlayer.Value)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogInfo($"[Drop_Prefix] skip (DropHeaviesAwayFromPlayer=false), item='{item?.id ?? "null"}', dir={direction}");
+            if (Plugin.DebugEnabled) Plugin.Log.LogInfo($"[Drop_Prefix] skip (DropHeaviesAwayFromPlayer=false), item='{item?.id ?? "null"}', dir={direction}");
             return;
         }
         if (direction != Direction.ToPlayer)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogInfo($"[Drop_Prefix] skip (dir={direction} not ToPlayer), item='{item?.id ?? "null"}'");
+            if (Plugin.DebugEnabled) Plugin.Log.LogInfo($"[Drop_Prefix] skip (dir={direction} not ToPlayer), item='{item?.id ?? "null"}'");
             return;
         }
         if (item == null)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogWarning("[Drop_Prefix] skip (item is null)");
+            if (Plugin.DebugEnabled) Plugin.Log.LogWarning("[Drop_Prefix] skip (item is null)");
             return;
         }
         if (item.definition == null)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogInfo($"[Drop_Prefix] skip (item.definition null), item.id='{item.id ?? "null"}'");
+            if (Plugin.DebugEnabled) Plugin.Log.LogInfo($"[Drop_Prefix] skip (item.definition null), item.id='{item.id ?? "null"}'");
             return;
         }
         if (!item.definition.is_big)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogInfo($"[Drop_Prefix] skip (not heavy), item='{item.id}', item_size={item.definition.item_size}");
+            if (Plugin.DebugEnabled) Plugin.Log.LogInfo($"[Drop_Prefix] skip (not heavy), item='{item.id}', item_size={item.definition.item_size}");
             return;
         }
-        if (Plugin.DebugEnabled) Plugin.LOG.LogInfo($"[Drop_Prefix] redirecting heavy '{item.id}' ToPlayer -> None");
+        if (Plugin.DebugEnabled) Plugin.Log.LogInfo($"[Drop_Prefix] redirecting heavy '{item.id}' ToPlayer -> None");
         direction = Direction.None;
     }
 
@@ -61,56 +61,56 @@ public static class Patches
     {
         if (!Plugin.HeavyCollisionGracePeriod.Value)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogInfo("[DoDrop_Postfix] skip (HeavyCollisionGracePeriod=false)");
+            if (Plugin.DebugEnabled) Plugin.Log.LogInfo("[DoDrop_Postfix] skip (HeavyCollisionGracePeriod=false)");
             return;
         }
         if (__instance == null)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogWarning("[DoDrop_Postfix] skip (__instance is null)");
+            if (Plugin.DebugEnabled) Plugin.Log.LogWarning("[DoDrop_Postfix] skip (__instance is null)");
             return;
         }
         if (__instance.res == null)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogWarning("[DoDrop_Postfix] skip (res is null)");
+            if (Plugin.DebugEnabled) Plugin.Log.LogWarning("[DoDrop_Postfix] skip (res is null)");
             return;
         }
         if (__instance.res.definition == null)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogInfo($"[DoDrop_Postfix] skip (res.definition null), res.id='{__instance.res.id ?? "null"}'");
+            if (Plugin.DebugEnabled) Plugin.Log.LogInfo($"[DoDrop_Postfix] skip (res.definition null), res.id='{__instance.res.id ?? "null"}'");
             return;
         }
         if (!__instance.res.definition.is_big)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogInfo($"[DoDrop_Postfix] skip (not heavy), res='{__instance.res.id}', item_size={__instance.res.definition.item_size}");
+            if (Plugin.DebugEnabled) Plugin.Log.LogInfo($"[DoDrop_Postfix] skip (not heavy), res='{__instance.res.id}', item_size={__instance.res.definition.item_size}");
             return;
         }
         if (MainGame.me == null)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogWarning("[DoDrop_Postfix] skip (MainGame.me is null)");
+            if (Plugin.DebugEnabled) Plugin.Log.LogWarning("[DoDrop_Postfix] skip (MainGame.me is null)");
             return;
         }
         if (MainGame.me.player == null)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogWarning("[DoDrop_Postfix] skip (MainGame.me.player is null)");
+            if (Plugin.DebugEnabled) Plugin.Log.LogWarning("[DoDrop_Postfix] skip (MainGame.me.player is null)");
             return;
         }
 
         var heavyCollider = __instance.GetComponent<CapsuleCollider2D>();
         if (heavyCollider == null)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogWarning($"[DoDrop_Postfix] skip (CapsuleCollider2D missing on heavy '{__instance.res.id}')");
+            if (Plugin.DebugEnabled) Plugin.Log.LogWarning($"[DoDrop_Postfix] skip (CapsuleCollider2D missing on heavy '{__instance.res.id}')");
             return;
         }
         var playerCollider = MainGame.me.player.GetComponentInChildren<CircleCollider2D>();
         if (playerCollider == null)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogWarning("[DoDrop_Postfix] skip (player CircleCollider2D missing)");
+            if (Plugin.DebugEnabled) Plugin.Log.LogWarning("[DoDrop_Postfix] skip (player CircleCollider2D missing)");
             return;
         }
 
         var seconds = Plugin.GracePeriodSeconds.Value;
         Physics2D.IgnoreCollision(heavyCollider, playerCollider, true);
-        if (Plugin.DebugEnabled) Plugin.LOG.LogInfo($"[DoDrop_Postfix] grace started on heavy '{__instance.res.id}' for {seconds:0.##}s");
+        if (Plugin.DebugEnabled) Plugin.Log.LogInfo($"[DoDrop_Postfix] grace started on heavy '{__instance.res.id}' for {seconds:0.##}s");
         MainGame.me.StartCoroutine(RestoreHeavyCollisionAfterDelay(heavyCollider, playerCollider, seconds, __instance.res.id));
     }
 
@@ -119,15 +119,15 @@ public static class Patches
         yield return new WaitForSeconds(seconds);
         if (heavy == null)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogInfo($"[RestoreGrace] heavy '{heavyId}' already destroyed — nothing to restore");
+            if (Plugin.DebugEnabled) Plugin.Log.LogInfo($"[RestoreGrace] heavy '{heavyId}' already destroyed — nothing to restore");
             yield break;
         }
         if (player == null)
         {
-            if (Plugin.DebugEnabled) Plugin.LOG.LogWarning($"[RestoreGrace] player collider gone when restoring grace for heavy '{heavyId}'");
+            if (Plugin.DebugEnabled) Plugin.Log.LogWarning($"[RestoreGrace] player collider gone when restoring grace for heavy '{heavyId}'");
             yield break;
         }
         Physics2D.IgnoreCollision(heavy, player, false);
-        if (Plugin.DebugEnabled) Plugin.LOG.LogInfo($"[RestoreGrace] grace ended for heavy '{heavyId}', collision restored");
+        if (Plugin.DebugEnabled) Plugin.Log.LogInfo($"[RestoreGrace] grace ended for heavy '{heavyId}', collision restored");
     }
 }

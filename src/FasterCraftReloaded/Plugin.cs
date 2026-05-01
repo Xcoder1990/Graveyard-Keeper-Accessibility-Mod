@@ -7,6 +7,7 @@ public class Plugin : BaseUnityPlugin
     private const string SpeedSection      = "── Speed ──";
     private const string CompostingSection = "── Composting ──";
     private const string GardensSection    = "── Gardens ──";
+    private const string WellsSection      = "── Wells ──";
     private const string ProductionSection = "── Zombie Production ──";
     private const string UpdatesSection    = "── Updates ──";
 
@@ -24,12 +25,20 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<float> RefugeeGardenSpeedMultiplier { get; private set; }
     internal static ConfigEntry<bool> ModifyZombieVineyardSpeed { get; private set; }
     internal static ConfigEntry<float> ZombieVineyardSpeedMultiplier { get; private set; }
+    internal static ConfigEntry<bool> ModifyZombieBrewerySpeed { get; private set; }
+    internal static ConfigEntry<float> ZombieBrewerySpeedMultiplier { get; private set; }
+    internal static ConfigEntry<bool> ModifyZombieWinemakingSpeed { get; private set; }
+    internal static ConfigEntry<float> ZombieWinemakingSpeedMultiplier { get; private set; }
+    internal static ConfigEntry<bool> ModifyZombieCraftingTableSpeed { get; private set; }
+    internal static ConfigEntry<float> ZombieCraftingTableSpeedMultiplier { get; private set; }
     internal static ConfigEntry<bool> ModifyZombieSawmillSpeed { get; private set; }
     internal static ConfigEntry<float> ZombieSawmillSpeedMultiplier { get; private set; }
     internal static ConfigEntry<bool> ModifyZombieMinesSpeed { get; private set; }
     internal static ConfigEntry<float> ZombieMinesSpeedMultiplier { get; private set; }
     internal static ConfigEntry<bool> ModifyCompostSpeed { get; private set; }
     internal static ConfigEntry<float> CompostSpeedMultiplier { get; private set; }
+    internal static ConfigEntry<bool> ModifyWaterPumpSpeed { get; private set; }
+    internal static ConfigEntry<float> WaterPumpSpeedMultiplier { get; private set; }
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     internal static TimestampedLogger Log { get; private set; }
@@ -41,6 +50,7 @@ public class Plugin : BaseUnityPlugin
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
@@ -121,6 +131,18 @@ public class Plugin : BaseUnityPlugin
                 new AcceptableValueRange<float>(1f, 50f),
                 new ConfigurationManagerAttributes {Order = 95, DispName = "    └ Zombie Garden Multiplier"}));
 
+        ModifyWaterPumpSpeed = Config.Bind(WellsSection, "Speed Up Water Pump", false,
+            new ConfigDescription(
+                "Speed up your upgraded water pump so it produces water faster. Basic wells (Quarry, Village) are interaction-only and aren't affected.",
+                null,
+                new ConfigurationManagerAttributes {Order = 100}));
+
+        WaterPumpSpeedMultiplier = Config.Bind(WellsSection, "Water Pump Multiplier", 2f,
+            new ConfigDescription(
+                "How much faster the water pump generates water when the toggle above is on.",
+                new AcceptableValueRange<float>(1f, 50f),
+                new ConfigurationManagerAttributes {Order = 99, DispName = "    └ Water Pump Multiplier"}));
+
         ModifyZombieMinesSpeed = Config.Bind(ProductionSection, "Speed Up Zombie Mines", false,
             new ConfigDescription(
                 "Speed up ore output from zombie-staffed mines in the stone yard, marble deposit, and iron mine.",
@@ -156,6 +178,42 @@ public class Plugin : BaseUnityPlugin
                 "How much faster the zombie vineyard produces when the toggle above is on.",
                 new AcceptableValueRange<float>(1f, 50f),
                 new ConfigurationManagerAttributes {Order = 95, DispName = "    └ Zombie Vineyard Multiplier"}));
+
+        ModifyZombieBrewerySpeed = Config.Bind(ProductionSection, "Speed Up Zombie Brewery", false,
+            new ConfigDescription(
+                "Speed up beer output from the zombie brewery.",
+                null,
+                new ConfigurationManagerAttributes {Order = 94}));
+
+        ZombieBrewerySpeedMultiplier = Config.Bind(ProductionSection, "Zombie Brewery Multiplier", 2f,
+            new ConfigDescription(
+                "How much faster the zombie brewery produces when the toggle above is on.",
+                new AcceptableValueRange<float>(1f, 50f),
+                new ConfigurationManagerAttributes {Order = 93, DispName = "    └ Zombie Brewery Multiplier"}));
+
+        ModifyZombieWinemakingSpeed = Config.Bind(ProductionSection, "Speed Up Zombie Winemaking", false,
+            new ConfigDescription(
+                "Speed up bottled wine output from the zombie winemaking station.",
+                null,
+                new ConfigurationManagerAttributes {Order = 92}));
+
+        ZombieWinemakingSpeedMultiplier = Config.Bind(ProductionSection, "Zombie Winemaking Multiplier", 2f,
+            new ConfigDescription(
+                "How much faster the zombie winemaking station produces when the toggle above is on.",
+                new AcceptableValueRange<float>(1f, 50f),
+                new ConfigurationManagerAttributes {Order = 91, DispName = "    └ Zombie Winemaking Multiplier"}));
+
+        ModifyZombieCraftingTableSpeed = Config.Bind(ProductionSection, "Speed Up Zombie Crafting Table", false,
+            new ConfigDescription(
+                "Speed up output from the general-purpose zombie crafting table.",
+                null,
+                new ConfigurationManagerAttributes {Order = 90}));
+
+        ZombieCraftingTableSpeedMultiplier = Config.Bind(ProductionSection, "Zombie Crafting Table Multiplier", 2f,
+            new ConfigDescription(
+                "How much faster the zombie crafting table produces when the toggle above is on.",
+                new AcceptableValueRange<float>(1f, 50f),
+                new ConfigurationManagerAttributes {Order = 89, DispName = "    └ Zombie Crafting Table Multiplier"}));
 
         CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
             new ConfigDescription(

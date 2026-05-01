@@ -100,6 +100,7 @@ public class Plugin : BaseUnityPlugin
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         RefreshDpiStatus();
         UpdateChecker.Register(Info, CheckForUpdates);
+        SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 

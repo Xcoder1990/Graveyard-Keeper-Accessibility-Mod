@@ -31,7 +31,7 @@ public static class Patches
 
         if (!found)
         {
-            Plugin.LOG.LogWarning("AddStraightToTable: Failed to find DialogGUI.OpenYesNo call in AutopsyGUI.OnBodyItemPress");
+            Plugin.Log.LogWarning("AddStraightToTable: Failed to find DialogGUI.OpenYesNo call in AutopsyGUI.OnBodyItemPress");
         }
     }
 

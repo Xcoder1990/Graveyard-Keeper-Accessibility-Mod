@@ -1,4 +1,4 @@
-﻿namespace AlchemyResearchRedux;
+namespace AlchemyResearchRedux;
 
 [Harmony]
 public static class Patches
@@ -65,7 +65,7 @@ public static class Patches
 
         if (itemDef == null)
         {
-            Plugin.LOG.LogWarning($"No item definition found: {resultId}");
+            Plugin.Log.LogWarning($"No item definition found: {resultId}");
             return;
         }
 

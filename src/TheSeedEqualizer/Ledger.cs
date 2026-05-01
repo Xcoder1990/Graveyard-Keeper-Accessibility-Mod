@@ -2,53 +2,48 @@ using Newtonsoft.Json;
 
 namespace TheSeedEqualizer;
 
-// Per-instance plant→harvest ledger. Each plant cycle is keyed by the bed's
-// world position (rounded to 1 decimal) so the same bed transitioning through
-// planting → growing → ready states keeps a single open record.
+// Per-crop seed ledger. Counts seeds spent on planting and seeds returned on
+// harvest, aggregated by crop. Stored as ledger.json next to the plugin DLL.
 //
-// Persisted as ledger.json next to the plugin DLL. Disk writes are debounced
-// via a hidden DontDestroyOnLoad MonoBehaviour so a flurry of harvests doesn't
-// thrash the disk. All file I/O is best-effort — the ledger is observability
+// Independent counters: SeedsIn is incremented at every spend event,
+// SeedsOut at every harvest event. Net is the difference. This avoids the
+// fragility of trying to pair individual plant→harvest cycles, which breaks
+// down on auto-cycling refugee/zombie gardens at high craft speeds.
+//
+// All file I/O is best-effort and non-blocking — the ledger is observability
 // only, never block plant/harvest if writing fails.
 public static class Ledger
 {
-    public sealed class SeedYield
-    {
-        public string Id;
-        public int Qty;
-    }
-
-    public sealed class PlantRecord
-    {
-        public string PositionKey;
-        public string Kind;
-        public string CraftId;
-        public string CropType;
-        public string SeedInId;
-        public int    SeedInQty;
-        public DateTime PlantedAtUtc;
-
-        public List<SeedYield> SeedOut;
-        public DateTime? HarvestedAtUtc;
-        public int Net;
-    }
-
     public sealed class CropTotals
     {
-        public int CyclesCompleted;
+        public int SpendEvents;
+        public int HarvestEvents;
         public int SeedsIn;
         public int SeedsOut;
         public int Net;
     }
 
+    public sealed class EventEntry
+    {
+        public string AtUtc;
+        public string Type;       // "spend" | "harvest"
+        public string Kind;       // player_garden | zombie_garden | zombie_vineyard | refugee_garden
+        public string CropType;
+        public string CraftOrObjId;
+        public string SeedId;
+        public int    Qty;
+        public string PositionKey;
+    }
+
     public sealed class LedgerFile
     {
-        public int Schema = 1;
+        public int Schema = 2;
         public string GeneratedAtUtc;
-        public Dictionary<string, PlantRecord> Open = new();
-        public List<PlantRecord> Closed = new();
         public Dictionary<string, CropTotals> TotalsByCrop = new();
+        public List<EventEntry> RecentEvents = new();
     }
+
+    private const int RecentEventsCap = 250;
 
     private static readonly object Sync = new();
     private static LedgerFile _file;
@@ -69,10 +64,7 @@ public static class Ledger
     {
         get
         {
-            if (!_loaded)
-            {
-                Load();
-            }
+            if (!_loaded) Load();
             return _file;
         }
     }
@@ -84,10 +76,18 @@ public static class Ledger
             if (System.IO.File.Exists(SavePath))
             {
                 var json = System.IO.File.ReadAllText(SavePath);
-                _file = JsonConvert.DeserializeObject<LedgerFile>(json) ?? new LedgerFile();
-                _file.Open ??= new Dictionary<string, PlantRecord>();
-                _file.Closed ??= new List<PlantRecord>();
-                _file.TotalsByCrop ??= new Dictionary<string, CropTotals>();
+                var loaded = JsonConvert.DeserializeObject<LedgerFile>(json);
+                if (loaded != null && loaded.Schema == 2)
+                {
+                    _file = loaded;
+                    _file.TotalsByCrop ??= new Dictionary<string, CropTotals>();
+                    _file.RecentEvents ??= new List<EventEntry>();
+                }
+                else
+                {
+                    LogHelper.Info($"[Ledger] Existing ledger.json is schema {loaded?.Schema ?? 0}, expected 2. Starting fresh — old file will be overwritten on next save.");
+                    _file = new LedgerFile();
+                }
             }
             else
             {
@@ -119,203 +119,136 @@ public static class Ledger
 
     public static string PositionKeyFor(WorldGameObject wgo)
     {
+        if (wgo == null || wgo.transform == null) return string.Empty;
         var p = wgo.transform.position;
         return string.Format(CultureInfo.InvariantCulture, "{0:F1},{1:F1}", p.x, p.y);
     }
 
-    public static string CropTypeFromCraftId(string craftId)
+    // Pulls the crop name out of any of the planting/growing/ready id patterns
+    // by skipping known structural tokens. Examples:
+    //   garden_wheat_planting_1            → wheat
+    //   garden_wheat_growing               → wheat
+    //   garden_wheat_ready_1               → wheat
+    //   garden_wheat_grow_desk_planting    → wheat
+    //   grow_desk_planting_carrot_2        → carrot
+    //   grow_vineyard_planting_grapes_3    → grapes
+    //   refugee_garden_grow_beet           → beet
+    //   refugee_garden_cabbage_grow_desk_planting → cabbage
+    public static string CropTypeFromId(string id)
     {
-        // garden_wheat_planting_1 → wheat
-        // grow_desk_planting_carrot_2 → carrot
-        // grow_vineyard_planting_grapes_3 → grapes
-        // refugee_garden_grow_beet → beet
-        if (string.IsNullOrEmpty(craftId)) return craftId;
-
-        const string growDesk = "grow_desk_planting_";
-        const string growVineyard = "grow_vineyard_planting_";
-        const string refugee = "refugee_garden_grow_";
-
-        if (craftId.StartsWith(growDesk))
+        if (string.IsNullOrEmpty(id)) return id;
+        var parts = id.Split('_');
+        for (var i = 0; i < parts.Length; i++)
         {
-            return TrimTrailingTier(craftId.Substring(growDesk.Length));
+            var p = parts[i];
+            if (string.IsNullOrEmpty(p)) continue;
+            if (p.Length == 1 && char.IsDigit(p[0])) continue;
+            switch (p)
+            {
+                case "garden":
+                case "refugee":
+                case "grow":
+                case "desk":
+                case "vineyard":
+                case "planting":
+                case "growing":
+                case "ready":
+                    continue;
+            }
+            return p;
         }
-        if (craftId.StartsWith(growVineyard))
-        {
-            return TrimTrailingTier(craftId.Substring(growVineyard.Length));
-        }
-        if (craftId.StartsWith(refugee))
-        {
-            return TrimTrailingTier(craftId.Substring(refugee.Length));
-        }
-        if (craftId.StartsWith("garden_"))
-        {
-            // garden_<crop>_planting_N or garden_<crop>_growing
-            var tail = craftId.Substring("garden_".Length);
-            var idx = tail.IndexOf("_planting", StringComparison.Ordinal);
-            if (idx < 0) idx = tail.IndexOf("_growing", StringComparison.Ordinal);
-            return idx > 0 ? tail.Substring(0, idx) : tail;
-        }
-        return craftId;
+        return id;
     }
 
-    private static string TrimTrailingTier(string s)
+    public static string KindFromId(string id)
     {
-        // Strip a trailing "_1", "_2", "_3" tier suffix if present.
-        if (s.Length >= 2 && s[s.Length - 2] == '_' && char.IsDigit(s[s.Length - 1]))
-        {
-            return s.Substring(0, s.Length - 2);
-        }
-        return s;
-    }
-
-    public static string KindFromCraftId(string craftId)
-    {
-        if (string.IsNullOrEmpty(craftId)) return "unknown";
-        if (craftId.Contains("grow_desk_planting")) return "zombie_garden";
-        if (craftId.Contains("grow_vineyard_planting")) return "zombie_vineyard";
-        if (craftId.StartsWith("refugee_garden")) return "refugee_garden";
-        if (craftId.StartsWith("garden")) return "player_garden";
+        if (string.IsNullOrEmpty(id)) return "unknown";
+        if (id.Contains("vineyard")) return "zombie_vineyard";
+        if (id.StartsWith("refugee_garden")) return "refugee_garden";
+        if (id.Contains("grow_desk")) return "zombie_garden";
+        if (id.StartsWith("garden")) return "player_garden";
         return "unknown";
     }
 
-    public static void RecordSpend(WorldGameObject wgo, string craftId, IReadOnlyList<(string id, int qty)> seedNeeds)
+    public static void RecordSpend(WorldGameObject wgo, string sourceId, string seedId, int qty)
     {
-        if (wgo == null || seedNeeds == null || seedNeeds.Count == 0) return;
+        if (qty <= 0) return;
         EnsureSaver();
-
-        var key = PositionKeyFor(wgo);
-        // Plant crafts have a single seed input. If for some reason there are
-        // multiple seed entries (multi-quality combo), sum them and pick the
-        // first id as the primary label — preserves total count without
-        // forcing a more complex schema for a rare case.
-        var totalQty = 0;
-        for (var i = 0; i < seedNeeds.Count; i++)
-        {
-            totalQty += seedNeeds[i].qty;
-        }
-        var primaryId = seedNeeds[0].id;
+        var crop = CropTypeFromId(sourceId);
+        var kind = KindFromId(sourceId);
+        var posKey = PositionKeyFor(wgo);
 
         lock (Sync)
         {
-            var record = new PlantRecord
-            {
-                PositionKey   = key,
-                Kind          = KindFromCraftId(craftId),
-                CraftId       = craftId,
-                CropType      = CropTypeFromCraftId(craftId),
-                SeedInId      = primaryId,
-                SeedInQty     = totalQty,
-                PlantedAtUtc  = DateTime.UtcNow,
-                SeedOut       = null,
-                HarvestedAtUtc = null,
-                Net           = 0
-            };
-            File.Open[key] = record;
+            var totals = GetOrCreate(crop);
+            totals.SpendEvents++;
+            totals.SeedsIn += qty;
+            totals.Net = totals.SeedsOut - totals.SeedsIn;
+            AppendRecent("spend", kind, crop, sourceId, seedId, qty, posKey);
             _dirty = true;
-            if (Plugin.DebugTracking != null && Plugin.DebugTracking.Value)
-            {
-                LogHelper.Info($"[Ledger] spend  pos={key} kind={record.Kind} craft={craftId} seed={primaryId} qty={totalQty}");
-            }
+        }
+
+        if (Plugin.DebugTracking != null && Plugin.DebugTracking.Value)
+        {
+            LogHelper.Info($"[Ledger] spend pos={posKey} kind={kind} crop={crop} src={sourceId} seed={seedId} qty={qty}");
         }
         _saver?.RequestFlush();
     }
 
-    public static void RecordHarvest(WorldGameObject wgo, IEnumerable<(string id, int qty)> outputs, string fallbackCraftId = null)
+    public static void RecordHarvest(WorldGameObject wgo, string sourceId, string seedId, int qty)
     {
-        if (wgo == null || outputs == null) return;
+        if (qty <= 0) return;
         EnsureSaver();
-
-        var key = PositionKeyFor(wgo);
-        var seedYields = new List<SeedYield>();
-        foreach (var (id, qty) in outputs)
-        {
-            if (string.IsNullOrEmpty(id) || qty <= 0) continue;
-            if (!id.Contains("seed")) continue;
-            seedYields.Add(new SeedYield { Id = id, Qty = qty });
-        }
-        if (seedYields.Count == 0) return;
+        var crop = CropTypeFromId(sourceId);
+        var kind = KindFromId(sourceId);
+        var posKey = PositionKeyFor(wgo);
 
         lock (Sync)
         {
-            File.Open.TryGetValue(key, out var open);
-
-            // Cancel detection: a planting craft cancellation refunds the seed
-            // via WorldGameObject.DropItems(craft.needs). If the open record's
-            // seed id+qty exactly matches the dropped items (single seed yield,
-            // same id, same qty), treat it as a cancel and discard the record
-            // without touching totals.
-            if (open != null && seedYields.Count == 1
-                && seedYields[0].Id == open.SeedInId
-                && seedYields[0].Qty == open.SeedInQty)
-            {
-                File.Open.Remove(key);
-                _dirty = true;
-                if (Plugin.DebugTracking != null && Plugin.DebugTracking.Value)
-                {
-                    LogHelper.Info($"[Ledger] cancel pos={key} craft={open.CraftId} seed={open.SeedInId} qty={open.SeedInQty} (refund detected)");
-                }
-                _saver?.RequestFlush();
-                return;
-            }
-
-            var totalOut = 0;
-            for (var i = 0; i < seedYields.Count; i++)
-            {
-                totalOut += seedYields[i].Qty;
-            }
-
-            PlantRecord closed;
-            if (open != null)
-            {
-                File.Open.Remove(key);
-                open.SeedOut = seedYields;
-                open.HarvestedAtUtc = DateTime.UtcNow;
-                open.Net = totalOut - open.SeedInQty;
-                closed = open;
-            }
-            else
-            {
-                // Orphan harvest — no matching plant record. Could be a save
-                // that predates the mod, or a refugee bed that auto-replanted.
-                closed = new PlantRecord
-                {
-                    PositionKey    = key,
-                    Kind           = fallbackCraftId != null ? KindFromCraftId(fallbackCraftId) : "unknown",
-                    CraftId        = fallbackCraftId,
-                    CropType       = fallbackCraftId != null ? CropTypeFromCraftId(fallbackCraftId) : "unknown",
-                    SeedInId       = null,
-                    SeedInQty      = 0,
-                    PlantedAtUtc   = DateTime.MinValue,
-                    SeedOut        = seedYields,
-                    HarvestedAtUtc = DateTime.UtcNow,
-                    Net            = totalOut
-                };
-                if (Plugin.DebugTracking != null && Plugin.DebugTracking.Value)
-                {
-                    LogHelper.Info($"[Ledger] orphan harvest pos={key} craft={fallbackCraftId} totalOut={totalOut}");
-                }
-            }
-
-            File.Closed.Add(closed);
-
-            if (!File.TotalsByCrop.TryGetValue(closed.CropType ?? "unknown", out var totals))
-            {
-                totals = new CropTotals();
-                File.TotalsByCrop[closed.CropType ?? "unknown"] = totals;
-            }
-            totals.CyclesCompleted += 1;
-            totals.SeedsIn  += closed.SeedInQty;
-            totals.SeedsOut += totalOut;
-            totals.Net      = totals.SeedsOut - totals.SeedsIn;
-
+            var totals = GetOrCreate(crop);
+            totals.HarvestEvents++;
+            totals.SeedsOut += qty;
+            totals.Net = totals.SeedsOut - totals.SeedsIn;
+            AppendRecent("harvest", kind, crop, sourceId, seedId, qty, posKey);
             _dirty = true;
+        }
 
-            if (Plugin.DebugTracking != null && Plugin.DebugTracking.Value)
-            {
-                LogHelper.Info($"[Ledger] harvest pos={key} kind={closed.Kind} crop={closed.CropType} in={closed.SeedInQty} out={totalOut} net={closed.Net}");
-            }
+        if (Plugin.DebugTracking != null && Plugin.DebugTracking.Value)
+        {
+            LogHelper.Info($"[Ledger] harvest pos={posKey} kind={kind} crop={crop} src={sourceId} seed={seedId} qty={qty}");
         }
         _saver?.RequestFlush();
+    }
+
+    private static CropTotals GetOrCreate(string crop)
+    {
+        if (!File.TotalsByCrop.TryGetValue(crop, out var t))
+        {
+            t = new CropTotals();
+            File.TotalsByCrop[crop] = t;
+        }
+        return t;
+    }
+
+    private static void AppendRecent(string type, string kind, string crop, string source, string seedId, int qty, string posKey)
+    {
+        File.RecentEvents.Add(new EventEntry
+        {
+            AtUtc        = DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture),
+            Type         = type,
+            Kind         = kind,
+            CropType     = crop,
+            CraftOrObjId = source,
+            SeedId       = seedId,
+            Qty          = qty,
+            PositionKey  = posKey,
+        });
+        // Cap recent log to RecentEventsCap entries (FIFO).
+        var overflow = File.RecentEvents.Count - RecentEventsCap;
+        if (overflow > 0)
+        {
+            File.RecentEvents.RemoveRange(0, overflow);
+        }
     }
 
     private static void EnsureSaver()
@@ -344,10 +277,7 @@ public static class Ledger
 
         public void RequestFlush()
         {
-            if (_flushAt < 0f)
-            {
-                _flushAt = Time.unscaledTime + MinIntervalSeconds;
-            }
+            if (_flushAt < 0f) _flushAt = Time.unscaledTime + MinIntervalSeconds;
         }
 
         private void Update()
@@ -358,9 +288,6 @@ public static class Ledger
             ConsumeDirty();
         }
 
-        private void OnApplicationQuit()
-        {
-            ConsumeDirty();
-        }
+        private void OnApplicationQuit() => ConsumeDirty();
     }
 }

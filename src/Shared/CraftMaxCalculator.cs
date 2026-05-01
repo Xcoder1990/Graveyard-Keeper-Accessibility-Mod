@@ -16,8 +16,10 @@ internal static class CraftMaxCalculator
     // Computes the maximum craftable amount for a recipe, correctly handling
     // multi-quality (starred) ingredients stored per-tier as "id:1"/"id:2"/"id:3".
     // When autoSelectHighestQuality is true, mutates __instance._multiquality_ids
-    // to lock in the preferred star tier (QueueEverything behaviour). Callers that
-    // only want a read-only calculation (e.g. MaxButtonsRedux) must pass false.
+    // to lock in the preferred star tier and returns that tier's max — used by both
+    // QueueEverything (auto-max on craft GUI open) and MaxButtonsRedux (Max button)
+    // so pressing Max mid-window reproduces what the auto-max would set. Pass false
+    // for a true read-only mixed-tier calculation if a caller ever needs that.
     internal static CraftInfo Calculate(CraftItemGUI __instance, MultiInventory multiInventory, bool autoSelectHighestQuality)
     {
         var info = new CraftInfo();

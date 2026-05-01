@@ -11,15 +11,15 @@ public class Plugin : BaseUnityPlugin
         ["00. Advanced"] = AdvancedSection,
     };
 
-    internal static TimestampedLogger LOG { get; private set; }
+    internal static TimestampedLogger Log { get; private set; }
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     private void Awake()
     {
-        LOG = new TimestampedLogger(Logger);
-        LogHelper.Log = LOG;
+        Log = new TimestampedLogger(Logger);
+        LogHelper.Log = Log;
         MigrateRenamedSections();
 
         Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
@@ -37,6 +37,7 @@ public class Plugin : BaseUnityPlugin
                 new ConfigurationManagerAttributes { Order = 0 }));
 
         UpdateChecker.Register(Info, CheckForUpdates);
+        SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
@@ -54,7 +55,7 @@ public class Plugin : BaseUnityPlugin
         }
         catch (Exception ex)
         {
-            LOG.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
+            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
             return;
         }
 
@@ -75,11 +76,11 @@ public class Plugin : BaseUnityPlugin
         }
         catch (Exception ex)
         {
-            LOG.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
+            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
             return;
         }
 
-        LOG.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
+        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
         Config.Reload();
     }
 }

@@ -247,6 +247,23 @@ public static class Patches
         if (!Plugin.DebugEnabled) return;
         if (item == null || string.IsNullOrEmpty(item.id)) return;
 
+        if (item.id == "water")
+        {
+            var wells = new StringBuilder();
+            wells.Append("[IsEnoughItem] wells in pool: ");
+            var wellCount = 0;
+            foreach (var inv in __instance.all)
+            {
+                var subName = inv?.data?.sub_name ?? string.Empty;
+                if (!subName.Contains("well")) continue;
+                var n = inv?.data?.GetTotalCount(item.id, true) ?? 0;
+                wells.Append($"{subName}={n} ");
+                wellCount++;
+            }
+            if (wellCount == 0) wells.Append("(none)");
+            Helpers.Log(wells.ToString());
+        }
+
         var sb = new StringBuilder();
         sb.Append($"[IsEnoughItem] id={item.id} need={item.value * multiplier} used={used_items} dest={destination} mq={multiquality_id} → {__result} | ");
         foreach (var inv in __instance.all)

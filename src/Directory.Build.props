@@ -81,6 +81,7 @@
         <Compile Include="..\Shared\UpdateChecker.cs" Link="UpdateChecker.cs"/>
         <Compile Include="..\Shared\UpdateCheckerUI.cs" Link="UpdateCheckerUI.cs"/>
         <Compile Include="..\Shared\TimestampedLogger.cs" Link="TimestampedLogger.cs"/>
+        <Compile Include="..\Shared\SettingsChangeLogger.cs" Link="SettingsChangeLogger.cs"/>
     </ItemGroup>
 
     <!-- Newtonsoft.Json is required by Shared/UpdateChecker.cs (JsonUtility can't

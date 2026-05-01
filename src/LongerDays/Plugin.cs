@@ -35,6 +35,7 @@ public class Plugin : BaseUnityPlugin
             new ConfigurationManagerAttributes { Order = 0 }));
 
         UpdateChecker.Register(Info, CheckForUpdates);
+        SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 

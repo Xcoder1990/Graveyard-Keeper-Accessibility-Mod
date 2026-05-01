@@ -15,6 +15,7 @@ public class Plugin : BaseUnityPlugin
             "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.");
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
