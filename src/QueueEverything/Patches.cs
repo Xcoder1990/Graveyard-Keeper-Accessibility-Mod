@@ -9,12 +9,22 @@ public static class Patches
     {
         if (!MainGame.game_started) return;
 
-        if (CraftComponentPatches.PendingReapply && Plugin.CcAlreadyRun)
+        if ((CraftComponentPatches.PendingFullReapply || CraftComponentPatches.PendingBenchReapply.Count > 0) && Plugin.CcAlreadyRun)
         {
-            CraftComponentPatches.PendingReapply = false;
             try
             {
-                CraftComponentPatches.ApplyCraftMutations();
+                if (CraftComponentPatches.PendingFullReapply)
+                {
+                    CraftComponentPatches.PendingFullReapply = false;
+                    CraftComponentPatches.PendingBenchReapply.Clear();
+                    CraftComponentPatches.ApplyCraftMutations();
+                }
+                else
+                {
+                    var benches = CraftComponentPatches.PendingBenchReapply.ToArray();
+                    CraftComponentPatches.PendingBenchReapply.Clear();
+                    CraftComponentPatches.ApplyCraftMutationsForBenches(benches);
+                }
             }
             catch (Exception ex)
             {
@@ -34,17 +44,44 @@ public static class Patches
         if (!Plugin.AnyAutoCraftCategoryEnabled()) return;
         if (Plugin.CraftsStarted) return;
 
-        foreach (var wgo in MainGame.me.world.GetComponentsInChildren<WorldGameObject>(true))
+        Plugin.ZombieOccupiedBenches.Clear();
+        foreach (var wgo in WorldMap._objs)
         {
-            if (wgo != null && wgo.components.craft.is_crafting && !wgo.has_linked_worker && wgo.linked_worker == null)
+            if (wgo == null) continue;
+
+            if (wgo.components.craft.is_crafting && !wgo.has_linked_worker && wgo.linked_worker == null)
             {
                 Plugin.CurrentlyCrafting.Add(wgo);
             }
+
+            if (wgo.has_linked_worker && wgo.linked_worker != null && wgo.linked_worker.obj_id.Contains("zombie") && wgo.obj_def != null)
+            {
+                Plugin.ZombieOccupiedBenches.Add(wgo.obj_def.id);
+            }
         }
 
-        if (Plugin.DebugEnabled) Plugin.WriteLog($"[MainGame.Update] initial scan found {Plugin.CurrentlyCrafting.Count} in-flight unmanned crafteries.");
+        if (Plugin.DebugEnabled)
+        {
+            Plugin.WriteLog($"[MainGame.Update] initial scan found {Plugin.CurrentlyCrafting.Count} in-flight unmanned crafteries.");
+            if (Plugin.ZombieOccupiedBenches.Count > 0)
+            {
+                Plugin.WriteLog($"[MainGame.Update] zombie-occupied bench types: {string.Join(", ", Plugin.ZombieOccupiedBenches)}");
+            }
+        }
 
         Plugin.CraftsStarted = true;
+
+        // The first ApplyCraftMutations pass (during FillCraftsList_Postfix) ran without knowing
+        // about these benches — queue a selective reapply for just the discovered bench types so
+        // those crafts get restored to vanilla on the next frame, without touching the other ~1000
+        // unrelated craft definitions.
+        if (Plugin.ZombieOccupiedBenches.Count > 0)
+        {
+            foreach (var benchId in Plugin.ZombieOccupiedBenches)
+            {
+                CraftComponentPatches.PendingBenchReapply.Add(benchId);
+            }
+        }
     }
 
     [HarmonyAfter("p1xel8ted.gyk.fastercraftreloaded")]
@@ -69,6 +106,16 @@ public static class Patches
         {
             if (Plugin.DebugEnabled) Plugin.WriteLog($"Exhaust-less! detected, using its config.");
         }
+
+        // Per-save state must clear between loads. Without this, going Main Menu → Load Save B
+        // after a session on Save A leaves Save A's WGO references in CurrentlyCrafting and
+        // Save A's bench types in ZombieOccupiedBenches, both of which would mis-drive Save B.
+        Plugin.CurrentlyCrafting.Clear();
+        Plugin.ZombieOccupiedBenches.Clear();
+        Plugin.CraftsStarted = false;
+        Plugin.CcAlreadyRun = false;
+        CraftComponentPatches.PendingFullReapply = false;
+        CraftComponentPatches.PendingBenchReapply.Clear();
     }
 
 
@@ -107,7 +154,7 @@ public static class Patches
             ? MainGame.me.player.GetMultiInventoryForInteraction()
             : GUIElements.me.craft.multi_inventory;
 
-        var craftInfo = Shared.CraftMaxCalculator.Calculate(__instance, multiInventory, Plugin.AutoSelectHighestQualRecipe.Value);
+        var craftInfo = CraftMaxCalculator.Calculate(__instance, multiInventory, Plugin.AutoSelectHighestQualRecipe.Value);
 
         if (Plugin.AutoMaxMultiQualCrafts.Value && craftInfo.IsMultiQualCraft)
         {
@@ -120,6 +167,61 @@ public static class Patches
             __instance._amount = craftInfo.Min;
             if (Plugin.DebugEnabled) Plugin.WriteLog($"[Redraw] {__instance.craft_definition.id}: auto-max normal → _amount={craftInfo.Min}");
         }
+    }
+
+    // Reactive update for ZombieOccupiedBenches when the player assigns or unassigns a worker.
+    // The initial scan in MainGame_Update covers what's loaded from save; this covers everything
+    // after, so reassigning a zombie mid-session no longer needs a save/reload to take effect.
+    // Gated on Plugin.CraftsStarted so the linked_worker writes the game does during world load
+    // are ignored — those are already aggregated into the initial scan.
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.linked_worker), MethodType.Setter)]
+    public static void WorldGameObject_linked_worker_Setter_Postfix(WorldGameObject __instance)
+    {
+        if (!MainGame.game_started) return;
+        if (!Plugin.CraftsStarted) return;
+        if (__instance?.obj_def == null) return;
+
+        var benchId = __instance.obj_def.id;
+        if (string.IsNullOrEmpty(benchId)) return;
+
+        var hasZombieNow = IsZombieLinked(__instance);
+
+        if (hasZombieNow)
+        {
+            if (Plugin.ZombieOccupiedBenches.Add(benchId))
+            {
+                if (Plugin.DebugEnabled) Plugin.WriteLog($"[ZombieLink] {benchId} now zombie-occupied → selective reapply queued");
+                CraftComponentPatches.PendingBenchReapply.Add(benchId);
+            }
+            return;
+        }
+
+        if (!Plugin.ZombieOccupiedBenches.Contains(benchId)) return;
+
+        // The instance just lost its zombie. The TYPE only leaves the set if no peer instance
+        // of the same obj_def.id still has a zombie linked — otherwise we'd unblock auto-craft
+        // on a craft that's still being run by a zombie elsewhere.
+        foreach (var wgo in WorldMap._objs)
+        {
+            if (wgo == null || wgo == __instance) continue;
+            if (wgo.obj_def?.id != benchId) continue;
+            if (IsZombieLinked(wgo)) return;
+        }
+
+        if (Plugin.ZombieOccupiedBenches.Remove(benchId))
+        {
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"[ZombieLink] {benchId} no longer zombie-occupied (no peers) → selective reapply queued");
+            CraftComponentPatches.PendingBenchReapply.Add(benchId);
+        }
+    }
+
+    private static bool IsZombieLinked(WorldGameObject wgo)
+    {
+        return wgo.has_linked_worker
+               && wgo.linked_worker != null
+               && wgo.linked_worker.obj_id != null
+               && wgo.linked_worker.obj_id.Contains("zombie");
     }
 
 }
@@ -139,7 +241,9 @@ public static class CraftComponentPatches
         public Dictionary<int, int> FireNeedValues;
         public Dictionary<int, int> ResearchOutputValues;
 
-        public bool IsUnsafe;
+        // IsUnsafe is recomputed per apply via Plugin.IsUnsafeDefinition(craft) — the zombie-bench
+        // set is populated AFTER this snapshot is captured, so caching the value here would lock
+        // in the wrong answer for the second apply pass.
         public CraftCategory Category;
         public SmartExpression CachedAutoCraftTime;
     }
@@ -148,7 +252,16 @@ public static class CraftComponentPatches
     private static readonly HashSet<string> WarnedUncategorized = new(StringComparer.Ordinal);
     private static readonly SmartExpression ZeroEnergyExpr = SmartExpression.ParseExpression("0");
 
-    internal static bool PendingReapply;
+    // Two-state reapply queue:
+    //  - PendingFullReapply: a config change happened, every craft's mutation state must be
+    //    re-evaluated. Wins over PendingBenchReapply.
+    //  - PendingBenchReapply: bench obj_def.ids whose zombie-occupancy flipped. Only the crafts
+    //    that reference one of these benches need re-evaluating; the rest are unchanged. ~1ms
+    //    instead of ~5ms across the ~1000 craft definitions.
+    // The drain in MainGame_Update postfix runs at most once per frame regardless of how many
+    // triggers fire — natural debouncing for rapid zombie reassignments.
+    internal static bool PendingFullReapply;
+    internal static readonly HashSet<string> PendingBenchReapply = new(StringComparer.Ordinal);
 
     [HarmonyPostfix, HarmonyPatch(nameof(CraftComponent.FillCraftsList))]
     public static void FillCraftsList_Postfix()
@@ -180,7 +293,6 @@ public static class CraftComponentPatches
                 DisableMultiCraft = craft.disable_multi_craft,
                 FireNeedValues = null,
                 ResearchOutputValues = null,
-                IsUnsafe = Plugin.IsUnsafeDefinition(craft),
                 Category = CraftCategories.Classify(craft.craft_in),
                 CachedAutoCraftTime = null,
             };
@@ -214,52 +326,83 @@ public static class CraftComponentPatches
         if (!Plugin.CcAlreadyRun) return;
 
         var startTicks = Stopwatch.GetTimestamp();
-
-        var converted = 0;
-        var skippedAutoAlready = 0;
-        var skippedUnsafe = 0;
-        var skippedCategoryOff = 0;
-        var halved = 0;
-        var fireAdjusted = 0;
-        var forcedMulti = 0;
+        var counters = default(ApplyCounters);
+        var visited = 0;
 
         foreach (var craft in GameBalance.me.craft_data)
         {
-            if (craft == null || !Snapshots.TryGetValue(craft.id, out var snap))
-            {
-                continue;
-            }
-
-            RestoreFromSnapshot(craft, snap);
-
-            if (TryAdjustFireRequirements(craft))
-            {
-                fireAdjusted++;
-            }
-
-            if (TryApplyForcedMultiCraft(craft, snap))
-            {
-                forcedMulti++;
-            }
-
-            var result = TryMakeCraftAuto(craft, snap);
-            switch (result)
-            {
-                case AutoResult.Converted: converted++; break;
-                case AutoResult.AlreadyAuto: skippedAutoAlready++; break;
-                case AutoResult.Unsafe: skippedUnsafe++; break;
-                case AutoResult.CategoryDisabled: skippedCategoryOff++; break;
-            }
-
-            if (result == AutoResult.Converted && TryAdjustCraftOutput(craft))
-            {
-                halved++;
-            }
+            if (craft == null || !Snapshots.TryGetValue(craft.id, out var snap)) continue;
+            ApplyOne(craft, snap, ref counters);
+            visited++;
         }
 
         var elapsedMs = (Stopwatch.GetTimestamp() - startTicks) * 1000.0 / Stopwatch.Frequency;
         Plugin.Log.LogInfo(
-            $"[ApplyCraftMutations] elapsed={elapsedMs:F2}ms converted={converted} halved={halved} fireAdjusted={fireAdjusted} forcedMulti={forcedMulti} skipped(alreadyAuto={skippedAutoAlready}, unsafe={skippedUnsafe}, categoryOff={skippedCategoryOff})");
+            $"[ApplyCraftMutations] elapsed={elapsedMs:F2}ms visited={visited} converted={counters.Converted} halved={counters.Halved} fireAdjusted={counters.FireAdjusted} forcedMulti={counters.ForcedMulti} skipped(alreadyAuto={counters.SkippedAutoAlready}, unsafe={counters.SkippedUnsafe}, categoryOff={counters.SkippedCategoryOff})");
+    }
+
+    // Selective variant: revisits only the crafts whose craft_in references one of the supplied
+    // bench obj_def.ids. Used when a zombie attaches/detaches — most craft definitions don't care
+    // about that bench, so paying the full ~1000-craft loop wastes ~5ms of frame time. Restoring
+    // from snapshot first means a craft that was previously auto-converted (because the bench
+    // wasn't yet known to be zombie-occupied) gets correctly reverted to vanilla on detach.
+    internal static void ApplyCraftMutationsForBenches(IReadOnlyCollection<string> benchIds)
+    {
+        if (!Plugin.CcAlreadyRun) return;
+        if (benchIds == null || benchIds.Count == 0) return;
+
+        var startTicks = Stopwatch.GetTimestamp();
+        var counters = default(ApplyCounters);
+        var visited = 0;
+
+        foreach (var craft in GameBalance.me.craft_data)
+        {
+            if (craft == null || !Snapshots.TryGetValue(craft.id, out var snap)) continue;
+            if (craft.craft_in == null || craft.craft_in.Count == 0) continue;
+
+            var matches = false;
+            foreach (var bench in craft.craft_in)
+            {
+                if (benchIds.Contains(bench)) { matches = true; break; }
+            }
+            if (!matches) continue;
+
+            ApplyOne(craft, snap, ref counters);
+            visited++;
+        }
+
+        var elapsedMs = (Stopwatch.GetTimestamp() - startTicks) * 1000.0 / Stopwatch.Frequency;
+        Plugin.Log.LogInfo(
+            $"[ApplyCraftMutations:Selective] benches=[{string.Join(",", benchIds)}] elapsed={elapsedMs:F2}ms visited={visited} converted={counters.Converted} halved={counters.Halved} fireAdjusted={counters.FireAdjusted} forcedMulti={counters.ForcedMulti} skipped(alreadyAuto={counters.SkippedAutoAlready}, unsafe={counters.SkippedUnsafe}, categoryOff={counters.SkippedCategoryOff})");
+    }
+
+    private struct ApplyCounters
+    {
+        public int Converted;
+        public int Halved;
+        public int FireAdjusted;
+        public int ForcedMulti;
+        public int SkippedAutoAlready;
+        public int SkippedUnsafe;
+        public int SkippedCategoryOff;
+    }
+
+    private static void ApplyOne(CraftDefinition craft, CraftSnapshot snap, ref ApplyCounters c)
+    {
+        RestoreFromSnapshot(craft, snap);
+        if (TryAdjustFireRequirements(craft)) c.FireAdjusted++;
+        if (TryApplyForcedMultiCraft(craft, snap)) c.ForcedMulti++;
+
+        var result = TryMakeCraftAuto(craft, snap);
+        switch (result)
+        {
+            case AutoResult.Converted: c.Converted++; break;
+            case AutoResult.AlreadyAuto: c.SkippedAutoAlready++; break;
+            case AutoResult.Unsafe: c.SkippedUnsafe++; break;
+            case AutoResult.CategoryDisabled: c.SkippedCategoryOff++; break;
+        }
+
+        if (result == AutoResult.Converted && TryAdjustCraftOutput(craft)) c.Halved++;
     }
 
     private enum AutoResult { Converted, AlreadyAuto, Unsafe, CategoryDisabled }
@@ -312,7 +455,7 @@ public static class CraftComponentPatches
 
     private static bool TryApplyForcedMultiCraft(CraftDefinition craft, CraftSnapshot snap)
     {
-        if (!Plugin.ForceMultiCraft.Value || snap.IsAuto || snap.IsUnsafe) return false;
+        if (!Plugin.ForceMultiCraft.Value || snap.IsAuto || Plugin.IsUnsafeDefinition(craft)) return false;
 
         craft.force_multi_craft = true;
         craft.disable_multi_craft = false;
@@ -322,7 +465,7 @@ public static class CraftComponentPatches
     private static AutoResult TryMakeCraftAuto(CraftDefinition craft, CraftSnapshot snap)
     {
         if (snap.IsAuto) return AutoResult.AlreadyAuto;
-        if (snap.IsUnsafe) return AutoResult.Unsafe;
+        if (Plugin.IsUnsafeDefinition(craft)) return AutoResult.Unsafe;
 
         WarnIfUncategorized(craft, snap);
 

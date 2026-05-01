@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.14 | 30 April 2026
+
+- Fixed zombies dropping their crafted items on the ground next to the workbench instead of into a nearby trunk when they were assigned to anvils, cooking tables, or other regular human workbenches
+- Log messages now include timestamps for easier bug reporting
+
 ## 2.1.13 | 27 April 2026
 
 - Fixed Chinese translations not loading

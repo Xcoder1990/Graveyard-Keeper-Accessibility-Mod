@@ -26,10 +26,22 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
-    internal static ManualLogSource Log { get; private set; }
+    internal static TimestampedLogger Log { get; private set; }
 
     internal static readonly List<WorldGameObject> CurrentlyCrafting = [];
 
+    // obj_def.id of human workbenches (anvils, cooking tables, etc.) that have a linked zombie
+    // worker as of the current save load. Populated once by the MainGame.Update initial-scan
+    // (Patches.cs) and consulted by IsUnsafeDefinition so any craft whose craft_in references a
+    // zombie-occupied bench stays out of auto/force-multi conversion. Mid-session reassignments
+    // require a save/reload to take effect — accepted trade-off for safety.
+    internal static readonly HashSet<string> ZombieOccupiedBenches = new(StringComparer.Ordinal);
+
+    // Multi-output multi-quality crafts (steel chisels, carved busts) where the recipe
+    // produces more than one item per craft AND uses starred ingredients. The CraftMaxCalculator
+    // mutates _multiquality_ids to lock in the highest available star tier, but the multi-output
+    // post-craft path doesn't compose with that mutation — the GUI ends up reporting "don't have
+    // items" for stocks the player clearly has. Confirmed Apr 2026 (user report on Nexus).
     internal static readonly string[] MultiOutCantQueue =
     [
         "chisel_2_2b", "marble_plate_3"
@@ -72,8 +84,8 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-        Log = Logger;
-        LogHelper.Log = Logger;
+        Log = new TimestampedLogger(Logger);
+        LogHelper.Log = Log;
         ConfigMigration.MigrateRenamedKeys(Config, Log,
             new ConfigMigration.KeyRename(AutoCraftSection, "Enable Auto-Craft", "Auto-Craft"));
         InitConfiguration();
@@ -214,7 +226,7 @@ public class Plugin : BaseUnityPlugin
             WriteLog($"[OnCraftSettingChanged] '{changedKey}' changed — queued for next-frame re-apply.");
         }
 
-        CraftComponentPatches.PendingReapply = true;
+        CraftComponentPatches.PendingFullReapply = true;
     }
 
     internal static bool IsUnsafeDefinition(CraftDefinition _craftDefinition)
@@ -224,8 +236,13 @@ public class Plugin : BaseUnityPlugin
         var unsafeOne = UnSafeCraftDefPartials.Any(_craftDefinition.id.Contains);
         var unsafeTwo = !_craftDefinition.icon.Contains("fire") && _craftDefinition.craft_in.Any(craftIn => UnSafeCraftObjects.Contains(craftIn));
         var unsafeThree = MultiOutCantQueue.Any(_craftDefinition.id.Contains);
+        // Catches human workbenches the player has assigned a zombie to — anvil, cooking table,
+        // carpenter's bench, etc. Without this the craft gets converted to auto and the game's
+        // zombie-completion path delivers outputs to the ground instead of the linked storage.
+        var zombieOccupied = ZombieOccupiedBenches.Count > 0 &&
+                             _craftDefinition.craft_in.Any(craftIn => ZombieOccupiedBenches.Contains(craftIn));
 
-        if (zombieCraft || refugeeCraft || unsafeOne || unsafeTwo || unsafeThree)
+        if (zombieCraft || refugeeCraft || unsafeOne || unsafeTwo || unsafeThree || zombieOccupied)
         {
             return true;
         }
