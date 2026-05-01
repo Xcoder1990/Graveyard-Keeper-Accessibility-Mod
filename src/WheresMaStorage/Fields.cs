@@ -69,7 +69,32 @@ public static class Fields
     internal static readonly Dictionary<WorldGameObject, MultiInventory> WildernessMultiInventories = new();
     internal static readonly List<Inventory> WildernessInventories = [];
 
-    internal static bool InventoriesLoaded { get; set; }
+    // Item -> world position lookup populated during LoadInventories. Inventory._data is the same
+    // Item instance held by the owning WorldGameObject's data, so this gives the sort step a way
+    // to recover the WGO's world position without the Inventory class having a back-reference.
+    // Cleared/refilled on every LoadInventories pass, same lifecycle as Fields.Mi.
+    internal static readonly Dictionary<Item, Vector3> InventoryPositions = new();
+
+    private static bool _inventoriesLoaded;
+
+    // Setting InventoriesLoaded — either direction — clears LoadInventoriesCoroutine.
+    // true ("just finished") and false ("stale, refresh allowed") both imply no coroutine should
+    // be considered in-flight. Keeps the in-flight invariant in one place instead of paired with
+    // every InventoriesLoaded=false call site.
+    internal static bool InventoriesLoaded
+    {
+        get => _inventoriesLoaded;
+        set
+        {
+            _inventoriesLoaded = value;
+            LoadInventoriesCoroutine = null;
+        }
+    }
+
+    // Non-null while a LoadInventories coroutine is pending. Prevents Plugin.Update from re-firing
+    // RunWmsTasks every frame when InventoriesLoaded is false (e.g. a save where the coroutine
+    // threw and never reached the end of LoadInventories where the flag flips to true).
+    internal static Coroutine LoadInventoriesCoroutine { get; set; }
     public static bool DropsCleaned { get; set; }
 
     // Debounce flags drained once per frame in Plugin.Update. SettingChanged fires

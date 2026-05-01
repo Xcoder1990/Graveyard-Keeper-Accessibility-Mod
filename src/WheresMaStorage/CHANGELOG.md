@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.1.16 | 30 April 2026
+
+- Fixed building options being greyed out at the Refugee Camp build desk
+- Stopped the BepInEx log filling up with repeated inventory-reload notices on some saves
+- Crafts now pull ingredients from the closest storage first instead of by zone discovery order. Toggle off under Inventory if you preferred the previous order
+- Log messages now include timestamps for easier bug reporting
+
 ## 2.1.15 | 27 April 2026
 
 - Fixed a crash during the game-load loot sweep that could leave the mod in a broken state until the next restart

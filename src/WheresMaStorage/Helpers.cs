@@ -8,11 +8,12 @@ public static class Helpers
 
     internal static void RunWmsTasks()
     {
-        Plugin.Log.LogInfo("Running WMS Tasks as the Player has spawned in or a new chest/craft has been built.");
         if (!MainGame.game_started) return;
 
+        if (Plugin.DebugEnabled) Plugin.Log.LogInfo("Running WMS Tasks (player spawned in or a new chest/craft was built/destroyed).");
+
         MainGame.me.StartCoroutine(Invents.LoadWildernessInventories());
-        MainGame.me.StartCoroutine(Invents.LoadInventories());
+        Fields.LoadInventoriesCoroutine = MainGame.me.StartCoroutine(Invents.LoadInventories());
 
         if (Plugin.CollectDropsOnGameLoad.Value && !Fields.DropsCleaned)
         {

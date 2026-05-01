@@ -22,7 +22,7 @@ public class Plugin : BaseUnityPlugin
         ["6. UI"] = UISection,
     };
 
-    internal static ManualLogSource Log { get; private set; }
+    internal static TimestampedLogger Log { get; private set; }
     internal static bool DebugEnabled;
     internal static ConfigEntry<bool> ModifyInventorySize { get; private set; }
     internal static ConfigEntry<bool> EnableGraveItemStacking { get; private set; }
@@ -38,6 +38,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<KeyboardShortcut> DebugTagScanKeybind { get; private set; }
     internal static ConfigEntry<float> DebugTagScanRadius { get; private set; }
     internal static ConfigEntry<bool> SharedInventory { get; private set; }
+    internal static ConfigEntry<bool> SortByDistanceFromCrafter { get; private set; }
     internal static ConfigEntry<bool> ExcludeWellsFromSharedInventory { get; private set; }
     internal static ConfigEntry<bool> ExcludeZombieMillFromSharedInventory { get; private set; }
     internal static ConfigEntry<bool> ExcludeQuarryFromSharedInventory { get; private set; }
@@ -71,8 +72,8 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-        Log = Logger;
-        LogHelper.Log = Logger;
+        Log = new TimestampedLogger(Logger);
+        LogHelper.Log = Log;
         MigrateRenamedSections();
         InitConfiguration();
         MigrateLegacySlider();
@@ -188,6 +189,12 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription("Enable or disable excluding the quarry from shared inventory.", null,
                 new ConfigurationManagerAttributes {Order = 96, DispName = "    └ Exclude Quarry"}));
         ExcludeQuarryFromSharedInventory.SettingChanged += (_, _) => Fields.InventoriesLoaded = false;
+
+        SortByDistanceFromCrafter = Config.Bind(InventorySection, "Sort By Distance From Crafter", true,
+            new ConfigDescription(
+                "When on, crafts pull ingredients from the closest storage first. When off, ordering follows the game's zone discovery order and per-object priority — which can mean a far chest gets drained before a nearby one.",
+                null,
+                new ConfigurationManagerAttributes {Order = 95, DispName = "    └ Sort By Distance From Crafter"}));
 
         ModifyInventorySize = Config.Bind(InventorySection, "Modify Inventory Size", true,
             new ConfigDescription("Enable or disable modifying the inventory size for the player and chests.", null,
@@ -399,7 +406,7 @@ public class Plugin : BaseUnityPlugin
         Helpers.ApplyPlayerInventorySize();
 
         if (Fields.InventoriesLoaded) return;
-        Log.LogInfo("Refreshing inventories...");
+        if (Fields.LoadInventoriesCoroutine != null) return;
         Helpers.RunWmsTasks();
     }
 }

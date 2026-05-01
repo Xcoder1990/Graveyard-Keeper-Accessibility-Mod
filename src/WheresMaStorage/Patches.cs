@@ -162,12 +162,17 @@ public static class Patches
         var isZombieMill = worldZoneId.Contains("zombie_mill");
         var isBuilder = __instance.obj_def.interaction_type == ObjectDefinition.InteractionType.Builder;
 
-        // Build desks (apiary, mining, garden, etc.) must always receive the shared pool —
-        // their obj_id can incidentally match the substring filter (e.g. apiary contains "bee")
-        // even though the filter is meant for passive production containers like the beehives themselves.
-        if (!isBuilder && Fields.AlwaysSkipInventories.Any(skipItem => objId.Contains(skipItem) || objDefId.Contains(skipItem) || worldZoneId.Contains(skipItem)))
+        // Build desks (apiary, mining, garden, etc.) must always receive the shared pool when the
+        // SKIP MATCH IS ON THE OBJ_ID (e.g. apiary's id contains "bee"). But a zone-level match
+        // (e.g. refugees_camp) signals an isolated zone whose contents must NOT leak into the
+        // shared pool — and refugee-camp builds need refugee-only items that vanilla's
+        // force_world_zone lookup returns. So the builder bypass only covers obj/def-substring
+        // noise, never zone isolation.
+        var objOrDefMatchesSkip = Fields.AlwaysSkipInventories.Any(s => objId.Contains(s) || objDefId.Contains(s));
+        var zoneMatchesSkip = Fields.AlwaysSkipInventories.Any(s => worldZoneId.Contains(s));
+        if (zoneMatchesSkip || (!isBuilder && objOrDefMatchesSkip))
         {
-            if (Plugin.DebugEnabled) Helpers.Log($"[GetMultiInventory] skip (AlwaysSkipInventories match) obj={objId} zone={worldZoneId}");
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMultiInventory] skip (AlwaysSkipInventories match: zone={zoneMatchesSkip} objOrDef={objOrDefMatchesSkip} isBuilder={isBuilder}) obj={objId} zone={worldZoneId}");
             return true;
         }
 
@@ -207,11 +212,18 @@ public static class Patches
             return true;
         }
 
-        var inv = Invents.GetMiInventory(objId, worldZoneId);
+        var inv = Invents.GetMiInventory(objId, worldZoneId, __instance.pos3);
         __result = inv;
 
         if (Plugin.DebugEnabled) Helpers.Log($"[GetMultiInventory] injected shared multi ({inv.all.Count} inventories) for obj={objId} zone={worldZoneId}");
         return false;
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.GetMultiInventoryForInteraction))]
+    public static void WorldGameObject_GetMultiInventoryForInteraction()
+    {
+        
     }
 
 
@@ -220,6 +232,66 @@ public static class Patches
     public static void WorldMap_GetWorldGameObjectsByComparator(ref bool log_if_not_found)
     {
         log_if_not_found = false;
+    }
+
+    // Diagnostic: report whether the multi-inventory the game just queried actually contains
+    // the requested item, and which inventory holds it. Catches cases where the shared pool
+    // is injected but the source the user expects (e.g. Vineyard Trunk for cross-zone grape
+    // pulls at the Zombie Winery) isn't actually in the pool.
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MultiInventory), nameof(MultiInventory.IsEnoughItem))]
+    public static void MultiInventory_IsEnoughItem(
+        MultiInventory __instance, Item item, MultiInventory.DestinationType destination,
+        string multiquality_id, int used_items, int multiplier, bool __result)
+    {
+        if (!Plugin.DebugEnabled) return;
+        if (item == null || string.IsNullOrEmpty(item.id)) return;
+
+        var sb = new StringBuilder();
+        sb.Append($"[IsEnoughItem] id={item.id} need={item.value * multiplier} used={used_items} dest={destination} mq={multiquality_id} → {__result} | ");
+        foreach (var inv in __instance.all)
+        {
+            var n = inv?.data?.GetTotalCount(item.id, true) ?? 0;
+            if (n > 0) sb.Append($"{inv?.data?.sub_name ?? "?"}={n} ");
+        }
+        Helpers.Log(sb.ToString());
+    }
+
+    // Snapshot per-inventory counts before the pull so the postfix can subtract and show
+    // which inventory or inventories actually supplied the items.
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(MultiInventory), nameof(MultiInventory.RemoveItem),
+        typeof(Item), typeof(int), typeof(MultiInventory.DestinationType))]
+    public static void MultiInventory_RemoveItem_Prefix(
+        MultiInventory __instance, Item item, ref Dictionary<int, int> __state)
+    {
+        if (!Plugin.DebugEnabled || item == null || string.IsNullOrEmpty(item.id)) return;
+        __state = new Dictionary<int, int>(__instance.all.Count);
+        for (var i = 0; i < __instance.all.Count; i++)
+        {
+            __state[i] = __instance.all[i]?.data?.GetTotalCount(item.id, true) ?? 0;
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MultiInventory), nameof(MultiInventory.RemoveItem),
+        typeof(Item), typeof(int), typeof(MultiInventory.DestinationType))]
+    public static void MultiInventory_RemoveItem_Postfix(
+        MultiInventory __instance, Item item, int count, MultiInventory.DestinationType destination,
+        bool __result, Dictionary<int, int> __state)
+    {
+        if (!Plugin.DebugEnabled || item == null || __state == null) return;
+
+        var sb = new StringBuilder();
+        sb.Append($"[RemoveItem] id={item.id} count={count} dest={destination} → {__result} | ");
+        for (var i = 0; i < __instance.all.Count; i++)
+        {
+            var before = __state.TryGetValue(i, out var b) ? b : 0;
+            var after = __instance.all[i]?.data?.GetTotalCount(item.id, true) ?? 0;
+            var delta = before - after;
+            if (delta != 0) sb.Append($"{__instance.all[i]?.data?.sub_name ?? "?"}=-{delta} ");
+        }
+        Helpers.Log(sb.ToString());
     }
 
     [HarmonyPostfix]
@@ -292,9 +364,13 @@ public static class Patches
         var crafteryWzId = crafteryWGO.GetMyWorldZoneId();
         var isBuilder = crafteryWGO.obj_def.interaction_type == ObjectDefinition.InteractionType.Builder;
 
-        if (!isBuilder && Fields.AlwaysSkipInventories.Any(a => crafteryObjId.Contains(a) || crafteryObjDefId.Contains(a) || crafteryWzId.Contains(a)))
+        // Same split as WorldGameObject_GetMultiInventory: builder bypass for obj/def-substring
+        // collisions only, NEVER for zone-isolation entries like refugees_camp.
+        var objOrDefMatchesSkip = Fields.AlwaysSkipInventories.Any(a => crafteryObjId.Contains(a) || crafteryObjDefId.Contains(a));
+        var zoneMatchesSkip = Fields.AlwaysSkipInventories.Any(a => crafteryWzId.Contains(a));
+        if (zoneMatchesSkip || (!isBuilder && objOrDefMatchesSkip))
         {
-            if (Plugin.DebugEnabled) Helpers.Log($"[BaseCraftGUI] skip (AlwaysSkipInventories match) obj={crafteryObjId} zone={crafteryWzId}");
+            if (Plugin.DebugEnabled) Helpers.Log($"[BaseCraftGUI] skip (AlwaysSkipInventories match: zone={zoneMatchesSkip} objOrDef={objOrDefMatchesSkip} isBuilder={isBuilder}) obj={crafteryObjId} zone={crafteryWzId}");
             return;
         }
 
@@ -323,7 +399,7 @@ public static class Patches
             return;
         }
 
-        __result = Invents.GetMiInventory($"[BaseCraftGUI.multi_inventory (Getter)]: {instanceName}, Craftery: {crafteryObjId}", crafteryWGO.GetMyWorldZoneId());
+        __result = Invents.GetMiInventory($"[BaseCraftGUI.multi_inventory (Getter)]: {instanceName}, Craftery: {crafteryObjId}", crafteryWGO.GetMyWorldZoneId(), crafteryWGO.pos3);
         if (Plugin.DebugEnabled) Helpers.Log($"[BaseCraftGUI] injected shared multi ({__result.all.Count} inventories) panel={instanceName} obj={crafteryObjId} zone={crafteryWzId}");
     }
 
