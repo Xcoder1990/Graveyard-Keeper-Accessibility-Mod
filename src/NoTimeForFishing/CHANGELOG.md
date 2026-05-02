@@ -2,6 +2,7 @@
 
 ## 3.2.10 | 1 May 2026
 
+- Added a Rare Fish Catch Rate setting for gold-tier fish (gold fish, gold salmon, gold sturgeon, gold crucian)
 - Log messages now include timestamps for easier bug reporting
 - Setting changes are now logged for easier bug reporting
 
