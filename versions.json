@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-05-03T16:31:59Z",
-  "generated_by": "update-manifest.yml@52e6022d",
+  "generated_at": "2026-05-04T16:54:36Z",
+  "generated_by": "update-manifest.yml@32a5d92d",
   "game_domain": "graveyardkeeper",
   "mods": [
     {
@@ -188,11 +188,11 @@
       "plugin_guid": "p1xel8ted.gyk.longerdays",
       "nexus_mod_id": 53,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/53",
-      "latest_version": "",
-      "latest_file_id": 0,
-      "latest_file_name": "",
-      "uploaded_unix": 0,
-      "status": "error"
+      "latest_version": "1.6.11",
+      "latest_file_id": 1142,
+      "latest_file_name": "Longer Days",
+      "uploaded_unix": 1777879126,
+      "status": "ok"
     },
     {
       "plugin_guid": "p1xel8ted.gyk.maxbuttonsredux",
@@ -318,20 +318,20 @@
       "plugin_guid": "p1xel8ted.gyk.thoughtfulreminders",
       "nexus_mod_id": 52,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/52",
-      "latest_version": "2.2.12",
-      "latest_file_id": 1137,
+      "latest_version": "2.2.13",
+      "latest_file_id": 1143,
       "latest_file_name": "Thoughtful Reminders",
-      "uploaded_unix": 1777799765,
+      "uploaded_unix": 1777880311,
       "status": "ok"
     },
     {
       "plugin_guid": "p1xel8ted.gyk.treesnomore",
       "nexus_mod_id": 50,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/50",
-      "latest_version": "2.5.13",
-      "latest_file_id": 1138,
+      "latest_version": "2.5.14",
+      "latest_file_id": 1144,
       "latest_file_name": "Trees No More",
-      "uploaded_unix": 1777799780,
+      "uploaded_unix": 1777880328,
       "status": "ok"
     },
     {
@@ -358,10 +358,10 @@
       "plugin_guid": "p1xel8ted.gyk.wheresmaveggies",
       "nexus_mod_id": 76,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/76",
-      "latest_version": "0.1.10",
-      "latest_file_id": 1140,
+      "latest_version": "0.1.11",
+      "latest_file_id": 1145,
       "latest_file_name": "Wheres Ma Veggies",
-      "uploaded_unix": 1777799805,
+      "uploaded_unix": 1777880354,
       "status": "ok"
     }
   ]
