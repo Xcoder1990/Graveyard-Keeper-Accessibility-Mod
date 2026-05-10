@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.16 | 10 May 2026
+
+- Added a dedicated Gold Nugget Multiplier so you can boost just gold without scaling every other ore
+
 ## 1.2.15 | 3 May 2026
 
 - New "Water Output Multiplier" to scale the water you get from wells

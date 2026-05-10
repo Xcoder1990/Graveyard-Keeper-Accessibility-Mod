@@ -40,6 +40,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<float> GreenTechPointMultiplier { get; private set; }
     internal static ConfigEntry<float> BlueTechPointMultiplier { get; private set; }
     internal static ConfigEntry<float> WaterOutputMultiplier { get; private set; }
+    internal static ConfigEntry<float> NuggetGoldMultiplier { get; private set; }
 
     // ── Categories ── (gates which item groups the Resource Multiplier touches)
     internal static ConfigEntry<bool> MultiplySticks { get; private set; }
@@ -189,6 +190,12 @@ public class Plugin : BaseUnityPlugin
                 new AcceptableValueRange<float>(1f, 50f),
                 new ConfigurationManagerAttributes {Order = 91}));
 
+        NuggetGoldMultiplier = Config.Bind(MultipliersSection, "Gold Nugget Multiplier", 1f,
+            new ConfigDescription(
+                "Multiplies gold nuggets that drop from mining gold ore deposits. 1 = vanilla. Use this to boost gold without scaling every other ore in the Multiply Ores category. Independent of the Multiply Ores toggle.",
+                new AcceptableValueRange<float>(1f, 50f),
+                new ConfigurationManagerAttributes {Order = 90}));
+
         // ── 3. Categories ──
         MultiplySticks = Config.Bind(CategoriesSection, "Multiply Sticks", true,
             new ConfigDescription(
@@ -216,7 +223,7 @@ public class Plugin : BaseUnityPlugin
 
         MultiplyOres = Config.Bind(CategoriesSection, "Multiply Ores", true,
             new ConfigDescription(
-                "On: ore blocks, stone plates, marble plates, clay, coal, sulfur, silver/gold nuggets, graphite, faceted diamonds, sand and lifestone get multiplied. Off: vanilla.",
+                "On: ore blocks, stone plates, marble plates, clay, coal, sulfur, silver/gold nuggets, graphite, faceted diamonds, sand and lifestone get multiplied. Off: vanilla. Gold nuggets also have their own dedicated Gold Nugget Multiplier in the Multipliers section if you want to boost just gold without scaling the rest of the ores.",
                 null,
                 new ConfigurationManagerAttributes {Order = 96}));
 

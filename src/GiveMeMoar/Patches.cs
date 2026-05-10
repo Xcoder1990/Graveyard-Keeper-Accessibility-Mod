@@ -419,6 +419,27 @@ public static class Patches
             // gets scaled by ResourceMultiplier as before for backward compat.
         }
 
+        // Gold nuggets get their own dedicated multiplier so users can boost just gold
+        // without scaling iron/stone/marble/sulfur etc. through the Ores category. The Ores
+        // category often produces way more of the other items than the player needs while
+        // gold stays scarce, so this gives gold an independent knob.
+        if (id == "nugget_gold")
+        {
+            var goldMulti = Plugin.NuggetGoldMultiplier.Value;
+            if (goldMulti > 1f)
+            {
+                var original = drop_item.value;
+                drop_item.value = Mathf.Max(1, Mathf.RoundToInt(original * goldMulti));
+                if (Plugin.DebugEnabled)
+                {
+                    Helpers.Log($"[Drop] GoldNugget '{id}' {original}×{goldMulti} → {drop_item.value}");
+                }
+                return;
+            }
+            // NuggetGoldMultiplier == 1 → fall through; if MultiplyOres is on, gold still
+            // gets scaled by ResourceMultiplier as before.
+        }
+
         // Sticks have their own dedicated toggle — keeps the "exclude sticks so they don't
         // flood inventory" option independent from the broader Logs category.
         if (id.Contains("stick"))
