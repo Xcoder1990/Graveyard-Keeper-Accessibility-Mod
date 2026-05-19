@@ -6,11 +6,6 @@ public class Plugin : BaseUnityPlugin
     private const string GeneralSection = "── General ──";
     private const string UpdatesSection = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["01. General"] = GeneralSection,
-    };
-
     private static TimestampedLogger Log { get; set; }
 
     internal static ConfigEntry<bool> RemoveFog { get; private set; }
@@ -25,11 +20,7 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Log = new TimestampedLogger(Logger);
-        ConfigMigration.MigrateRenamedSections(Config, Log, SectionRenames);
-        ConfigMigration.MigrateRenamedKeys(Config, Log,
-            new ConfigMigration.KeyRename(GeneralSection, "Disable Fog", "Remove Fog"),
-            new ConfigMigration.KeyRename(GeneralSection, "Disable Wind", "Remove Wind"),
-            new ConfigMigration.KeyRename(GeneralSection, "Disable Rain", "Remove Rain"));
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         InitConfiguration();
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
@@ -38,15 +29,9 @@ public class Plugin : BaseUnityPlugin
 
     private void InitConfiguration()
     {
-        RemoveFog = Config.Bind(GeneralSection, "Remove Fog", true,
-            new ConfigDescription("Remove fog from outdoor and indoor weather.", null,
-                new ConfigurationManagerAttributes { Order = 3 }));
-        RemoveWind = Config.Bind(GeneralSection, "Remove Wind", false,
-            new ConfigDescription("Remove wind weather effects.", null,
-                new ConfigurationManagerAttributes { Order = 2 }));
-        RemoveRain = Config.Bind(GeneralSection, "Remove Rain", false,
-            new ConfigDescription("Remove rain weather effects.", null,
-                new ConfigurationManagerAttributes { Order = 1 }));
+        RemoveFog = LocalizedConfig.Bind(Config, GeneralSection, "Remove Fog", true, "remove_fog", order: 3);
+        RemoveWind = LocalizedConfig.Bind(Config, GeneralSection, "Remove Wind", false, "remove_wind", order: 2);
+        RemoveRain = LocalizedConfig.Bind(Config, GeneralSection, "Remove Rain", false, "remove_rain", order: 1);
 
         RemoveFogCached = RemoveFog.Value;
         RemoveWindCached = RemoveWind.Value;
@@ -56,10 +41,6 @@ public class Plugin : BaseUnityPlugin
         RemoveWind.SettingChanged += (_, _) => RemoveWindCached = RemoveWind.Value;
         RemoveRain.SettingChanged += (_, _) => RemoveRainCached = RemoveRain.Value;
 
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes { Order = 0 }));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates");
     }
 }

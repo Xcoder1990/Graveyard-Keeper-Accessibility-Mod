@@ -1,0 +1,14 @@
+{
+  "cfg.section.economy": "Economía",
+  "cfg.section.updates": "Actualizaciones",
+  "cfg.dynamic_buy_pricing.name": "Precios de compra dinámicos",
+  "cfg.dynamic_buy_pricing.desc": "Si está activado, los precios suben cuando las tiendas tienen poco stock. Si está desactivado, siempre el precio base.",
+  "cfg.buy_price_multiplier.name": "Multiplicador de precio de compra",
+  "cfg.buy_price_multiplier.desc": "Multiplicador final. 1.0 = base, 0.5 = mitad, 2.0 = doble.",
+  "cfg.dynamic_sell_pricing.name": "Precios de venta dinámicos",
+  "cfg.dynamic_sell_pricing.desc": "Si está activado, los precios bajan cuando las tiendas se llenan. Si está desactivado, siempre el precio base.",
+  "cfg.sell_price_multiplier.name": "Multiplicador de precio de venta",
+  "cfg.sell_price_multiplier.desc": "Multiplicador final. 0,75 coincide con el juego base.",
+  "cfg.check_for_updates.name": "Buscar actualizaciones",
+  "cfg.check_for_updates.desc": "Muestra un aviso en el menú principal cuando hay una versión más nueva de este mod en NexusMods. Haz clic en el aviso para abrir la página del mod."
+}

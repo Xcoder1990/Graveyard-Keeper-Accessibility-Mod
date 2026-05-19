@@ -1,0 +1,14 @@
+{
+  "cfg.section.economy": "経済",
+  "cfg.section.updates": "アップデート",
+  "cfg.dynamic_buy_pricing.name": "動的な購入価格",
+  "cfg.dynamic_buy_pricing.desc": "オンの場合、店の在庫が少なくなると購入価格が上がります。オフの場合、常に基本価格です。",
+  "cfg.buy_price_multiplier.name": "購入価格倍率",
+  "cfg.buy_price_multiplier.desc": "最終倍率。1.0 = 基本、0.5 = 半額、2.0 = 2 倍。",
+  "cfg.dynamic_sell_pricing.name": "動的な販売価格",
+  "cfg.dynamic_sell_pricing.desc": "オンの場合、店の在庫が増えると販売価格が下がります。オフの場合、常に基本価格です。",
+  "cfg.sell_price_multiplier.name": "販売価格倍率",
+  "cfg.sell_price_multiplier.desc": "最終倍率。0.75 はバニラと同じ。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
+}

@@ -1,0 +1,20 @@
+{
+  "Conflict.PlayerJudderFix.Feature": "Smussamento del movimento",
+  "Conflict.PlayerJudderFix.Note": "Rest In Patches smussa già il movimento del giocatore. Player Judder Fix è ridondante quando entrambi sono installati.",
+  "Conflict.FootprintPerformance.Feature": "Comportamento delle impronte",
+  "Conflict.FootprintPerformance.Note": "Rest In Patches include già le correzioni per le impronte. Footprint Performance è ridondante quando entrambi sono installati.",
+  "cfg.section.application": "Applicazione",
+  "cfg.section.drops": "Drop",
+  "cfg.section.footprints": "Impronte",
+  "cfg.section.updates": "Aggiornamenti",
+  "cfg.keep_running_in_background.name": "Continua a girare in background",
+  "cfg.keep_running_in_background.desc": "Mantiene la simulazione anche fuori fuoco.",
+  "cfg.mute_when_unfocused.name": "Disattiva audio fuori fuoco",
+  "cfg.mute_when_unfocused.desc": "Disattiva tutto l'audio quando la finestra non è in primo piano.",
+  "cfg.max_footprints.name": "Max impronte",
+  "cfg.max_footprints.desc": "Numero massimo di impronte prima della rimozione delle più vecchie. 0 disabilita il limite.",
+  "cfg.apply_trigger_to_all_drops.name": "Applica trigger a tutti i drop",
+  "cfg.apply_trigger_to_all_drops.desc": "Impedisce ai drop accumulati di separarsi fisicamente a ogni frame. Per impostazione predefinita solo pietre, marmo, minerali e casse. Attiva per tutti.",
+  "cfg.check_for_updates.name": "Controlla aggiornamenti",
+  "cfg.check_for_updates.desc": "Mostra un avviso nel menu principale quando è disponibile una nuova versione di questo mod su NexusMods. Clicca sull'avviso per aprire la pagina del mod."
+}

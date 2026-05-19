@@ -1,0 +1,20 @@
+{
+  "Conflict.PlayerJudderFix.Feature": "Suavizado de movimiento",
+  "Conflict.PlayerJudderFix.Note": "Rest In Patches ya suaviza el movimiento del jugador. Player Judder Fix es redundante cuando ambos están instalados.",
+  "Conflict.FootprintPerformance.Feature": "Comportamiento de huellas",
+  "Conflict.FootprintPerformance.Note": "Rest In Patches ya incluye correcciones de huellas. Footprint Performance es redundante cuando ambos están instalados.",
+  "cfg.section.application": "Aplicación",
+  "cfg.section.drops": "Soltados",
+  "cfg.section.footprints": "Huellas",
+  "cfg.section.updates": "Actualizaciones",
+  "cfg.keep_running_in_background.name": "Seguir ejecutándose en segundo plano",
+  "cfg.keep_running_in_background.desc": "Mantiene la simulación cuando la ventana no está enfocada.",
+  "cfg.mute_when_unfocused.name": "Silenciar cuando no esté enfocado",
+  "cfg.mute_when_unfocused.desc": "Silencia todo el audio mientras la ventana del juego no está enfocada.",
+  "cfg.max_footprints.name": "Máx. de huellas",
+  "cfg.max_footprints.desc": "Número máximo de huellas antes de eliminar las más antiguas. 0 desactiva el límite.",
+  "cfg.apply_trigger_to_all_drops.name": "Aplicar el trigger a todos los soltados",
+  "cfg.apply_trigger_to_all_drops.desc": "Evita que los soltados apilados se separen físicamente cada cuadro. Por defecto solo piedras, mármol, mineral y cajas. Actívalo para todos.",
+  "cfg.check_for_updates.name": "Buscar actualizaciones",
+  "cfg.check_for_updates.desc": "Muestra un aviso en el menú principal cuando hay una versión más nueva de este mod en NexusMods. Haz clic en el aviso para abrir la página del mod."
+}

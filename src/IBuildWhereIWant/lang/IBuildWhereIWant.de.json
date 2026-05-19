@@ -1,5 +1,27 @@
 {
   "DebugWarning": "Bitte beachten Sie, dass der Debug-Modus aktiviert ist. Es wird nicht empfohlen, diesen eingeschaltet zu lassen, es sei denn, Sie haben einen Zweck dafür.",
   "Description": "Ich baue wo ich will!",
-  "Header": "Überall bauen"
+  "Header": "Überall bauen",
+  "Conflict.MoveObjects.Feature": "Bauablauf",
+  "Conflict.MoveObjects.Note": "Aktiviere in den Einstellungen von Move Objects die Option 'I Build Where I Want Compatibility'.",
+  "cfg.section.advanced": "Erweitert",
+  "cfg.section.collision": "Kollision",
+  "cfg.section.display": "Anzeige",
+  "cfg.section.keybinds": "Tastenbelegungen",
+  "cfg.section.controller": "Controller",
+  "cfg.section.updates": "Aktualisierungen",
+  "cfg.debug_logging.name": "Debug-Logging",
+  "cfg.debug_logging.desc": "Schreibt ausführliche Baumenü-Diagnosen in die BepInEx-Konsole. Für normales Spielen ausschalten.",
+  "cfg.building_collision.name": "Gebäudekollision",
+  "cfg.building_collision.desc": "Erzwingt Kollision zwischen Gebäuden. Aus, um platzierte Strukturen überlappen zu lassen.",
+  "cfg.grid.name": "Raster",
+  "cfg.grid.desc": "Zeigt das Bauraster beim Platzieren von Strukturen an.",
+  "cfg.grey_overlay.name": "Grau-Overlay",
+  "cfg.grey_overlay.desc": "Zeigt das graue Entfernen-Overlay beim Abriss von Strukturen.",
+  "cfg.menu_key_bind.name": "Menü-Tastenbelegung",
+  "cfg.menu_key_bind.desc": "Tastenkürzel zum Öffnen des «Überall-bauen»-Menüs.",
+  "cfg.menu_controller_button.name": "Menü-Controller-Taste",
+  "cfg.menu_controller_button.desc": "Controller-Taste zum Öffnen des «Überall-bauen»-Menüs.",
+  "cfg.check_for_updates.name": "Auf Updates prüfen",
+  "cfg.check_for_updates.desc": "Zeigt im Hauptmenü einen Hinweis an, wenn auf NexusMods eine neuere Version dieses Mods verfügbar ist. Klicke auf den Hinweis, um die Modseite zu öffnen."
 }

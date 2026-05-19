@@ -1,0 +1,17 @@
+{
+  "cfg.section.advanced": "Erweitert",
+  "cfg.section.general": "Allgemein",
+  "cfg.section.updates": "Aktualisierungen",
+  "cfg.debug_logging.name": "Debug-Logging",
+  "cfg.debug_logging.desc": "Schreibt ausführliche Diagnoseinformationen ins BepInEx-Log. Aktiviere dies vor Fehlermeldungen.",
+  "cfg.npc_collision.name": "NSC-Kollision",
+  "cfg.npc_collision.desc": "Erlaubt NSCs, dir den Weg zu versperren. Aus, um durch jeden NSC hindurchzulaufen, statt um sie herum.",
+  "cfg.drop_heavies_away_from_player.name": "Schwere Drops abseits des Spielers ablegen",
+  "cfg.drop_heavies_away_from_player.desc": "Stämme, Steine und abgebaute Blöcke landen neben Baum oder Fels statt vor deinen Füßen.",
+  "cfg.heavy_drop_grace_period.name": "Schonzeit nach schwerem Drop",
+  "cfg.heavy_drop_grace_period.desc": "Ein frisch abgelegter Stamm, Stein oder Block kann dich für einen kurzen Moment nach dem Landen nicht schieben. Du kannst sie danach weiterhin verschieben.",
+  "cfg.grace_period_seconds.name": "Schonzeit (Sekunden)",
+  "cfg.grace_period_seconds.desc": "Sekunden, bevor ein frisch abgelegter Stamm, Stein oder Block dich erneut schieben kann.",
+  "cfg.check_for_updates.name": "Auf Updates prüfen",
+  "cfg.check_for_updates.desc": "Zeigt im Hauptmenü einen Hinweis an, wenn auf NexusMods eine neuere Version dieses Mods verfügbar ist. Klicke auf den Hinweis, um die Modseite zu öffnen."
+}

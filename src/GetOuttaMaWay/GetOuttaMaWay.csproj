@@ -5,7 +5,6 @@
         <NexusGroupId>980515</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs"/>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
     </ItemGroup>
 </Project>

@@ -1,0 +1,13 @@
+{
+  "cfg.section.advanced": "Zaawansowane",
+  "cfg.section.changes": "Zmiany",
+  "cfg.section.updates": "Aktualizacje",
+  "cfg.debug_logging.name": "Logi debugowania",
+  "cfg.debug_logging.desc": "Zapisuje szczegółowe diagnostyki zmian jakości grobów i dekoracji w konsoli BepInEx. Pozostaw wyłączone podczas normalnej rozgrywki.",
+  "cfg.modify_graves.name": "Modyfikuj groby",
+  "cfg.modify_graves.desc": "Ustawia maksymalną jakość bazową każdego przedmiotu z kategorii grób, aby wynik cmentarza był od początku na maksimum.",
+  "cfg.modify_decorations.name": "Modyfikuj dekoracje",
+  "cfg.modify_decorations.desc": "Maksymalizuje również jakość bazową obiektów dekoracyjnych powiązanych z grobami - nie tylko nagrobków i ogrodzeń.",
+  "cfg.check_for_updates.name": "Sprawdź aktualizacje",
+  "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
+}

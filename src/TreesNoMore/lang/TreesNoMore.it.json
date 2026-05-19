@@ -3,5 +3,20 @@
   "DebugWarning": "Nota: la modalità debug è attivata. Non è consigliato lasciarla attiva a meno che tu non abbia un motivo specifico.",
   "No": "No",
   "ResetButton": "Ripristina alberi",
-  "Yes": "Sì"
+  "Yes": "Sì",
+  "cfg.section.advanced": "Avanzate",
+  "cfg.section.trees": "Alberi",
+  "cfg.section.stumps": "Ceppi",
+  "cfg.section.reset": "Reimposta",
+  "cfg.section.updates": "Aggiornamenti",
+  "cfg.debug_logging.name": "Log di debug",
+  "cfg.debug_logging.desc": "Scrive informazioni diagnostiche dettagliate nel log di BepInEx mentre giochi. Attivalo prima di segnalare un bug.",
+  "cfg.tree_search_distance.name": "Distanza di ricerca alberi",
+  "cfg.tree_search_distance.desc": "Quanto cercare intorno a un albero memorizzato. Predefinito 2 prende lo stesso albero senza i vicini.",
+  "cfg.instant_stump_removal.name": "Rimozione istantanea ceppi",
+  "cfg.instant_stump_removal.desc": "Acceso: i ceppi spariscono alla caduta. Spento: restano finché non li rimuovi tu.",
+  "cfg.reset_trees.name": "Reimposta alberi",
+  "cfg.reset_trees.desc": "Ripristina ogni albero abbattuto al prossimo avvio. Il registro degli alberi tagliati viene cancellato.",
+  "cfg.check_for_updates.name": "Controlla aggiornamenti",
+  "cfg.check_for_updates.desc": "Mostra un avviso nel menu principale quando è disponibile una nuova versione di questo mod su NexusMods. Clicca sull'avviso per aprire la pagina del mod."
 }

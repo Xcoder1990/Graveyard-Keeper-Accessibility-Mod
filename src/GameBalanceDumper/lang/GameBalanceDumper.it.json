@@ -1,0 +1,10 @@
+{
+  "cfg.section.dumper": "Esportatore",
+  "cfg.section.updates": "Aggiornamenti",
+  "cfg.enabled.name": "Attivo",
+  "cfg.enabled.desc": "Interruttore principale. Acceso, l'intero GameBalance vanilla viene esportato in BepInEx/plugins/GameBalanceDumper/dump/ all'avvio del gioco.",
+  "cfg.pretty_print.name": "Formato leggibile",
+  "cfg.pretty_print.desc": "Acceso: indenta il JSON per leggibilità. Spento: output minificato su una riga (file più piccoli e veloci).",
+  "cfg.check_for_updates.name": "Controlla aggiornamenti",
+  "cfg.check_for_updates.desc": "Mostra un avviso nel menu principale quando è disponibile una nuova versione di questo mod su NexusMods. Clicca sull'avviso per aprire la pagina del mod."
+}

@@ -2,6 +2,9 @@ namespace FasterCraftReloaded;
 
 [Harmony]
 [HarmonyBefore("p1xel8ted.gyk.queueeverything")]
+// Run after known external mods that also multiply CraftComponent.delta_time, so this
+// mod's exclude list and craft-speed value have the final say (multipliers still compound).
+[HarmonyAfter("com.bongk.craftspeedcontroller")]
 public static class Patches
 {
     private static readonly string[] Exclude =

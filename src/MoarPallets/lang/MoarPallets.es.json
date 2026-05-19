@@ -1,4 +1,18 @@
 {
   "Name": "Palé",
-  "ConnectedMessage": "Conectado al elevador"
+  "ConnectedMessage": "Conectado al elevador",
+  "cfg.section.advanced": "Avanzado",
+  "cfg.section.notifications": "Notificaciones",
+  "cfg.section.pallet": "Palet",
+  "cfg.section.updates": "Actualizaciones",
+  "cfg.show_pallet_connected_popup.name": "Mostrar aviso de palet conectado",
+  "cfg.show_pallet_connected_popup.desc": "Muestra un pequeño «Enlazado al ascensor» sobre cada palet del sótano.",
+  "cfg.auto_route_loose_crates.name": "Enrutar cajas sueltas automáticamente",
+  "cfg.auto_route_loose_crates.desc": "Al cargar, las cajas sueltas van al palet más cercano con espacio. Lo sobrante al ascensor del sótano.",
+  "cfg.auto_route_carried_crates.name": "Enrutar cajas que llevas automáticamente",
+  "cfg.auto_route_carried_crates.desc": "Al soltar una caja que llevas, va al palet más cercano con espacio. Lo sobrante al ascensor del sótano.",
+  "cfg.debug_logging.name": "Registro de depuración",
+  "cfg.debug_logging.desc": "Escribe diagnósticos detallados de palets y zonas en la consola de BepInEx. Déjalo desactivado para jugar.",
+  "cfg.check_for_updates.name": "Buscar actualizaciones",
+  "cfg.check_for_updates.desc": "Muestra un aviso en el menú principal cuando hay una versión más nueva de este mod en NexusMods. Haz clic en el aviso para abrir la página del mod."
 }

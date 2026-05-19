@@ -1,0 +1,14 @@
+{
+  "cfg.section.user_interface": "Benutzeroberfläche",
+  "cfg.section.visual_feedback": "Visuelles Feedback",
+  "cfg.section.audio_feedback": "Audio-Feedback",
+  "cfg.section.updates": "Aktualisierungen",
+  "cfg.always_show_xp_bar.name": "XP-Leiste immer anzeigen",
+  "cfg.always_show_xp_bar.desc": "Zeigt die Erfahrungsleiste ständig an, auch ohne aktuellen XP-Zuwachs.",
+  "cfg.show_point_gain_above_keeper.name": "Punktegewinn über dem Keeper anzeigen",
+  "cfg.show_point_gain_above_keeper.desc": "Zeigt die verdienten Punkte über dem Kopf des Keepers an.",
+  "cfg.still_play_collect_audio.name": "Sammel-Sound weiterhin abspielen",
+  "cfg.still_play_collect_audio.desc": "Spielt den Sammel-Sound weiter, wenn der Punktegewinn über dem Kopf des Keepers angezeigt wird.",
+  "cfg.check_for_updates.name": "Auf Updates prüfen",
+  "cfg.check_for_updates.desc": "Zeigt im Hauptmenü einen Hinweis an, wenn auf NexusMods eine neuere Version dieses Mods verfügbar ist. Klicke auf den Hinweis, um die Modseite zu öffnen."
+}

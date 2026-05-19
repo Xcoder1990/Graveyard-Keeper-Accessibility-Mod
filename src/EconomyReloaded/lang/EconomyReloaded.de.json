@@ -1,0 +1,14 @@
+{
+  "cfg.section.economy": "Wirtschaft",
+  "cfg.section.updates": "Aktualisierungen",
+  "cfg.dynamic_buy_pricing.name": "Dynamische Kaufpreise",
+  "cfg.dynamic_buy_pricing.desc": "Wenn aktiviert, steigen Kaufpreise bei niedrigem Bestand. Wenn deaktiviert, gilt immer der Grundpreis.",
+  "cfg.buy_price_multiplier.name": "Kaufpreis-Multiplikator",
+  "cfg.buy_price_multiplier.desc": "Endgültiger Multiplikator. 1.0 = Basis, 0.5 = halb, 2.0 = doppelt.",
+  "cfg.dynamic_sell_pricing.name": "Dynamische Verkaufspreise",
+  "cfg.dynamic_sell_pricing.desc": "Wenn aktiviert, sinken Verkaufspreise bei vollen Beständen. Wenn deaktiviert, immer der Grundpreis.",
+  "cfg.sell_price_multiplier.name": "Verkaufspreis-Multiplikator",
+  "cfg.sell_price_multiplier.desc": "Endgültiger Multiplikator. 0,75 entspricht dem Grundspiel.",
+  "cfg.check_for_updates.name": "Auf Updates prüfen",
+  "cfg.check_for_updates.desc": "Zeigt im Hauptmenü einen Hinweis an, wenn auf NexusMods eine neuere Version dieses Mods verfügbar ist. Klicke auf den Hinweis, um die Modseite zu öffnen."
+}

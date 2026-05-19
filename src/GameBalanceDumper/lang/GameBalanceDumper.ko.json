@@ -1,0 +1,10 @@
+{
+  "cfg.section.dumper": "덤프",
+  "cfg.section.updates": "업데이트",
+  "cfg.enabled.name": "활성화",
+  "cfg.enabled.desc": "마스터 스위치. 켜두면 게임 시작 시 바닐라 GameBalance 전체가 BepInEx/plugins/GameBalanceDumper/dump/에 덤프됩니다.",
+  "cfg.pretty_print.name": "보기 좋게 정리",
+  "cfg.pretty_print.desc": "켜기: JSON을 들여써서 읽기 좋게 출력. 끄기: 한 줄로 최소화한 출력(파일이 작고 쓰기도 빠름).",
+  "cfg.check_for_updates.name": "업데이트 확인",
+  "cfg.check_for_updates.desc": "NexusMods에 새 버전이 올라오면 메인 메뉴에 알림이 표시됩니다. 알림을 클릭하면 모드 페이지로 이동합니다."
+}

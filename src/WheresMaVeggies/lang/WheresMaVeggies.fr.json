@@ -1,5 +1,15 @@
 {
+  "cfg.section.advanced": "Avancé",
+  "cfg.section.harvest": "Récolte",
+  "cfg.section.updates": "Mises à jour",
+  "cfg.debug_logging.name": "Journal de débogage",
+  "cfg.debug_logging.desc": "Écrit des informations de diagnostic détaillées dans le log BepInEx pendant que tu joues. Active-le avant de signaler un bug pour fournir le contexte nécessaire.",
+  "cfg.require_farmer_perk.name": "Exiger le talent Fermier",
+  "cfg.require_farmer_perk.desc": "Activé : les parcelles voisines ne sont récoltées en masse qu'une fois le talent Fermier débloqué dans l'arbre tech. C'est le comportement d'origine du mod. Désactivé : chaque récolte fauche immédiatement les parcelles voisines de la même culture, même avant le déverrouillage - pratique si tu veux le confort dès le premier jour.",
+  "cfg.cascade_radius_tiles.name": "Rayon de cascade (cases)",
+  "cfg.cascade_radius_tiles.desc": "Distance à laquelle s'étend la cascade de récolte à partir du parterre cliqué, en cases du jeu. 1 attrape les 8 parterres adjacents (3x3 = 9 au total). 2 attrape un 5x5 (25 parterres). Les valeurs plus élevées incluent plus de voisins mais examinent plus d'objets par récolte - garde-le bas sauf si tu as de très grands terrains.",
+  "cfg.check_for_updates.name": "Vérifier les mises à jour",
+  "cfg.check_for_updates.desc": "Affiche un avis dans le menu principal lorsqu'une nouvelle version de ce mod est disponible sur NexusMods. Clique sur l'avis pour ouvrir la page du mod.",
   "Stage1Header": "Récolte améliorée",
-  "Stage1Des": "Améliore vos compétences de jardinage pour récolter automatiquement les parcelles entourant la parcelle sur laquelle vous travaillez.",
-  "DebugWarning": "Veuillez noter que le mode débogage est activé. Il n'est pas recommandé de le laisser activé sauf si vous en avez besoin."
+  "Stage1Des": "Améliore vos compétences de jardinage pour récolter automatiquement les parcelles entourant la parcelle sur laquelle vous travaillez."
 }

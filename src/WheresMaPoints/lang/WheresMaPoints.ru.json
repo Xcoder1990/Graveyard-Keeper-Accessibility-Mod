@@ -1,0 +1,14 @@
+{
+  "cfg.section.user_interface": "Интерфейс",
+  "cfg.section.visual_feedback": "Визуальная отдача",
+  "cfg.section.audio_feedback": "Звуковая отдача",
+  "cfg.section.updates": "Обновления",
+  "cfg.always_show_xp_bar.name": "Всегда показывать полосу опыта",
+  "cfg.always_show_xp_bar.desc": "Постоянно показывает полосу опыта, даже без активного получения опыта.",
+  "cfg.show_point_gain_above_keeper.name": "Показывать очки над персонажем",
+  "cfg.show_point_gain_above_keeper.desc": "Показывает заработанные очки над головой персонажа.",
+  "cfg.still_play_collect_audio.name": "Всё равно проигрывать звук получения",
+  "cfg.still_play_collect_audio.desc": "Продолжает воспроизводить звук получения, когда очки показываются над головой персонажа.",
+  "cfg.check_for_updates.name": "Проверять обновления",
+  "cfg.check_for_updates.desc": "Показывать в главном меню уведомление, когда на NexusMods появляется более новая версия этого мода. Нажмите на уведомление, чтобы открыть страницу мода."
+}

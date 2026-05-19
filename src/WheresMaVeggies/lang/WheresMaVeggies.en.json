@@ -1,5 +1,15 @@
 {
+  "cfg.section.advanced": "Advanced",
+  "cfg.section.harvest": "Harvest",
+  "cfg.section.updates": "Updates",
+  "cfg.debug_logging.name": "Debug Logging",
+  "cfg.debug_logging.desc": "Write detailed diagnostic info to the BepInEx log while you play. Turn this on before reporting a bug so the log has the context I need to help.",
+  "cfg.require_farmer_perk.name": "Require Farmer Perk",
+  "cfg.require_farmer_perk.desc": "On: nearby garden plots only mass-harvest after you've unlocked the Farmer perk in the tech tree. This matches the mod's original behaviour. Off: every harvest immediately reaps neighbouring plots of the same crop, even before the perk is unlocked - useful if you want the convenience from day one.",
+  "cfg.cascade_radius_tiles.name": "Cascade Radius (tiles)",
+  "cfg.cascade_radius_tiles.desc": "How far the harvest cascade reaches from the bed you clicked, measured in game tiles. 1 catches the 8 beds touching it (3x3 = 9 beds total). 2 catches a 5x5 (25 beds). Larger values pull in more neighbours but check more world objects per harvest, so leave this low unless you have very large plots.",
+  "cfg.check_for_updates.name": "Check for Updates",
+  "cfg.check_for_updates.desc": "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
   "Stage1Header": "Enhanced Gathering",
-  "Stage1Des": "Enhances your gardening skills to automatically harvest the plots surrounding the plot you're working on.",
-  "DebugWarning": "Please note you have debug mode turned on. It isn't recommended to leave this on unless you have a purpose for it."
+  "Stage1Des": "Enhances your gardening skills to automatically harvest the plots surrounding the plot you're working on."
 }

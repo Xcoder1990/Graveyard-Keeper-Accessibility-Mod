@@ -1,0 +1,13 @@
+{
+  "cfg.section.advanced": "詳細設定",
+  "cfg.section.changes": "変更",
+  "cfg.section.updates": "アップデート",
+  "cfg.debug_logging.name": "デバッグログ",
+  "cfg.debug_logging.desc": "墓・装飾の品質変更に関する詳細な診断情報を BepInEx コンソールに記録します。通常プレイ時はオフのままにしてください。",
+  "cfg.modify_graves.name": "墓を変更",
+  "cfg.modify_graves.desc": "墓カテゴリのアイテムの基本品質を最大化し、墓地スコアを最初から上限にします。",
+  "cfg.modify_decorations.name": "装飾を変更",
+  "cfg.modify_decorations.desc": "墓石や柵だけでなく、墓関連の装飾オブジェクトの基本品質も最大化します。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
+}

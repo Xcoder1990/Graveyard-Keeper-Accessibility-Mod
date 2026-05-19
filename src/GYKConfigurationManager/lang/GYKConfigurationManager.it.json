@@ -1,0 +1,33 @@
+{
+  "cm.window.title": "Impostazioni plugin / mod",
+  "cm.cat.shortcuts": "Scorciatoie da tastiera",
+  "cm.plugins_no_options": "Plugin senza opzioni disponibili",
+
+  "cm.tip.click_to_expand": "Suggerimento: Clicca sul nome di un plugin per espanderlo. Clicca sui nomi di impostazioni o gruppi per vederne la descrizione.",
+  "cm.tip.drag_window": "Suggerimento: Puoi trascinare questa finestra per spostarla. Resterà aperta mentre interagisci con il gioco.",
+
+  "cm.filter.normal": "Impostazioni normali",
+  "cm.filter.keybinds": "Scorciatoie da tastiera",
+  "cm.filter.advanced": "Impostazioni avanzate",
+  "cm.filter.debug": "Info di debug",
+
+  "cm.button.open_log": "Apri log",
+  "cm.button.close": "Chiudi",
+  "cm.button.clear": "Cancella",
+  "cm.button.cancel": "Annulla",
+  "cm.button.expand_all": "Espandi tutto",
+  "cm.button.collapse_all": "Comprimi tutto",
+  "cm.button.url": "URL",
+  "cm.button.reset": "Ripristina",
+  "cm.button.set": "Imposta...",
+  "cm.button.set_tooltip": "Premi un tasto qualsiasi della tastiera per assegnarlo.",
+
+  "cm.label.search": "Cerca",
+  "cm.label.hex": "Hex",
+  "cm.label.press_any_key": "Premi un tasto qualsiasi",
+  "cm.label.press_any_key_combo": "Premi una combinazione di tasti",
+  "cm.label.draw_failure": "Impossibile disegnare questo campo. Controlla il log per i dettagli.",
+
+  "cm.bool.enabled": "Attivato",
+  "cm.bool.disabled": "Disattivato"
+}

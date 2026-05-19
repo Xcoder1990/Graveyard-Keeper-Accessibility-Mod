@@ -1,6 +1,9 @@
 namespace GiveMeMoar;
 
 [Harmony]
+// Run after known external mods that also multiply the same drop/faith/tech/soul/happiness
+// values, so this mod's multipliers have the final say (effects compound).
+[HarmonyAfter("codesprint.more_resouces")]
 public static class Patches
 {
     // Item-ID category lists. Drawn from the fork at game_code/other_mods/GiveMeMoarFork so
@@ -79,47 +82,49 @@ public static class Patches
         "repair_", "place_tent", "find_zombie"
     ];
 
-    // Vanilla craft output values, kept so settings changes can be re-applied cleanly.
-    private static readonly Dictionary<string, int> CraftOutputSnapshots = new(StringComparer.Ordinal);
-
     // Vanilla water values from output_to_wgo (water pump etc.), kept for the water multiplier.
     private static readonly Dictionary<string, int> CraftWaterToWgoSnapshots = new(StringComparer.Ordinal);
-    private static bool _craftOutputApplied;
+    private static bool _waterToWgoApplied;
+
+    // Set while a craft is finishing. The ResModificator postfix only scales the drop
+    // when this is set, so non-craft loot (chopping a tree, mining a rock) is left alone.
+    // The prefix/postfix below save and restore the previous value via __state so a nested
+    // call (UI counter, end_script chain) doesn't lose it.
+    [ThreadStatic] private static CraftDefinition _craftCtx;
+
+    // Multiquality drops read craft.output[i].value directly and skip ResModificator.
+    // The prefix scales those values in place, the postfix puts them back.
+    [ThreadStatic] private static List<int> _mqValueSnapshot;
+
+    private readonly struct CraftCtxState(CraftDefinition ctx, List<int> snap)
+    {
+        public readonly CraftDefinition PrevCtx = ctx;
+        public readonly List<int> PrevSnapshot = snap;
+    }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(GameBalance), nameof(GameBalance.LoadGameBalance))]
     public static void GameBalance_LoadGameBalance_Postfix()
     {
-        CaptureCraftOutputSnapshots();
-        ApplyCraftOutputMultiplier();
+        CaptureWaterToWgoSnapshots();
+        ApplyWaterToWgoMultiplier();
     }
 
-    internal static void RequestCraftOutputReapply()
+    internal static void RequestWaterToWgoReapply()
     {
-        if (!_craftOutputApplied) return;
-        // GameBalance already loaded once; restore everything then re-apply so settings
-        // changes are reflected immediately in the live craft_data.
-        RestoreCraftOutputSnapshots();
-        ApplyCraftOutputMultiplier();
+        if (!_waterToWgoApplied) return;
+        RestoreWaterToWgoSnapshots();
+        ApplyWaterToWgoMultiplier();
     }
 
-    private static void CaptureCraftOutputSnapshots()
+    private static void CaptureWaterToWgoSnapshots()
     {
         if (GameBalance.me == null) return;
-        CraftOutputSnapshots.Clear();
         CraftWaterToWgoSnapshots.Clear();
 
         foreach (var craft in GameBalance.me.craft_data)
         {
             if (craft == null || string.IsNullOrEmpty(craft.id)) continue;
-            for (var i = 0; i < craft.output.Count; i++)
-            {
-                var output = craft.output[i];
-                if (output == null || string.IsNullOrEmpty(output.id)) continue;
-                // r/g/b are research-point outputs, never touched by the craft multiplier.
-                if (output.id is "r" or "g" or "b") continue;
-                CraftOutputSnapshots[$"{craft.id}|{i}"] = output.value;
-            }
             for (var i = 0; i < craft.output_to_wgo.Count; i++)
             {
                 var output = craft.output_to_wgo[i];
@@ -130,135 +135,231 @@ public static class Patches
 
         if (Plugin.DebugEnabled)
         {
-            Helpers.Log($"[CraftSnapshot] captured {CraftOutputSnapshots.Count} output values and {CraftWaterToWgoSnapshots.Count} water output_to_wgo values across {GameBalance.me.craft_data.Count} craft definitions");
+            Helpers.Log($"[WaterSnapshot] captured {CraftWaterToWgoSnapshots.Count} water output_to_wgo values");
         }
     }
 
-    private static void RestoreCraftOutputSnapshots()
+    private static void RestoreWaterToWgoSnapshots()
     {
         if (GameBalance.me == null) return;
         var restored = 0;
-        var restoredWater = 0;
         foreach (var craft in GameBalance.me.craft_data)
         {
             if (craft == null || string.IsNullOrEmpty(craft.id)) continue;
-            for (var i = 0; i < craft.output.Count; i++)
-            {
-                if (!CraftOutputSnapshots.TryGetValue($"{craft.id}|{i}", out var original)) continue;
-                craft.output[i].value = original;
-                restored++;
-            }
             for (var i = 0; i < craft.output_to_wgo.Count; i++)
             {
                 if (!CraftWaterToWgoSnapshots.TryGetValue($"{craft.id}|wgo|{i}", out var original)) continue;
                 craft.output_to_wgo[i].value = original;
-                restoredWater++;
+                restored++;
             }
         }
 
         if (Plugin.DebugEnabled)
         {
-            Helpers.Log($"[CraftSnapshot] restored {restored} output values, {restoredWater} water output_to_wgo values");
+            Helpers.Log($"[WaterSnapshot] restored {restored} water output_to_wgo values");
         }
     }
 
-    private static void ApplyCraftOutputMultiplier()
+    private static void ApplyWaterToWgoMultiplier()
     {
         if (GameBalance.me == null) return;
 
-        var globalMulti = Plugin.CraftOutputMultiplier.Value;
         var waterMulti = Plugin.WaterOutputMultiplier.Value;
-        var excludeTools = Plugin.CraftExcludeToolsAndEquipment.Value;
-        var excludeProgression = Plugin.CraftExcludeProgressionCrafts.Value;
-
-        var globalActive = !Mathf.Approximately(globalMulti, 1f);
-        var waterActive = !Mathf.Approximately(waterMulti, 1f);
-
-        if (!globalActive && !waterActive)
+        if (waterMulti == 1)
         {
-            _craftOutputApplied = true;
+            _waterToWgoApplied = true;
             if (Plugin.DebugEnabled)
             {
-                Helpers.Log("[CraftApply] global=1.0 and water=1.0, nothing to multiply");
+                Helpers.Log("[WaterApply] water=1, nothing to multiply");
             }
             return;
         }
 
-        var mutatedCrafts = 0;
-        var mutatedOutputs = 0;
-        var mutatedWaterOutputs = 0;
-        var skippedProgression = 0;
-        var skippedToolLike = 0;
-
+        var mutated = 0;
         foreach (var craft in GameBalance.me.craft_data)
         {
             if (craft == null || string.IsNullOrEmpty(craft.id)) continue;
-
-            if (excludeProgression && IsProgressionCraft(craft.id))
+            for (var i = 0; i < craft.output_to_wgo.Count; i++)
             {
-                skippedProgression++;
-                continue;
-            }
+                var output = craft.output_to_wgo[i];
+                if (output == null || output.id != "water") continue;
 
-            var craftMutated = false;
-
-            if (globalActive)
-            {
-                for (var i = 0; i < craft.output.Count; i++)
+                if (!CraftWaterToWgoSnapshots.TryGetValue($"{craft.id}|wgo|{i}", out var baseValue))
                 {
-                    var output = craft.output[i];
-                    if (output == null || string.IsNullOrEmpty(output.id)) continue;
-                    if (output.id is "r" or "g" or "b") continue;
-
-                    if (excludeTools && IsToolLikeOutput(output.id))
-                    {
-                        skippedToolLike++;
-                        continue;
-                    }
-
-                    if (!CraftOutputSnapshots.TryGetValue($"{craft.id}|{i}", out var baseValue))
-                    {
-                        baseValue = output.value;
-                    }
-
-                    var scaled = Mathf.Max(1, Mathf.RoundToInt(baseValue * globalMulti));
-                    if (scaled == output.value) continue;
-
-                    output.value = scaled;
-                    mutatedOutputs++;
-                    craftMutated = true;
+                    baseValue = output.value;
                 }
+
+                var scaled = Math.Max(1, baseValue * waterMulti);
+                if (scaled == output.value) continue;
+                output.value = scaled;
+                mutated++;
             }
-
-            if (waterActive)
-            {
-                for (var i = 0; i < craft.output_to_wgo.Count; i++)
-                {
-                    var output = craft.output_to_wgo[i];
-                    if (output == null || output.id != "water") continue;
-
-                    if (!CraftWaterToWgoSnapshots.TryGetValue($"{craft.id}|wgo|{i}", out var baseValue))
-                    {
-                        baseValue = output.value;
-                    }
-
-                    var scaled = Mathf.Max(1, Mathf.RoundToInt(baseValue * waterMulti));
-                    if (scaled == output.value) continue;
-
-                    output.value = scaled;
-                    mutatedWaterOutputs++;
-                    craftMutated = true;
-                }
-            }
-
-            if (craftMutated) mutatedCrafts++;
         }
 
-        _craftOutputApplied = true;
+        _waterToWgoApplied = true;
 
-        if (Plugin.DebugEnabled || mutatedCrafts > 0)
+        if (Plugin.DebugEnabled || mutated > 0)
         {
-            Helpers.Log($"[CraftApply] global={globalMulti}, water={waterMulti}, excludeTools={excludeTools}, excludeProgression={excludeProgression} → mutatedCrafts={mutatedCrafts}, mutatedOutputs={mutatedOutputs}, mutatedWaterOutputs={mutatedWaterOutputs}, skipped(progression={skippedProgression}, toolLike={skippedToolLike})");
+            Helpers.Log($"[WaterApply] water={waterMulti} -> mutated {mutated} water output_to_wgo values");
+        }
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(CraftComponent), nameof(CraftComponent.ProcessFinishedCraft))]
+    private static void CraftComponent_ProcessFinishedCraft_Prefix(CraftComponent __instance, out CraftCtxState __state)
+    {
+        __state = new CraftCtxState(_craftCtx, _mqValueSnapshot);
+        _mqValueSnapshot = null;
+
+        var craft = __instance.current_craft;
+        _craftCtx = craft;
+
+        if (Plugin.DebugEnabled && craft != null)
+        {
+            Helpers.Log($"[Craft] enter id='{craft.id}', multiquality={craft.IsMultiqualityOutput()}, nested={__state.PrevCtx != null}");
+        }
+
+        if (craft == null || !craft.IsMultiqualityOutput()) return;
+
+        var multi = Plugin.CraftOutputMultiplier.Value;
+        if (multi == 1)
+        {
+            if (Plugin.DebugEnabled)
+            {
+                Helpers.Log($"[CraftMQ] '{craft.id}' skipped: multi=1");
+            }
+            return;
+        }
+
+        if (Plugin.CraftExcludeProgressionCrafts.Value && IsProgressionCraft(craft.id))
+        {
+            if (Plugin.DebugEnabled)
+            {
+                Helpers.Log($"[CraftMQ] '{craft.id}' skipped: progression craft");
+            }
+            return;
+        }
+
+        var excludeTools = Plugin.CraftExcludeToolsAndEquipment.Value;
+        _mqValueSnapshot = new List<int>(craft.output.Count);
+        var mutated = 0;
+        var skippedTools = 0;
+        for (var i = 0; i < craft.output.Count; i++)
+        {
+            var output = craft.output[i];
+            _mqValueSnapshot.Add(output?.value ?? 0);
+            if (output == null || string.IsNullOrEmpty(output.id)) continue;
+            if (output.id is "r" or "g" or "b") continue;
+            if (excludeTools && IsToolLikeOutput(output.id))
+            {
+                skippedTools++;
+                continue;
+            }
+            var before = output.value;
+            output.value = Math.Max(1, before * multi);
+            if (output.value != before) mutated++;
+        }
+
+        if (Plugin.DebugEnabled)
+        {
+            Helpers.Log($"[CraftMQ] '{craft.id}' multi={multi} -> mutated {mutated}/{craft.output.Count}, skippedTools={skippedTools}");
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(CraftComponent), nameof(CraftComponent.ProcessFinishedCraft))]
+    private static void CraftComponent_ProcessFinishedCraft_Postfix(CraftComponent __instance, CraftCtxState __state)
+    {
+        var snapshot = _mqValueSnapshot;
+        if (snapshot != null)
+        {
+            var craft = __instance.current_craft;
+            if (craft != null)
+            {
+                var restored = 0;
+                for (var i = 0; i < craft.output.Count && i < snapshot.Count; i++)
+                {
+                    if (craft.output[i] == null) continue;
+                    if (craft.output[i].value != snapshot[i])
+                    {
+                        craft.output[i].value = snapshot[i];
+                        restored++;
+                    }
+                }
+                if (Plugin.DebugEnabled && restored > 0)
+                {
+                    Helpers.Log($"[CraftMQ] '{craft.id}' restored {restored} output values to vanilla");
+                }
+            }
+        }
+
+        _craftCtx = __state.PrevCtx;
+        _mqValueSnapshot = __state.PrevSnapshot;
+
+        if (Plugin.DebugEnabled && __instance.current_craft != null)
+        {
+            Helpers.Log($"[Craft] leave id='{__instance.current_craft.id}', resumed nested={__state.PrevCtx != null}");
+        }
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.GetCraftAmountCounter))]
+    private static void WorldGameObject_GetCraftAmountCounter_Prefix(CraftDefinition craft_definition, out CraftDefinition __state)
+    {
+        __state = _craftCtx;
+        _craftCtx = craft_definition;
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.GetCraftAmountCounter))]
+    private static void WorldGameObject_GetCraftAmountCounter_Postfix(CraftDefinition __state)
+        => _craftCtx = __state;
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(ResModificator), nameof(ResModificator.ProcessItemsListBeforeDrop))]
+    private static void ResModificator_ProcessItemsListBeforeDrop_Postfix(List<Item> __result)
+    {
+        var craft = _craftCtx;
+        if (craft == null || __result == null || __result.Count == 0) return;
+
+        var multi = Plugin.CraftOutputMultiplier.Value;
+        if (multi == 1) return;
+        if (Plugin.CraftExcludeProgressionCrafts.Value && IsProgressionCraft(craft.id))
+        {
+            if (Plugin.DebugEnabled)
+            {
+                Helpers.Log($"[CraftDrop] '{craft.id}' skipped: progression craft");
+            }
+            return;
+        }
+
+        var excludeTools = Plugin.CraftExcludeToolsAndEquipment.Value;
+        var mutated = 0;
+        var skippedTools = 0;
+        foreach (var item in __result)
+        {
+            if (item == null || string.IsNullOrEmpty(item.id)) continue;
+            if (item.id is "r" or "g" or "b") continue;
+            if (excludeTools && IsToolLikeOutput(item.id))
+            {
+                skippedTools++;
+                continue;
+            }
+            var before = item.value;
+            item.value = Math.Max(1, before * multi);
+            if (item.value != before)
+            {
+                mutated++;
+                if (Plugin.DebugEnabled)
+                {
+                    Helpers.Log($"[CraftDrop] '{craft.id}' {item.id} {before} -> {item.value} (x{multi})");
+                }
+            }
+        }
+
+        if (Plugin.DebugEnabled && mutated == 0 && __result.Count > 0)
+        {
+            Helpers.Log($"[CraftDrop] '{craft.id}' nothing mutated (count={__result.Count}, skippedTools={skippedTools})");
         }
     }
 
@@ -306,7 +407,7 @@ public static class Patches
         }
 
         var original = faith;
-        faith = (int)(faith * multi);
+        faith *= multi;
         if (Plugin.DebugEnabled)
         {
             Helpers.Log($"[Faith] Original={original}, Multi={multi}, New={faith}");
@@ -374,13 +475,13 @@ public static class Patches
         if (id == "sin_shard")
         {
             var sinMulti = Plugin.SinShardMultiplier.Value;
-            if (sinMulti > 0 && !Mathf.Approximately(sinMulti, 1f))
+            if (sinMulti > 1)
             {
                 var original = drop_item.value;
-                drop_item.value = Mathf.RoundToInt(drop_item.value * sinMulti);
+                drop_item.value = Math.Max(1, drop_item.value * sinMulti);
                 if (Plugin.DebugEnabled)
                 {
-                    Helpers.Log($"[Drop] SinShard {original}×{sinMulti} → {drop_item.value}");
+                    Helpers.Log($"[Drop] SinShard {original} x {sinMulti} -> {drop_item.value}");
                 }
             }
             else if (Plugin.DebugEnabled)
@@ -394,17 +495,17 @@ public static class Patches
         if (id == "water")
         {
             var waterMulti = Plugin.WaterOutputMultiplier.Value;
-            if (waterMulti > 1f)
+            if (waterMulti > 1)
             {
                 var original = drop_item.value;
-                drop_item.value = Mathf.Max(1, Mathf.RoundToInt(original * waterMulti));
+                drop_item.value = Math.Max(1, original * waterMulti);
                 if (Plugin.DebugEnabled)
                 {
-                    Helpers.Log($"[Drop] Water '{id}' {original}×{waterMulti} → {drop_item.value}");
+                    Helpers.Log($"[Drop] Water '{id}' {original} x {waterMulti} -> {drop_item.value}");
                 }
                 return;
             }
-            // WaterOutputMultiplier == 1 → fall through; if MultiplyMisc is on, water still
+            // WaterOutputMultiplier == 1 -> fall through; if MultiplyMisc is on, water still
             // gets scaled by ResourceMultiplier as before for backward compat.
         }
 
@@ -412,17 +513,17 @@ public static class Patches
         if (id == "nugget_gold")
         {
             var goldMulti = Plugin.NuggetGoldMultiplier.Value;
-            if (goldMulti > 1f)
+            if (goldMulti > 1)
             {
                 var original = drop_item.value;
-                drop_item.value = Mathf.Max(1, Mathf.RoundToInt(original * goldMulti));
+                drop_item.value = Math.Max(1, original * goldMulti);
                 if (Plugin.DebugEnabled)
                 {
-                    Helpers.Log($"[Drop] GoldNugget '{id}' {original}×{goldMulti} → {drop_item.value}");
+                    Helpers.Log($"[Drop] GoldNugget '{id}' {original} x {goldMulti} -> {drop_item.value}");
                 }
                 return;
             }
-            // NuggetGoldMultiplier == 1 → fall through; if MultiplyOres is on, gold still
+            // NuggetGoldMultiplier == 1 -> fall through; if MultiplyOres is on, gold still
             // gets scaled by ResourceMultiplier as before.
         }
 
@@ -457,7 +558,7 @@ public static class Patches
     private static void ApplyResourceMultiplier(Item item, string tag)
     {
         var multi = Plugin.ResourceMultiplier.Value;
-        if (multi <= 0 || Mathf.Approximately(multi, 1f))
+        if (multi <= 1)
         {
             if (Plugin.DebugEnabled)
             {
@@ -467,10 +568,10 @@ public static class Patches
         }
 
         var original = item.value;
-        item.value = Mathf.RoundToInt(item.value * multi);
+        item.value = Math.Max(1, item.value * multi);
         if (Plugin.DebugEnabled)
         {
-            Helpers.Log($"[Drop] {tag} '{item.id}' {original}×{multi} → {item.value}");
+            Helpers.Log($"[Drop] {tag} '{item.id}' {original} x {multi} -> {item.value}");
         }
     }
 
@@ -511,7 +612,7 @@ public static class Patches
         }
 
         var original = money;
-        money = Mathf.RoundToInt(money * multi);
+        money = Mathf.Round(money * multi);
         if (Plugin.DebugEnabled)
         {
             Helpers.Log($"[Donation] Original={original}, Multi={multi}, New={money}");
@@ -540,33 +641,33 @@ public static class Patches
             Helpers.Log($"[TechPoints] Incoming r={r}, g={g}, b={b}; multipliers red={redMultiplier}, green={greenMultiplier}, blue={blueMultiplier}");
         }
 
-        if (redMultiplier > 0)
+        if (redMultiplier > 1)
         {
             var original = r;
-            r = Mathf.RoundToInt(r * redMultiplier);
+            r *= redMultiplier;
             if (Plugin.DebugEnabled)
             {
-                Helpers.Log($"[TechPoints] Red {original}×{redMultiplier} → {r}");
+                Helpers.Log($"[TechPoints] Red {original} x {redMultiplier} -> {r}");
             }
         }
 
-        if (greenMultiplier > 0)
+        if (greenMultiplier > 1)
         {
             var original = g;
-            g = Mathf.RoundToInt(g * greenMultiplier);
+            g *= greenMultiplier;
             if (Plugin.DebugEnabled)
             {
-                Helpers.Log($"[TechPoints] Green {original}×{greenMultiplier} → {g}");
+                Helpers.Log($"[TechPoints] Green {original} x {greenMultiplier} -> {g}");
             }
         }
 
-        if (blueMultiplier > 0)
+        if (blueMultiplier > 1)
         {
             var original = b;
-            b = Mathf.RoundToInt(b * blueMultiplier);
+            b *= blueMultiplier;
             if (Plugin.DebugEnabled)
             {
-                Helpers.Log($"[TechPoints] Blue {original}×{blueMultiplier} → {b}");
+                Helpers.Log($"[TechPoints] Blue {original} x {blueMultiplier} -> {b}");
             }
         }
     }

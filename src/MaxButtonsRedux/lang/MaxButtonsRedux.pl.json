@@ -1,0 +1,5 @@
+{
+  "cfg.section.updates": "Aktualizacje",
+  "cfg.check_for_updates.name": "Sprawdź aktualizacje",
+  "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
+}

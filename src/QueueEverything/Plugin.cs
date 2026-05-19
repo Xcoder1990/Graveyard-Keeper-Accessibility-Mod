@@ -80,10 +80,8 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        ConfigMigration.MigrateRenamedKeys(Config, Log,
-            new ConfigMigration.KeyRename(AutoCraftSection, "Enable Auto-Craft", "Auto-Craft"));
-        InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        InitConfiguration();
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
@@ -101,55 +99,37 @@ public class Plugin : BaseUnityPlugin
             Log.LogInfo("Loading FasterCraft Reloaded Config");
         }
 
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Enable or disable debug logging.", null,
-                new ConfigurationManagerAttributes {Order = 10}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 10);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        AutoCraft = Config.Bind(AutoCraftSection, "Auto-Craft", true,
-            new ConfigDescription("Master switch for converting hand crafts into queueable auto-crafts. Use the per-workbench toggles below to choose which benches get converted. If this is off, nothing is converted regardless of the child toggles.",
-                null, new ConfigurationManagerAttributes {Order = 100}));
+        AutoCraft = LocalizedConfig.Bind(Config, AutoCraftSection, "Auto-Craft", true, "auto_craft", order: 100);
 
-        BindCategory(CraftCategory.Alchemy,    "Alchemy",    "Auto-convert alchemy hand crafts at the alchemy workbench, mortar, and survey station.", 99);
-        BindCategory(CraftCategory.Cooking,    "Cooking",    "Auto-convert cooking-table and tavern-kitchen crafts.",                                  98);
-        BindCategory(CraftCategory.Study,      "Study",      "Auto-convert study desks and book-writing table crafts.",                                97);
-        BindCategory(CraftCategory.Metalwork,  "Metalwork",  "Auto-convert anvil, hammer station, and jewelry-bench crafts.",                          96);
-        BindCategory(CraftCategory.Morgue,     "Morgue",     "Auto-convert body-preparation, autopsy-table, and packing-table crafts.",                95);
-        BindCategory(CraftCategory.Carpentry,  "Carpentry",  "Auto-convert sawhorse, chopping spot, carpenter's workbench, and beam-gantry crafts.",   94);
-        BindCategory(CraftCategory.Sermons,    "Sermons",    "Auto-convert sermons at the church pulpit. Note: this removes the energy cost per sermon.", 93);
-        BindCategory(CraftCategory.Printing,   "Printing",   "Auto-convert printing press and paper-press crafts.",                                    92);
-        BindCategory(CraftCategory.Winemaking, "Winemaking", "Auto-convert vine-press crafts.",                                                        91);
-        BindCategory(CraftCategory.Pottery,    "Pottery",    "Auto-convert potter's wheel crafts.",                                                    90);
-        BindCategory(CraftCategory.Misc,       "Misc",       "Auto-convert any other hand crafts that don't fall into the categories above (e.g. new benches from a game update).", 89);
+        BindCategory(CraftCategory.Alchemy,    "Alchemy",    "cat_alchemy",    99);
+        BindCategory(CraftCategory.Cooking,    "Cooking",    "cat_cooking",    98);
+        BindCategory(CraftCategory.Study,      "Study",      "cat_study",      97);
+        BindCategory(CraftCategory.Metalwork,  "Metalwork",  "cat_metalwork",  96);
+        BindCategory(CraftCategory.Morgue,     "Morgue",     "cat_morgue",     95);
+        BindCategory(CraftCategory.Carpentry,  "Carpentry",  "cat_carpentry",  94);
+        BindCategory(CraftCategory.Sermons,    "Sermons",    "cat_sermons",    93);
+        BindCategory(CraftCategory.Printing,   "Printing",   "cat_printing",   92);
+        BindCategory(CraftCategory.Winemaking, "Winemaking", "cat_winemaking", 91);
+        BindCategory(CraftCategory.Pottery,    "Pottery",    "cat_pottery",    90);
+        BindCategory(CraftCategory.Misc,       "Misc",       "cat_misc",       89);
 
-        HalfFireRequirements = Config.Bind(BalanceSection, "Half Fire Requirements", true,
-            new ConfigDescription("Halve the amount of fuel fires need for their requirements, across every craft that uses fire.",
-                null, new ConfigurationManagerAttributes {Order = 100}));
+        HalfFireRequirements = LocalizedConfig.Bind(Config, BalanceSection, "Half Fire Requirements", true, "half_fire_requirements", order: 100);
 
-        HalfCraftOutputs = Config.Bind(BalanceSection, "Half Research Point Outputs", true,
-            new ConfigDescription("Halves red/green/blue research-point outputs (blood, fat, skin, heart, intestine) on crafts this mod has converted from manual to auto. Vanilla auto-crafts are never touched. Turn this off if you want full yields on auto-crafted recipes.",
-                null, new ConfigurationManagerAttributes {Order = 99}));
+        HalfCraftOutputs = LocalizedConfig.Bind(Config, BalanceSection, "Half Research Point Outputs", true, "half_research_point_outputs", order: 99);
 
-        AutoMaxMultiQualCrafts = Config.Bind(ConvenienceSection, "Auto Max Multi-Quality Crafts", true,
-            new ConfigDescription("Automatically choose maximum craft amount for multi-quality crafts.",
-                null, new ConfigurationManagerAttributes {Order = 100}));
+        AutoMaxMultiQualCrafts = LocalizedConfig.Bind(Config, ConvenienceSection, "Auto Max Multi-Quality Crafts", true, "auto_max_multi_quality_crafts", order: 100);
 
-        AutoMaxNormalCrafts = Config.Bind(ConvenienceSection, "Auto Max Normal Crafts", false,
-            new ConfigDescription("Automatically choose maximum craft amount for normal crafts.",
-                null, new ConfigurationManagerAttributes {Order = 99}));
+        AutoMaxNormalCrafts = LocalizedConfig.Bind(Config, ConvenienceSection, "Auto Max Normal Crafts", false, "auto_max_normal_crafts", order: 99);
 
-        AutoSelectHighestQualRecipe = Config.Bind(ConvenienceSection, "Auto Select Highest Quality Recipe", true,
-            new ConfigDescription("Automatically select the highest quality recipe available.",
-                null, new ConfigurationManagerAttributes {Order = 98}));
+        AutoSelectHighestQualRecipe = LocalizedConfig.Bind(Config, ConvenienceSection, "Auto Select Highest Quality Recipe", true, "auto_select_highest_quality_recipe", order: 98);
 
-        AutoSelectCraftButtonWithController = Config.Bind(ConvenienceSection, "Auto Select Craft Button With Controller", true,
-            new ConfigDescription("Automatically focus the craft button when using a controller.",
-                null, new ConfigurationManagerAttributes {Order = 97}));
+        AutoSelectCraftButtonWithController = LocalizedConfig.Bind(Config, ConvenienceSection, "Auto Select Craft Button With Controller", true, "auto_select_craft_button_with_controller", order: 97);
 
-        ForceMultiCraft = Config.Bind(ConvenienceSection, "Force Multi Craft", true,
-            new ConfigDescription("Makes almost all crafting items able to be queued.",
-                null, new ConfigurationManagerAttributes {Order = 96}));
+        ForceMultiCraft = LocalizedConfig.Bind(Config, ConvenienceSection, "Force Multi Craft", true, "force_multi_craft", order: 96);
 
         AutoCraft.SettingChanged      += OnCraftSettingChanged;
         HalfFireRequirements.SettingChanged += OnCraftSettingChanged;
@@ -160,18 +140,12 @@ public class Plugin : BaseUnityPlugin
             entry.SettingChanged += OnCraftSettingChanged;
         }
 
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes {Order = 0}));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 0);
         return;
 
-        void BindCategory(CraftCategory category, string label, string description, int order)
+        void BindCategory(CraftCategory category, string label, string langKey, int order)
         {
-            var entry = Config.Bind(AutoCraftSection, label, true,
-                new ConfigDescription(description, null,
-                    new ConfigurationManagerAttributes {Order = order, DispName = "    └ " + label}));
+            var entry = LocalizedConfig.Bind(Config, AutoCraftSection, label, true, langKey, order: order, dispNamePrefix: "    └ ");
             CategoryToggles[category] = entry;
         }
     }

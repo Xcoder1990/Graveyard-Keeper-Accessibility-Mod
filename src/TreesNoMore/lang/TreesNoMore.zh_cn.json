@@ -3,5 +3,20 @@
   "DebugWarning": "请注意，调试模式已开启。除非有特定目的，否则不建议保持开启状态。",
   "No": "否",
   "ResetButton": "重置树木",
-  "Yes": "是"
+  "Yes": "是",
+  "cfg.section.advanced": "高级",
+  "cfg.section.trees": "树木",
+  "cfg.section.stumps": "树桩",
+  "cfg.section.reset": "重置",
+  "cfg.section.updates": "更新",
+  "cfg.debug_logging.name": "调试日志",
+  "cfg.debug_logging.desc": "游戏中将详细的诊断信息写入 BepInEx 日志。报告 BUG 前请开启。",
+  "cfg.tree_search_distance.name": "树木搜索距离",
+  "cfg.tree_search_distance.desc": "从记录的树木周围搜索多大范围。默认 2 只匹配该树本身。",
+  "cfg.instant_stump_removal.name": "立即移除树桩",
+  "cfg.instant_stump_removal.desc": "开启：倒下瞬间树桩同时消失。关闭：留至你亲自移除。",
+  "cfg.reset_trees.name": "重置树木",
+  "cfg.reset_trees.desc": "下次启动游戏时恢复所有已伐倒的树木。已砍记录会被清空。",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。"
 }

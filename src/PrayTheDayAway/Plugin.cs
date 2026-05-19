@@ -12,17 +12,6 @@ public class Plugin : BaseUnityPlugin
     private const string CheatsSection        = "── Cheats ──";
     private const string UpdatesSection       = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["00. Advanced"]      = AdvancedSection,
-        ["01. General"]       = GeneralSection,
-        ["02. Mode"]          = ModeSection,
-        ["03. Notifications"] = NotificationsSection,
-        ["04. Upgrades"]      = UpgradesSection,
-        ["04. Speed"]         = SpeedSection,
-        ["05. Cheats"]        = CheatsSection,
-    };
-
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
     internal static TimestampedLogger Log { get; private set; }
@@ -42,106 +31,31 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        MigrateRenamedSections();
-        InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        InitConfiguration();
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
-    private void MigrateRenamedSections()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string content;
-        try
-        {
-            content = File.ReadAllText(path);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
-            return;
-        }
-
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
-        {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
-        }
-        if (renamed == 0) return;
-
-        try
-        {
-            File.WriteAllText(path, content);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
-            return;
-        }
-
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
-        Config.Reload();
-    }
-
     private void InitConfiguration()
     {
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Write verbose sermon/prayer diagnostics to the BepInEx console. Leave off for normal play.", null,
-                new ConfigurationManagerAttributes {Order = 597}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 597);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        EverydayIsSermonDay = Config.Bind(GeneralSection, "Everyday Is Sermon Day", true,
-            new ConfigDescription("Sermons can be held every day instead of only on the vanilla sermon day.", null,
-                new ConfigurationManagerAttributes {Order = 606}));
+        EverydayIsSermonDay = LocalizedConfig.Bind(Config, GeneralSection, "Everyday Is Sermon Day", true, "everyday_is_sermon_day", order: 606);
+        SermonOverAndOver = LocalizedConfig.Bind(Config, GeneralSection, "Sermon Over And Over", false, "sermon_over_and_over", order: 605);
+        AlternateMode = LocalizedConfig.Bind(Config, ModeSection, "Alternate Mode", true, "alternate_mode", order: 603);
+        NoLossOnDailySermons = LocalizedConfig.Bind(Config, ModeSection, "No Loss On Daily Sermons", false, "no_loss_on_daily_sermons", order: 602, dispNamePrefix: "    └ ");
+        NotifyOnPrayerLoss = LocalizedConfig.Bind(Config, NotificationsSection, "Notify On Prayer Loss", true, "notify_on_prayer_loss", order: 602);
+        RandomlyUpgradeBasicPrayer = LocalizedConfig.Bind(Config, UpgradesSection, "Randomly Upgrade Basic Prayer", true, "randomly_upgrade_basic_prayer", order: 601);
+        SpeedUpSermon = LocalizedConfig.Bind(Config, SpeedSection, "Speed Up Sermon", false, "speed_up_sermon", order: 600);
+        SermonSpeed = LocalizedConfig.Bind(Config, SpeedSection, "Sermon Speed", 5, "sermon_speed", new AcceptableValueRange<int>(2, 10), order: 599, dispNamePrefix: "    └ ");
+        CheatModeConfig = LocalizedConfig.Bind(Config, CheatsSection, "Cheat Mode", false, "cheat_mode", order: 598);
 
-        SermonOverAndOver = Config.Bind(GeneralSection, "Sermon Over And Over", false,
-            new ConfigDescription("Repeat the same sermon multiple times in one day without the usual once-per-day cooldown.", null,
-                new ConfigurationManagerAttributes {Order = 605}));
-
-        AlternateMode = Config.Bind(ModeSection, "Alternate Mode", true,
-            new ConfigDescription("Instead of a chance to destroy a prayer item on use, there's a chance to just downgrade it one tier. Softer loss, keeps your prayers usable.", null,
-                new ConfigurationManagerAttributes {Order = 603}));
-
-        NoLossOnDailySermons = Config.Bind(ModeSection, "No Loss On Daily Sermons", false,
-            new ConfigDescription("Prayer items used on the bonus daily sermons never get lost or downgraded. Only applies when Everyday Is Sermon Day is on.", null,
-                new ConfigurationManagerAttributes {Order = 602, DispName = "    └ No Loss On Daily Sermons"}));
-
-        NotifyOnPrayerLoss = Config.Bind(NotificationsSection, "Notify On Prayer Loss", true,
-            new ConfigDescription("Pop up a message when a prayer item gets lost or downgraded, so you notice it happened.", null,
-                new ConfigurationManagerAttributes {Order = 602}));
-
-        RandomlyUpgradeBasicPrayer = Config.Bind(UpgradesSection, "Randomly Upgrade Basic Prayer", true,
-            new ConfigDescription("Give basic prayers a small chance to upgrade to a known starred version when used.", null,
-                new ConfigurationManagerAttributes {Order = 601}));
-
-        SpeedUpSermon = Config.Bind(SpeedSection, "Speed Up Sermon", false,
-            new ConfigDescription("Fast-forward the sermon sequence. Note: everything in the world runs faster while the sermon is playing out.", null,
-                new ConfigurationManagerAttributes {Order = 600}));
-
-        SermonSpeed = Config.Bind(SpeedSection, "Sermon Speed", 5,
-            new ConfigDescription("How much faster the sermon plays. Default game speed is 1 - higher values are more aggressive.",
-                new AcceptableValueRange<int>(2, 10),
-                new ConfigurationManagerAttributes {Order = 599, DispName = "    └ Sermon Speed"}));
-
-        CheatModeConfig = Config.Bind(CheatsSection, "Cheat Mode", false,
-            new ConfigDescription("All sermons always succeed and prayer items are never consumed. Overrides every other setting.", null,
-                new ConfigurationManagerAttributes {Order = 598}));
-
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes { Order = 0 }));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates");
     }
 
     internal static void WriteLog(string message, bool error = false)

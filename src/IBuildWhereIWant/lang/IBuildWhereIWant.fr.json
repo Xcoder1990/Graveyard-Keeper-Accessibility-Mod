@@ -1,5 +1,27 @@
 {
   "DebugWarning": "Veuillez noter que le mode débogage est activé. Il n'est pas recommandé de le laisser activé sauf si vous en avez besoin.",
   "Description": "Je construis où je veux !",
-  "Header": "Fabriquer n'importe où"
+  "Header": "Fabriquer n'importe où",
+  "Conflict.MoveObjects.Feature": "Flux de construction",
+  "Conflict.MoveObjects.Note": "Active 'I Build Where I Want Compatibility' dans les paramètres de Move Objects.",
+  "cfg.section.advanced": "Avancé",
+  "cfg.section.collision": "Collision",
+  "cfg.section.display": "Affichage",
+  "cfg.section.keybinds": "Raccourcis",
+  "cfg.section.controller": "Manette",
+  "cfg.section.updates": "Mises à jour",
+  "cfg.debug_logging.name": "Journal de débogage",
+  "cfg.debug_logging.desc": "Écrit des diagnostics détaillés du menu de construction dans la console BepInEx. Désactive pour le jeu normal.",
+  "cfg.building_collision.name": "Collision des bâtiments",
+  "cfg.building_collision.desc": "Impose la collision entre bâtiments. Désactive pour autoriser le chevauchement des structures.",
+  "cfg.grid.name": "Grille",
+  "cfg.grid.desc": "Affiche la grille du mode construction lors du placement des structures.",
+  "cfg.grey_overlay.name": "Superposition grise",
+  "cfg.grey_overlay.desc": "Affiche la superposition grise du mode suppression lors de la démolition.",
+  "cfg.menu_key_bind.name": "Raccourci du menu",
+  "cfg.menu_key_bind.desc": "Raccourci pour ouvrir le menu «construire partout».",
+  "cfg.menu_controller_button.name": "Bouton manette du menu",
+  "cfg.menu_controller_button.desc": "Bouton de la manette pour ouvrir le menu «construire partout».",
+  "cfg.check_for_updates.name": "Vérifier les mises à jour",
+  "cfg.check_for_updates.desc": "Affiche un avis dans le menu principal lorsqu'une nouvelle version de ce mod est disponible sur NexusMods. Clique sur l'avis pour ouvrir la page du mod."
 }

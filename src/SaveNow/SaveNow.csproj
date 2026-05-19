@@ -5,12 +5,9 @@
         <NexusGroupId>495841</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs"/>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
-        <Compile Include="..\Shared\Localisation.cs" Link="Localisation.cs"/>
     </ItemGroup>
     <ItemGroup>
-        <Content Include="lang\*.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
     <ItemGroup>
         <Reference Include="Rewired_Core">

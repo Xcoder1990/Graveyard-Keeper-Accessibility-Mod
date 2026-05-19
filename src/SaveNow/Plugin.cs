@@ -25,23 +25,6 @@ public class Plugin : BaseUnityPlugin
     private const string ExitingSection       = "── Exiting ──";
     private const string UpdatesSection       = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["00. Advanced"]           = AdvancedSection,
-        ["01. Saving"]             = SavingSection,
-        ["02. Notifications"]      = NotificationsSection,
-        ["03. Exiting"]            = ExitingSection,
-        ["04. UI"]                 = UISection,
-        ["05. Controls"]           = ControlsSection,
-        ["── 1. Advanced ──"]      = AdvancedSection,
-        ["── 2. Saving ──"]        = SavingSection,
-        ["── 3. UI ──"]            = UISection,
-        ["── 4. Controls ──"]      = ControlsSection,
-        ["── 5. Notifications ──"] = NotificationsSection,
-        ["── 6. Exiting ──"]       = ExitingSection,
-        ["── 7. Updates ──"]       = UpdatesSection,
-    };
-
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
     internal static ConfigEntry<int> SaveInterval { get; private set; }
@@ -116,63 +99,18 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        MigrateRenamedSections();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         InitConfiguration();
         UpdateSaveData();
-        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
-    private void MigrateRenamedSections()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string content;
-        try
-        {
-            content = File.ReadAllText(path);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
-            return;
-        }
-
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
-        {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
-        }
-        if (renamed == 0) return;
-
-        try
-        {
-            File.WriteAllText(path, content);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
-            return;
-        }
-
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
-        Config.Reload();
-    }
-
     private void InitConfiguration()
     {
-        // ── 1. Advanced ──
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Write detailed diagnostic info to the BepInEx log. Turn on before reporting bugs.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 100);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
@@ -180,10 +118,7 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription("Internal: tracks the last save you played so it can be pinned to the top of the list.", null,
                 new ConfigurationManagerAttributes {Browsable = false, IsAdvanced = true, HideDefaultButton = true, ReadOnly = true}));
 
-        // ── 2. Saving ──
-        AutoSaveConfig = Config.Bind(SavingSection, "Auto Save", true,
-            new ConfigDescription("Save your game automatically on a timer while you play.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        AutoSaveConfig = LocalizedConfig.Bind(Config, SavingSection, "Auto Save", true, "auto_save", order: 100);
         AutoSaveConfig.SettingChanged += (_, _) =>
         {
             KillTimers();
@@ -193,84 +128,43 @@ public class Plugin : BaseUnityPlugin
             }
         };
 
-        SaveInterval = Config.Bind(SavingSection, "Save Interval (Minutes)", 10,
-            new ConfigDescription("Minutes between automatic saves.",
-                new AcceptableValueRange<int>(1, 60),
-                new ConfigurationManagerAttributes {Order = 99, ShowRangeAsPercent = false, DispName = "    └ Save Interval (Minutes)"}));
+        SaveInterval = LocalizedConfig.Bind(Config, SavingSection, "Save Interval (Minutes)", 10, "save_interval_minutes", new AcceptableValueRange<int>(1, 60), order: 99, dispNamePrefix: "    └ ",
+            extra: a => a.ShowRangeAsPercent = false);
 
-        NewFileOnAutoSave = Config.Bind(SavingSection, "New File On Auto Save", false,
-            new ConfigDescription("On: every auto save creates a new file. Off: a single auto save file is reused each time.", null,
-                new ConfigurationManagerAttributes {Order = 98, DispName = "    └ New File On Auto Save"}));
+        NewFileOnAutoSave = LocalizedConfig.Bind(Config, SavingSection, "New File On Auto Save", false, "new_file_on_auto_save", order: 98, dispNamePrefix: "    └ ");
 
-        SaveOnNewDay = Config.Bind(SavingSection, "Save On New Day", true,
-            new ConfigDescription("Save at the start of every in-game day. Runs independently of the Auto Save timer.", null,
-                new ConfigurationManagerAttributes {Order = 90}));
+        SaveOnNewDay = LocalizedConfig.Bind(Config, SavingSection, "Save On New Day", true, "save_on_new_day", order: 90);
 
-        NewFileOnNewDaySave = Config.Bind(SavingSection, "New File On New Day Save", true,
-            new ConfigDescription("On: each new-day save gets its own file. Off: a single new-day save file is reused.", null,
-                new ConfigurationManagerAttributes {Order = 89, DispName = "    └ New File On New Day Save"}));
+        NewFileOnNewDaySave = LocalizedConfig.Bind(Config, SavingSection, "New File On New Day Save", true, "new_file_on_new_day_save", order: 89, dispNamePrefix: "    └ ");
 
-        NewFileOnManualSave = Config.Bind(SavingSection, "New File On Manual Save", true,
-            new ConfigDescription("On: each manual save creates a new file. Off: your manual save overwrites the currently loaded slot.", null,
-                new ConfigurationManagerAttributes {Order = 80}));
+        NewFileOnManualSave = LocalizedConfig.Bind(Config, SavingSection, "New File On Manual Save", true, "new_file_on_manual_save", order: 80);
 
-        BackupSavesOnSave = Config.Bind(SavingSection, "Backup Saves On Save", true,
-            new ConfigDescription("Copy your save files to a backup folder inside the mod's plugin directory every time the game saves.", null,
-                new ConfigurationManagerAttributes {Order = 70}));
+        BackupSavesOnSave = LocalizedConfig.Bind(Config, SavingSection, "Backup Saves On Save", true, "backup_saves_on_save", order: 70);
 
-        // ── 3. UI ──
-        MaximumSavesVisible = Config.Bind(UISection, "Maximum Saves Visible", 20,
-            new ConfigDescription("How many saves to show in the Load Game list. 0 = unlimited.",
-                new AcceptableValueRange<int>(0, 100),
-                new ConfigurationManagerAttributes {Order = 100, ShowRangeAsPercent = false}));
+        MaximumSavesVisible = LocalizedConfig.Bind(Config, UISection, "Maximum Saves Visible", 20, "maximum_saves_visible", new AcceptableValueRange<int>(0, 100), order: 100,
+            extra: a => a.ShowRangeAsPercent = false);
 
-        SortMode = Config.Bind(UISection, "Sort Mode", SaveSortMode.GameTime,
-            new ConfigDescription("How the Load Game list is ordered. Game Time uses how many in-game days have passed. Real Time uses the clock time when you saved.", null,
-                new ConfigurationManagerAttributes {Order = 90}));
+        SortMode = LocalizedConfig.Bind(Config, UISection, "Sort Mode", SaveSortMode.GameTime, "sort_mode", order: 90);
 
-        SortDirection = Config.Bind(UISection, "Sort Direction", SaveSortDirection.Descending,
-            new ConfigDescription("Descending puts newest or most-progressed saves at the top. Ascending puts oldest at the top.", null,
-                new ConfigurationManagerAttributes {Order = 89}));
+        SortDirection = LocalizedConfig.Bind(Config, UISection, "Sort Direction", SaveSortDirection.Descending, "sort_direction", order: 89);
 
-        PinLastPlayedToTop = Config.Bind(UISection, "Pin Last Played To Top", false,
-            new ConfigDescription("Float the save you most recently loaded or saved to the top of the list, regardless of sort.", null,
-                new ConfigurationManagerAttributes {Order = 80}));
+        PinLastPlayedToTop = LocalizedConfig.Bind(Config, UISection, "Pin Last Played To Top", false, "pin_last_played_to_top", order: 80);
 
-        // ── 4. Controls ──
-        ManualSaveKeyBind = Config.Bind(ControlsSection, "Manual Save Key Bind", new KeyboardShortcut(KeyCode.K),
-            new ConfigDescription("Keyboard shortcut to save your game instantly.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        ManualSaveKeyBind = LocalizedConfig.Bind(Config, ControlsSection, "Manual Save Key Bind", new KeyboardShortcut(KeyCode.K), "manual_save_key_bind", order: 100);
 
-        EnableManualSaveControllerButton = Config.Bind(ControlsSection, "Enable Manual Save Controller Button", false,
-            new ConfigDescription("Allow saving instantly with a controller button.", null,
-                new ConfigurationManagerAttributes {Order = 90}));
+        EnableManualSaveControllerButton = LocalizedConfig.Bind(Config, ControlsSection, "Enable Manual Save Controller Button", false, "enable_manual_save_controller_button", order: 90);
 
-        ManualSaveControllerButton = Config.Bind(ControlsSection, "Manual Save Controller Button",
-            Enum.GetName(typeof(GamePadButton), GamePadButton.LT),
-            new ConfigDescription("Controller button used to trigger a manual save.",
-                new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))),
-                new ConfigurationManagerAttributes {Order = 89, DispName = "    └ Manual Save Controller Button"}));
+        ManualSaveControllerButton = LocalizedConfig.Bind(Config, ControlsSection, "Manual Save Controller Button",
+            Enum.GetName(typeof(GamePadButton), GamePadButton.LT), "manual_save_controller_button",
+            new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), order: 89, dispNamePrefix: "    └ ");
 
-        // ── 5. Notifications ──
-        SaveGameNotificationText = Config.Bind(NotificationsSection, "Save Game Notification Text", false,
-            new ConfigDescription("Show a small 'Saved' message above your character every time the game saves.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        SaveGameNotificationText = LocalizedConfig.Bind(Config, NotificationsSection, "Save Game Notification Text", false, "save_game_notification_text", order: 100);
 
-        // ── 6. Exiting ──
-        SaveOnExit = Config.Bind(ExitingSection, "Save On Exit", true,
-            new ConfigDescription("Save your game when you use the Save and Exit button.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        SaveOnExit = LocalizedConfig.Bind(Config, ExitingSection, "Save On Exit", true, "save_on_exit", order: 100);
 
-        ExitToDesktop = Config.Bind(ExitingSection, "Exit To Desktop", false,
-            new ConfigDescription("Make the Save and Exit button quit to desktop instead of returning to the main menu.", null,
-                new ConfigurationManagerAttributes {Order = 90}));
+        ExitToDesktop = LocalizedConfig.Bind(Config, ExitingSection, "Exit To Desktop", false, "exit_to_desktop", order: 90);
 
-        // ── 7. Updates ──
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 100);
     }
 
     private static void UpdateSaveData()

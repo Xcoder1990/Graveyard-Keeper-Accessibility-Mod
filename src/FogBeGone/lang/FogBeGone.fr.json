@@ -1,0 +1,12 @@
+{
+  "cfg.section.general": "Général",
+  "cfg.section.updates": "Mises à jour",
+  "cfg.remove_fog.name": "Supprimer le brouillard",
+  "cfg.remove_fog.desc": "Supprime le brouillard du temps extérieur et intérieur.",
+  "cfg.remove_wind.name": "Supprimer le vent",
+  "cfg.remove_wind.desc": "Supprime les effets météo du vent.",
+  "cfg.remove_rain.name": "Supprimer la pluie",
+  "cfg.remove_rain.desc": "Supprime les effets météo de la pluie.",
+  "cfg.check_for_updates.name": "Vérifier les mises à jour",
+  "cfg.check_for_updates.desc": "Affiche un avis dans le menu principal lorsqu'une nouvelle version de ce mod est disponible sur NexusMods. Clique sur l'avis pour ouvrir la page du mod."
+}

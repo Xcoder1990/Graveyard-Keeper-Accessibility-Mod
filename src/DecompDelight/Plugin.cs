@@ -7,12 +7,6 @@ public class Plugin : BaseUnityPlugin
     private const string ColorsSection   = "── Colors ──";
     private const string UpdatesSection  = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["00. Advanced"] = AdvancedSection,
-        ["Colors"]       = ColorsSection,
-    };
-
     internal static TimestampedLogger Log { get; private set; }
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
@@ -58,83 +52,37 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        MigrateRenamedSections();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
 
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Write verbose decompose-element diagnostics to the BepInEx console. Leave off for normal play.", null,
-                new ConfigurationManagerAttributes {Order = 1}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 1);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
 
-        SlowingColor      = Config.Bind(ColorsSection, "Slowing",      new Color(0.478f, 0.235f, 0.043f), "Colour used in decompose tooltips for the Slowing element.");
-        AccelerationColor = Config.Bind(ColorsSection, "Acceleration", new Color(0.035f, 0.157f, 0.384f), "Colour used in decompose tooltips for the Acceleration element.");
-        HealthColor       = Config.Bind(ColorsSection, "Health",       new Color(0.145f, 0.322f, 0.004f), "Colour used in decompose tooltips for the Health element.");
-        DeathColor        = Config.Bind(ColorsSection, "Death",        new Color(0.220f, 0.039f, 0.310f), "Colour used in decompose tooltips for the Death element.");
-        OrderColor        = Config.Bind(ColorsSection, "Order",        new Color(0.851f, 0.984f, 0.455f), "Colour used in decompose tooltips for the Order element.");
-        ToxicColor        = Config.Bind(ColorsSection, "Toxic",        new Color(0.776f, 0.145f, 0.075f), "Colour used in decompose tooltips for the Toxic element.");
-        ChaosColor        = Config.Bind(ColorsSection, "Chaos",        new Color(0.537f, 0.035f, 0.843f), "Colour used in decompose tooltips for the Chaos element.");
-        LifeColor         = Config.Bind(ColorsSection, "Life",         new Color(0.647f, 0.435f, 0.004f), "Colour used in decompose tooltips for the Life element.");
-        ElectricColor     = Config.Bind(ColorsSection, "Electric",     new Color(0.141f, 1f, 1f),         "Colour used in decompose tooltips for the Electric element.");
-        SilverColor       = Config.Bind(ColorsSection, "Silver",       new Color(0.753f, 0.753f, 0.753f), "Colour used in decompose tooltips for the Silver element.");
-        WhiteColor        = Config.Bind(ColorsSection, "White",        new Color(1f, 1f, 1f),             "Colour used in decompose tooltips for the White element.");
-        WaterColor        = Config.Bind(ColorsSection, "Water",        new Color(0.004f, 0.004f, 0.404f), "Colour used in decompose tooltips for the Water element.");
-        OilColor          = Config.Bind(ColorsSection, "Oil",          new Color(0.157f, 0.157f, 0.157f), "Colour used in decompose tooltips for the Oil element.");
-        BloodColor        = Config.Bind(ColorsSection, "Blood",        new Color(0.404f, 0.004f, 0.004f), "Colour used in decompose tooltips for the Blood element.");
-        SaltColor         = Config.Bind(ColorsSection, "Salt",         new Color(0.404f, 0.404f, 0.404f), "Colour used in decompose tooltips for the Salt element.");
-        AshColor          = Config.Bind(ColorsSection, "Ash",          new Color(0.157f, 0.157f, 0.157f), "Colour used in decompose tooltips for the Ash element.");
-        AlcoholColor      = Config.Bind(ColorsSection, "Alcohol",      new Color(0.404f, 0.404f, 0.004f), "Colour used in decompose tooltips for the Alcohol element.");
+        SlowingColor      = LocalizedConfig.Bind(Config, ColorsSection, "Slowing",      new Color(0.478f, 0.235f, 0.043f), "color_slowing");
+        AccelerationColor = LocalizedConfig.Bind(Config, ColorsSection, "Acceleration", new Color(0.035f, 0.157f, 0.384f), "color_acceleration");
+        HealthColor       = LocalizedConfig.Bind(Config, ColorsSection, "Health",       new Color(0.145f, 0.322f, 0.004f), "color_health");
+        DeathColor        = LocalizedConfig.Bind(Config, ColorsSection, "Death",        new Color(0.220f, 0.039f, 0.310f), "color_death");
+        OrderColor        = LocalizedConfig.Bind(Config, ColorsSection, "Order",        new Color(0.851f, 0.984f, 0.455f), "color_order");
+        ToxicColor        = LocalizedConfig.Bind(Config, ColorsSection, "Toxic",        new Color(0.776f, 0.145f, 0.075f), "color_toxic");
+        ChaosColor        = LocalizedConfig.Bind(Config, ColorsSection, "Chaos",        new Color(0.537f, 0.035f, 0.843f), "color_chaos");
+        LifeColor         = LocalizedConfig.Bind(Config, ColorsSection, "Life",         new Color(0.647f, 0.435f, 0.004f), "color_life");
+        ElectricColor     = LocalizedConfig.Bind(Config, ColorsSection, "Electric",     new Color(0.141f, 1f, 1f),         "color_electric");
+        SilverColor       = LocalizedConfig.Bind(Config, ColorsSection, "Silver",       new Color(0.753f, 0.753f, 0.753f), "color_silver");
+        WhiteColor        = LocalizedConfig.Bind(Config, ColorsSection, "White",        new Color(1f, 1f, 1f),             "color_white");
+        WaterColor        = LocalizedConfig.Bind(Config, ColorsSection, "Water",        new Color(0.004f, 0.004f, 0.404f), "color_water");
+        OilColor          = LocalizedConfig.Bind(Config, ColorsSection, "Oil",          new Color(0.157f, 0.157f, 0.157f), "color_oil");
+        BloodColor        = LocalizedConfig.Bind(Config, ColorsSection, "Blood",        new Color(0.404f, 0.004f, 0.004f), "color_blood");
+        SaltColor         = LocalizedConfig.Bind(Config, ColorsSection, "Salt",         new Color(0.404f, 0.404f, 0.404f), "color_salt");
+        AshColor          = LocalizedConfig.Bind(Config, ColorsSection, "Ash",          new Color(0.157f, 0.157f, 0.157f), "color_ash");
+        AlcoholColor      = LocalizedConfig.Bind(Config, ColorsSection, "Alcohol",      new Color(0.404f, 0.404f, 0.004f), "color_alcohol");
 
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes { Order = 0 }));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 0);
 
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
-    private void MigrateRenamedSections()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string content;
-        try
-        {
-            content = File.ReadAllText(path);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
-            return;
-        }
-
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
-        {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
-        }
-        if (renamed == 0) return;
-
-        try
-        {
-            File.WriteAllText(path, content);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
-            return;
-        }
-
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
-        Config.Reload();
-    }
 }

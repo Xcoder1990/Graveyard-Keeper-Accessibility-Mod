@@ -3,5 +3,20 @@
   "DebugWarning": "Ten en cuenta que el modo de depuración está activado. No se recomienda dejarlo activado a menos que tengas un propósito para ello.",
   "No": "No",
   "ResetButton": "Restablecer árboles",
-  "Yes": "Sí"
+  "Yes": "Sí",
+  "cfg.section.advanced": "Avanzado",
+  "cfg.section.trees": "Árboles",
+  "cfg.section.stumps": "Tocones",
+  "cfg.section.reset": "Restablecer",
+  "cfg.section.updates": "Actualizaciones",
+  "cfg.debug_logging.name": "Registro de depuración",
+  "cfg.debug_logging.desc": "Escribe información de diagnóstico detallada en el log de BepInEx mientras juegas. Actívalo antes de reportar un error.",
+  "cfg.tree_search_distance.name": "Distancia de búsqueda de árboles",
+  "cfg.tree_search_distance.desc": "Hasta dónde buscar alrededor de un árbol recordado. El valor por defecto 2 atrapa el mismo árbol sin los vecinos.",
+  "cfg.instant_stump_removal.name": "Eliminación instantánea de tocones",
+  "cfg.instant_stump_removal.desc": "Activado: los tocones desaparecen al caer el árbol. Desactivado: permanecen hasta que los quites tú.",
+  "cfg.reset_trees.name": "Restablecer árboles",
+  "cfg.reset_trees.desc": "Restaura cada árbol talado al próximo inicio. El registro del mod sobre los árboles cortados se borra.",
+  "cfg.check_for_updates.name": "Buscar actualizaciones",
+  "cfg.check_for_updates.desc": "Muestra un aviso en el menú principal cuando hay una versión más nueva de este mod en NexusMods. Haz clic en el aviso para abrir la página del mod."
 }

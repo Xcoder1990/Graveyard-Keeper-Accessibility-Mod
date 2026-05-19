@@ -1,0 +1,33 @@
+{
+  "cm.window.title": "Plugin- / Mod-Einstellungen",
+  "cm.cat.shortcuts": "Tastenkürzel",
+  "cm.plugins_no_options": "Plugins ohne Einstellungen",
+
+  "cm.tip.click_to_expand": "Tipp: Klicke auf Plugin-Namen, um sie aufzuklappen. Klicke auf Einstellungs- oder Gruppennamen, um Beschreibungen zu sehen.",
+  "cm.tip.drag_window": "Tipp: Du kannst dieses Fenster verschieben, indem du es ziehst. Es bleibt offen, während du das Spiel bedienst.",
+
+  "cm.filter.normal": "Normale Einstellungen",
+  "cm.filter.keybinds": "Tastenkürzel",
+  "cm.filter.advanced": "Erweiterte Einstellungen",
+  "cm.filter.debug": "Debug-Info",
+
+  "cm.button.open_log": "Log öffnen",
+  "cm.button.close": "Schließen",
+  "cm.button.clear": "Leeren",
+  "cm.button.cancel": "Abbrechen",
+  "cm.button.expand_all": "Alle aufklappen",
+  "cm.button.collapse_all": "Alle zuklappen",
+  "cm.button.url": "URL",
+  "cm.button.reset": "Zurücksetzen",
+  "cm.button.set": "Setzen...",
+  "cm.button.set_tooltip": "Drücke eine Taste auf der Tastatur, um sie zuzuweisen.",
+
+  "cm.label.search": "Suche",
+  "cm.label.hex": "Hex",
+  "cm.label.press_any_key": "Drücke eine Taste",
+  "cm.label.press_any_key_combo": "Drücke eine Tastenkombination",
+  "cm.label.draw_failure": "Dieses Feld konnte nicht angezeigt werden. Details siehe Log.",
+
+  "cm.bool.enabled": "Aktiviert",
+  "cm.bool.disabled": "Deaktiviert"
+}

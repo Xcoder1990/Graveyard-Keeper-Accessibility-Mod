@@ -1,4 +1,18 @@
 {
   "Name": "Pallet",
-  "ConnectedMessage": "Collegato all'ascensore"
+  "ConnectedMessage": "Collegato all'ascensore",
+  "cfg.section.advanced": "Avanzate",
+  "cfg.section.notifications": "Notifiche",
+  "cfg.section.pallet": "Pallet",
+  "cfg.section.updates": "Aggiornamenti",
+  "cfg.show_pallet_connected_popup.name": "Mostra popup «pallet collegato»",
+  "cfg.show_pallet_connected_popup.desc": "Mostra «Collegato all'ascensore» sopra ogni pallet della cantina.",
+  "cfg.auto_route_loose_crates.name": "Instrada automaticamente le casse libere",
+  "cfg.auto_route_loose_crates.desc": "Al caricamento, le casse libere vanno sul pallet più vicino con spazio. Il resto all'ascensore.",
+  "cfg.auto_route_carried_crates.name": "Instrada automaticamente le casse trasportate",
+  "cfg.auto_route_carried_crates.desc": "Quando posi una cassa trasportata, va al pallet più vicino con spazio. Il resto all'ascensore.",
+  "cfg.debug_logging.name": "Log di debug",
+  "cfg.debug_logging.desc": "Scrive diagnostiche dettagliate su pallet e zone nella console BepInEx. Disattiva per il gioco normale.",
+  "cfg.check_for_updates.name": "Controlla aggiornamenti",
+  "cfg.check_for_updates.desc": "Mostra un avviso nel menu principale quando è disponibile una nuova versione di questo mod su NexusMods. Clicca sull'avviso per aprire la pagina del mod."
 }

@@ -1,4 +1,18 @@
 {
   "Name": "Palette",
-  "ConnectedMessage": "Mit Aufzug verbunden"
+  "ConnectedMessage": "Mit Aufzug verbunden",
+  "cfg.section.advanced": "Erweitert",
+  "cfg.section.notifications": "Benachrichtigungen",
+  "cfg.section.pallet": "Palette",
+  "cfg.section.updates": "Aktualisierungen",
+  "cfg.show_pallet_connected_popup.name": "«Palette verbunden»-Popup anzeigen",
+  "cfg.show_pallet_connected_popup.desc": "Zeigt über jeder im Keller gebauten Palette «Mit Aufzug verbunden» an.",
+  "cfg.auto_route_loose_crates.name": "Lose Kisten automatisch zuweisen",
+  "cfg.auto_route_loose_crates.desc": "Beim Laden wandern lose Kisten auf die nächste freie Palette. Reste landen am Kelleraufzug.",
+  "cfg.auto_route_carried_crates.name": "Getragene Kisten automatisch zuweisen",
+  "cfg.auto_route_carried_crates.desc": "Beim Ablegen einer getragenen Kiste wandert sie zur nächsten freien Palette. Reste landen am Kelleraufzug.",
+  "cfg.debug_logging.name": "Debug-Logging",
+  "cfg.debug_logging.desc": "Schreibt ausführliche Paletten- und Zonen-Diagnosen in die BepInEx-Konsole. Für normales Spielen ausschalten.",
+  "cfg.check_for_updates.name": "Auf Updates prüfen",
+  "cfg.check_for_updates.desc": "Zeigt im Hauptmenü einen Hinweis an, wenn auf NexusMods eine neuere Version dieses Mods verfügbar ist. Klicke auf den Hinweis, um die Modseite zu öffnen."
 }

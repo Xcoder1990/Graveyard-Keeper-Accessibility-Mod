@@ -1,0 +1,33 @@
+{
+  "cm.window.title": "Plugin / mod settings",
+  "cm.cat.shortcuts": "Keyboard shortcuts",
+  "cm.plugins_no_options": "Plugins with no options available",
+
+  "cm.tip.click_to_expand": "Tip: Click plugin names to expand. Click setting and group names to see their descriptions.",
+  "cm.tip.drag_window": "Tip: You can drag this window to move it. It will stay open while you interact with the game.",
+
+  "cm.filter.normal": "Normal settings",
+  "cm.filter.keybinds": "Keyboard shortcuts",
+  "cm.filter.advanced": "Advanced settings",
+  "cm.filter.debug": "Debug info",
+
+  "cm.button.open_log": "Open Log",
+  "cm.button.close": "Close",
+  "cm.button.clear": "Clear",
+  "cm.button.cancel": "Cancel",
+  "cm.button.expand_all": "Expand All",
+  "cm.button.collapse_all": "Collapse All",
+  "cm.button.url": "URL",
+  "cm.button.reset": "Reset",
+  "cm.button.set": "Set...",
+  "cm.button.set_tooltip": "Set the key by pressing any key on your keyboard.",
+
+  "cm.label.search": "Search",
+  "cm.label.hex": "Hex",
+  "cm.label.press_any_key": "Press any key",
+  "cm.label.press_any_key_combo": "Press any key combination",
+  "cm.label.draw_failure": "Failed to draw this field, check log for details.",
+
+  "cm.bool.enabled": "Enabled",
+  "cm.bool.disabled": "Disabled"
+}

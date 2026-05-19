@@ -1,0 +1,15 @@
+{
+  "cfg.section.dumper": "Dumper",
+  "cfg.enabled.name": "Aktiviert",
+  "cfg.enabled.desc": "Hauptschalter. Wenn an, wird jeder vom Spiel geladene FlowScript nach BepInEx/plugins/FlowScriptDumper/dump/ exportiert.",
+  "cfg.dump_resources_folder.name": "Resources-Ordner exportieren",
+  "cfg.dump_resources_folder.desc": "Ruft Resources.LoadAll<FlowScript>(\"FlowCanvas\") einmal beim Öffnen des Hauptmenüs auf und exportiert alles in diesem Ordner.",
+  "cfg.dump_scene_attached_scripts.name": "Szenen-Skripte exportieren",
+  "cfg.dump_scene_attached_scripts.desc": "Geht FlowScriptEngine._scripts durch und exportiert jeden FlowScriptController-Graph. Das sind die engine-gesteuerten Globals der Spielszene.",
+  "cfg.hook_get_graph.name": "CustomFlowScript.GetGraph einhängen",
+  "cfg.hook_get_graph.desc": "Postfix auf CustomFlowScript.GetGraph, sodass jeder zur Laufzeit per Namen geladene Flow-Script ebenfalls exportiert wird (erfasst alles, was nicht unter Resources/FlowCanvas/ liegt).",
+  "cfg.write_reference_sidecars.name": "Referenz-Beilagen schreiben",
+  "cfg.write_reference_sidecars.desc": "Schreibt zusätzlich zu jeder <name>.json eine <name>.refs.tsv, in der jeder _objectReferences[i]-Eintrag aufgelöst ist (Typ + Unity-Objektname). So lassen sich \"$ref\":N-Tokens in der JSON auflösen.",
+  "cfg.pretty_print.name": "Hübsche Formatierung",
+  "cfg.pretty_print.desc": "Rückt das JSON für bessere Lesbarkeit ein. Aus: schreibt den ursprünglichen einzeiligen Text, wie ihn das Spiel gespeichert hat."
+}

@@ -1,0 +1,8 @@
+{
+  "cfg.section.day_length": "하루 길이",
+  "cfg.section.updates": "업데이트",
+  "cfg.day_length.name": "하루 길이",
+  "cfg.day_length.desc": "하루의 길이를 설정합니다.",
+  "cfg.check_for_updates.name": "업데이트 확인",
+  "cfg.check_for_updates.desc": "NexusMods에 새 버전이 올라오면 메인 메뉴에 알림이 표시됩니다. 알림을 클릭하면 모드 페이지로 이동합니다."
+}

@@ -1,0 +1,17 @@
+{
+  "cfg.section.advanced": "高级",
+  "cfg.section.general": "常规",
+  "cfg.section.updates": "更新",
+  "cfg.debug_logging.name": "调试日志",
+  "cfg.debug_logging.desc": "将详细诊断信息写入 BepInEx 日志。报告 BUG 前请开启。",
+  "cfg.npc_collision.name": "NPC 碰撞",
+  "cfg.npc_collision.desc": "允许 NPC 阻挡你的路径。关闭可直接穿过 NPC。",
+  "cfg.drop_heavies_away_from_player.name": "将重物丢落在远离玩家处",
+  "cfg.drop_heavies_away_from_player.desc": "原木、石头和挖出的方块掉在树或岩石旁边，而不是飞到你脚下。",
+  "cfg.heavy_drop_grace_period.name": "重物落地的宽限期",
+  "cfg.heavy_drop_grace_period.desc": "刚落地的原木、石块或方块在短时间内不会把你推开。之后仍然可以推它们。",
+  "cfg.grace_period_seconds.name": "宽限期（秒）",
+  "cfg.grace_period_seconds.desc": "刚落地的原木、石块或方块再次能推动你前所需的秒数。",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。"
+}

@@ -1,0 +1,17 @@
+{
+  "cfg.section.advanced": "Zaawansowane",
+  "cfg.section.general": "Ogólne",
+  "cfg.section.updates": "Aktualizacje",
+  "cfg.debug_logging.name": "Logi debugowania",
+  "cfg.debug_logging.desc": "Zapisuje szczegółowe informacje diagnostyczne do logu BepInEx. Włącz przed zgłoszeniem błędu.",
+  "cfg.npc_collision.name": "Kolizja z NPC",
+  "cfg.npc_collision.desc": "Pozwala NPC blokować ci drogę. Wyłącz, aby przechodzić przez NPC bez omijania.",
+  "cfg.drop_heavies_away_from_player.name": "Upuszczaj ciężkie poza graczem",
+  "cfg.drop_heavies_away_from_player.desc": "Kłody, kamienie i wydobyte bloki spadają obok drzewa lub skały, a nie u twoich stóp.",
+  "cfg.heavy_drop_grace_period.name": "Czas ochronny po upuszczeniu ciężkich",
+  "cfg.heavy_drop_grace_period.desc": "Świeżo upuszczone kłody, kamienie i bloki przez chwilę po wylądowaniu nie mogą cię popychać. Później wciąż możesz je przesuwać.",
+  "cfg.grace_period_seconds.name": "Czas ochronny (sekundy)",
+  "cfg.grace_period_seconds.desc": "Sekundy, zanim świeżo upuszczona kłoda, kamień lub blok znów może cię popchnąć.",
+  "cfg.check_for_updates.name": "Sprawdź aktualizacje",
+  "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
+}

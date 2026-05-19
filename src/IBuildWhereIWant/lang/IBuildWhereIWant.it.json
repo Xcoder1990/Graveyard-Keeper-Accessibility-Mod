@@ -1,5 +1,27 @@
 {
   "DebugWarning": "Nota: la modalità debug è attivata. Non è consigliato lasciarla attiva a meno che tu non abbia un motivo specifico.",
   "Description": "Costruisco dove voglio!",
-  "Header": "Crea ovunque"
+  "Header": "Crea ovunque",
+  "Conflict.MoveObjects.Feature": "Flusso di costruzione",
+  "Conflict.MoveObjects.Note": "Attiva 'I Build Where I Want Compatibility' nelle impostazioni di Move Objects.",
+  "cfg.section.advanced": "Avanzate",
+  "cfg.section.collision": "Collisione",
+  "cfg.section.display": "Visualizzazione",
+  "cfg.section.keybinds": "Tasti",
+  "cfg.section.controller": "Controller",
+  "cfg.section.updates": "Aggiornamenti",
+  "cfg.debug_logging.name": "Log di debug",
+  "cfg.debug_logging.desc": "Scrive diagnostiche dettagliate del menu di costruzione nella console BepInEx. Disattiva per il gioco normale.",
+  "cfg.building_collision.name": "Collisione tra edifici",
+  "cfg.building_collision.desc": "Applica la collisione tra edifici. Disattiva per permettere alle strutture di sovrapporsi.",
+  "cfg.grid.name": "Griglia",
+  "cfg.grid.desc": "Mostra la griglia della modalità costruzione durante il posizionamento.",
+  "cfg.grey_overlay.name": "Sovrapposizione grigia",
+  "cfg.grey_overlay.desc": "Mostra la sovrapposizione grigia della modalità rimozione durante la demolizione.",
+  "cfg.menu_key_bind.name": "Tasto del menu",
+  "cfg.menu_key_bind.desc": "Tasto per aprire il menu «costruisci ovunque».",
+  "cfg.menu_controller_button.name": "Pulsante controller del menu",
+  "cfg.menu_controller_button.desc": "Pulsante del controller per aprire il menu «costruisci ovunque».",
+  "cfg.check_for_updates.name": "Controlla aggiornamenti",
+  "cfg.check_for_updates.desc": "Mostra un avviso nel menu principale quando è disponibile una nuova versione di questo mod su NexusMods. Clicca sull'avviso per aprire la pagina del mod."
 }

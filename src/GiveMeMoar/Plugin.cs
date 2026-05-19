@@ -9,36 +9,21 @@ public class Plugin : BaseUnityPlugin
     private const string CraftingSection    = "── Crafting ──";
     private const string UpdatesSection     = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["00. Advanced"]             = AdvancedSection,
-        ["01. Multipliers"]          = MultipliersSection,
-        // "Multiply Sticks" used to live in Miscellaneous; it now belongs in Categories
-        // alongside the new per-category toggles.
-        ["3. Miscellaneous"]         = CategoriesSection,
-        ["── 3. Miscellaneous ──"]   = CategoriesSection,
-        ["── 1. Advanced ──"]        = AdvancedSection,
-        ["── 2. Multipliers ──"]     = MultipliersSection,
-        ["── 3. Categories ──"]      = CategoriesSection,
-        ["── 4. Crafting ──"]        = CraftingSection,
-        ["── 5. Updates ──"]         = UpdatesSection,
-    };
-
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
 
     // ── Multipliers ──
-    internal static ConfigEntry<float> ResourceMultiplier { get; private set; }
-    internal static ConfigEntry<float> FaithMultiplier { get; private set; }
-    internal static ConfigEntry<float> DonationMultiplier { get; private set; }
-    internal static ConfigEntry<float> GratitudeMultiplier { get; private set; }
-    internal static ConfigEntry<float> SinShardMultiplier { get; private set; }
-    internal static ConfigEntry<float> HappinessMultiplier { get; private set; }
-    internal static ConfigEntry<float> RedTechPointMultiplier { get; private set; }
-    internal static ConfigEntry<float> GreenTechPointMultiplier { get; private set; }
-    internal static ConfigEntry<float> BlueTechPointMultiplier { get; private set; }
-    internal static ConfigEntry<float> WaterOutputMultiplier { get; private set; }
-    internal static ConfigEntry<float> NuggetGoldMultiplier { get; private set; }
+    internal static ConfigEntry<int> ResourceMultiplier { get; private set; }
+    internal static ConfigEntry<int> FaithMultiplier { get; private set; }
+    internal static ConfigEntry<int> DonationMultiplier { get; private set; }
+    internal static ConfigEntry<int> GratitudeMultiplier { get; private set; }
+    internal static ConfigEntry<int> SinShardMultiplier { get; private set; }
+    internal static ConfigEntry<int> HappinessMultiplier { get; private set; }
+    internal static ConfigEntry<int> RedTechPointMultiplier { get; private set; }
+    internal static ConfigEntry<int> GreenTechPointMultiplier { get; private set; }
+    internal static ConfigEntry<int> BlueTechPointMultiplier { get; private set; }
+    internal static ConfigEntry<int> WaterOutputMultiplier { get; private set; }
+    internal static ConfigEntry<int> NuggetGoldMultiplier { get; private set; }
 
     // ── Categories ── (gates which item groups the Resource Multiplier touches)
     internal static ConfigEntry<bool> MultiplySticks { get; private set; }
@@ -52,7 +37,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> MultiplyBodyParts { get; private set; }
 
     // ── Crafting ── (craft-output scaling)
-    internal static ConfigEntry<float>  CraftOutputMultiplier { get; private set; }
+    internal static ConfigEntry<int>    CraftOutputMultiplier { get; private set; }
     internal static ConfigEntry<bool>   CraftExcludeToolsAndEquipment { get; private set; }
     internal static ConfigEntry<bool>   CraftExcludeProgressionCrafts { get; private set; }
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
@@ -63,224 +48,64 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        MigrateRenamedSections();
-        InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        InitConfiguration();
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
+        ConflictWarningRegistry.Register(MyPluginInfo.PLUGIN_NAME, () => new[]
+        {
+            new ConflictEntry(
+                theirGuid: "codesprint.more_resouces",
+                theirName: "Even More Resources",
+                feature: Lang.Get("Conflict.EvenMoreResources.Feature"),
+                severity: ConflictSeverity.Race,
+                note: Lang.Get("Conflict.EvenMoreResources.Note")),
+        });
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
-    }
-
-    private void MigrateRenamedSections()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string content;
-        try
-        {
-            content = File.ReadAllText(path);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
-            return;
-        }
-
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
-        {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
-        }
-        if (renamed == 0) return;
-
-        try
-        {
-            File.WriteAllText(path, content);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
-            return;
-        }
-
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── N. Name ──' style. Existing user values preserved.");
-        Config.Reload();
     }
 
     private void InitConfiguration()
     {
-        // ── 1. Advanced ──
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription(
-                "Write detailed diagnostic info to the BepInEx log while you play. Turn this on before reporting a bug so the log has the context I need to help.",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 100);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        // ── 2. Multipliers ──
-        ResourceMultiplier = Config.Bind(MultipliersSection, "Resource Multiplier", 1f,
-            new ConfigDescription(
-                "Multiplies the drop amount for resources you harvest, chop, mine, or collect. Use the toggles in the Categories section to pick which item groups this applies to. Values below 1 reduce drops; 1 is vanilla.",
-                new AcceptableValueRange<float>(0.1f, 50f),
-                new ConfigurationManagerAttributes {Order = 100}));
+        ResourceMultiplier = LocalizedConfig.Bind(Config, MultipliersSection, "Resource Multiplier", 1, "resource_multiplier", new AcceptableValueRange<int>(1, 50), order: 100);
+        FaithMultiplier = LocalizedConfig.Bind(Config, MultipliersSection, "Faith Multiplier", 1, "faith_multiplier", new AcceptableValueRange<int>(1, 50), order: 99);
+        DonationMultiplier = LocalizedConfig.Bind(Config, MultipliersSection, "Donation Multiplier", 1, "donation_multiplier", new AcceptableValueRange<int>(1, 50), order: 98);
+        GratitudeMultiplier = LocalizedConfig.Bind(Config, MultipliersSection, "Gratitude Multiplier", 1, "gratitude_multiplier", new AcceptableValueRange<int>(1, 50), order: 97);
+        SinShardMultiplier = LocalizedConfig.Bind(Config, MultipliersSection, "Sin Shard Multiplier", 1, "sin_shard_multiplier", new AcceptableValueRange<int>(1, 50), order: 96);
+        HappinessMultiplier = LocalizedConfig.Bind(Config, MultipliersSection, "Happiness Multiplier", 1, "happiness_multiplier", new AcceptableValueRange<int>(1, 50), order: 95);
+        RedTechPointMultiplier = LocalizedConfig.Bind(Config, MultipliersSection, "Red Tech Point Multiplier", 1, "red_tech_point_multiplier", new AcceptableValueRange<int>(1, 50), order: 94);
+        GreenTechPointMultiplier = LocalizedConfig.Bind(Config, MultipliersSection, "Green Tech Point Multiplier", 1, "green_tech_point_multiplier", new AcceptableValueRange<int>(1, 50), order: 93);
+        BlueTechPointMultiplier = LocalizedConfig.Bind(Config, MultipliersSection, "Blue Tech Point Multiplier", 1, "blue_tech_point_multiplier", new AcceptableValueRange<int>(1, 50), order: 92);
+        WaterOutputMultiplier = LocalizedConfig.Bind(Config, MultipliersSection, "Water Output Multiplier", 1, "water_output_multiplier", new AcceptableValueRange<int>(1, 50), order: 91);
+        NuggetGoldMultiplier = LocalizedConfig.Bind(Config, MultipliersSection, "Gold Nugget Multiplier", 1, "gold_nugget_multiplier", new AcceptableValueRange<int>(1, 50), order: 90);
 
-        FaithMultiplier = Config.Bind(MultipliersSection, "Faith Multiplier", 1f,
-            new ConfigDescription(
-                "Multiplies faith earned from sermons at the church pulpit. Higher values let you unlock church upgrades and shop items faster.",
-                new AcceptableValueRange<float>(0.1f, 50f),
-                new ConfigurationManagerAttributes {Order = 99}));
+        MultiplySticks = LocalizedConfig.Bind(Config, CategoriesSection, "Multiply Sticks", true, "multiply_sticks", order: 100);
+        MultiplyCrops = LocalizedConfig.Bind(Config, CategoriesSection, "Multiply Crops", true, "multiply_crops", order: 99);
+        MultiplySeeds = LocalizedConfig.Bind(Config, CategoriesSection, "Multiply Seeds", false, "multiply_seeds", order: 98);
+        MultiplyLogs = LocalizedConfig.Bind(Config, CategoriesSection, "Multiply Logs", true, "multiply_logs", order: 97);
+        MultiplyOres = LocalizedConfig.Bind(Config, CategoriesSection, "Multiply Ores", true, "multiply_ores", order: 96);
+        MultiplyBugs = LocalizedConfig.Bind(Config, CategoriesSection, "Multiply Bugs", true, "multiply_bugs", order: 95);
+        MultiplyEnemyDrops = LocalizedConfig.Bind(Config, CategoriesSection, "Multiply Enemy Drops", true, "multiply_enemy_drops", order: 94);
+        MultiplyMisc = LocalizedConfig.Bind(Config, CategoriesSection, "Multiply Miscellaneous", false, "multiply_miscellaneous", order: 93);
+        MultiplyBodyParts = LocalizedConfig.Bind(Config, CategoriesSection, "Multiply Body Parts", false, "multiply_body_parts", order: 92);
 
-        DonationMultiplier = Config.Bind(MultipliersSection, "Donation Multiplier", 1f,
-            new ConfigDescription(
-                "Multiplies coin donations collected from the church after each sermon. Useful if you want sermons to fund your building projects more quickly.",
-                new AcceptableValueRange<float>(0.1f, 50f),
-                new ConfigurationManagerAttributes {Order = 98}));
+        CraftOutputMultiplier = LocalizedConfig.Bind(Config, CraftingSection, "Craft Output Multiplier", 1, "craft_output_multiplier", new AcceptableValueRange<int>(1, 50), order: 100);
+        CraftExcludeToolsAndEquipment = LocalizedConfig.Bind(Config, CraftingSection, "Exclude Tools And Equipment", true, "exclude_tools_and_equipment", order: 80);
+        CraftExcludeProgressionCrafts = LocalizedConfig.Bind(Config, CraftingSection, "Exclude Progression Crafts", true, "exclude_progression_crafts", order: 79);
 
-        GratitudeMultiplier = Config.Bind(MultipliersSection, "Gratitude Multiplier", 1f,
-            new ConfigDescription(
-                "Multiplies the gratitude points earned when you release souls at the lighthouse. Higher values speed up your progress through the soul-release tech tree.",
-                new AcceptableValueRange<float>(0.1f, 50f),
-                new ConfigurationManagerAttributes {Order = 97}));
+        // The craft multiplier reads live config values inside the runtime postfix,
+        // so only the water_to_wgo path needs an explicit re-apply on setting change.
+        WaterOutputMultiplier.SettingChanged += OnWaterToWgoSettingChanged;
 
-        SinShardMultiplier = Config.Bind(MultipliersSection, "Sin Shard Multiplier", 1f,
-            new ConfigDescription(
-                "Multiplies sin shards dropped from corpses during body preparation. Higher values help you cash in at the inquisitor faster.",
-                new AcceptableValueRange<float>(0.1f, 50f),
-                new ConfigurationManagerAttributes {Order = 96}));
-
-        HappinessMultiplier = Config.Bind(MultipliersSection, "Happiness Multiplier", 1f,
-            new ConfigDescription(
-                "Multiplies the happiness change applied to refugees in the refugee camp. Values above 1 make the camp reach full happiness quicker; this affects both gains and losses.",
-                new AcceptableValueRange<float>(0.1f, 50f),
-                new ConfigurationManagerAttributes {Order = 95}));
-
-        RedTechPointMultiplier = Config.Bind(MultipliersSection, "Red Tech Point Multiplier", 1f,
-            new ConfigDescription(
-                "Multiplies red (crafting) tech points earned from crafts, corpses and other sources. Higher values unlock workbench techs faster.",
-                new AcceptableValueRange<float>(0.1f, 50f),
-                new ConfigurationManagerAttributes {Order = 94}));
-
-        GreenTechPointMultiplier = Config.Bind(MultipliersSection, "Green Tech Point Multiplier", 1f,
-            new ConfigDescription(
-                "Multiplies green (nature) tech points earned from gardening, alchemy and other sources. Higher values unlock farming and potion techs faster.",
-                new AcceptableValueRange<float>(0.1f, 50f),
-                new ConfigurationManagerAttributes {Order = 93}));
-
-        BlueTechPointMultiplier = Config.Bind(MultipliersSection, "Blue Tech Point Multiplier", 1f,
-            new ConfigDescription(
-                "Multiplies blue (science) tech points earned from study desks, writing and other sources. Higher values unlock study and printing techs faster.",
-                new AcceptableValueRange<float>(0.1f, 50f),
-                new ConfigurationManagerAttributes {Order = 92}));
-
-        WaterOutputMultiplier = Config.Bind(MultipliersSection, "Water Output Multiplier", 1f,
-            new ConfigDescription(
-                "Multiplies the water you get from wells - both auto-pumped water flowing into your upgraded home well's inventory and water you take by hand from any well (basic or upgraded). 1 = vanilla. Higher values let breweries and other water-heavy crafts keep up. Independent of the Multiply Miscellaneous toggle.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 91}));
-
-        NuggetGoldMultiplier = Config.Bind(MultipliersSection, "Gold Nugget Multiplier", 1f,
-            new ConfigDescription(
-                "Multiplies gold nuggets that drop from mining gold ore deposits. 1 = vanilla. Use this to boost gold without scaling every other ore in the Multiply Ores category. Independent of the Multiply Ores toggle.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 90}));
-
-        // ── 3. Categories ──
-        MultiplySticks = Config.Bind(CategoriesSection, "Multiply Sticks", true,
-            new ConfigDescription(
-                "On: sticks get multiplied by the Resource Multiplier alongside other resources - great for stocking fires. Off: sticks are excluded and drop at vanilla quantities, useful if high multipliers flood your inventory (deconstructing a garden is the common offender).",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
-
-        MultiplyCrops = Config.Bind(CategoriesSection, "Multiply Crops", true,
-            new ConfigDescription(
-                "On: harvested crops (wheat, cabbage, carrot, beet, onion, lentils, pumpkin, hops, hemp, grapes, apples, berries, mushrooms, flowers, crop waste, hiccup grass) are multiplied by the Resource Multiplier. Off: crops stay at vanilla amounts.",
-                null,
-                new ConfigurationManagerAttributes {Order = 99}));
-
-        MultiplySeeds = Config.Bind(CategoriesSection, "Multiply Seeds", false,
-            new ConfigDescription(
-                "On: seeds you get back from harvesting get multiplied by the Resource Multiplier. Off: seeds stay at vanilla amounts. Off is usually what you want - seeds pile up fast at high multipliers because each harvest already returns more than you planted.",
-                null,
-                new ConfigurationManagerAttributes {Order = 98}));
-
-        MultiplyLogs = Config.Bind(CategoriesSection, "Multiply Logs", true,
-            new ConfigDescription(
-                "On: wooden billets, planks, beams and flitches that drop from trees, stumps or deconstructing built objects are multiplied. Off: they stay at vanilla. Sticks are controlled by the Multiply Sticks toggle separately.",
-                null,
-                new ConfigurationManagerAttributes {Order = 97}));
-
-        MultiplyOres = Config.Bind(CategoriesSection, "Multiply Ores", true,
-            new ConfigDescription(
-                "On: ore blocks, stone plates, marble plates, clay, coal, sulfur, silver/gold nuggets, graphite, faceted diamonds, sand and lifestone get multiplied. Off: vanilla. Gold nuggets also have their own dedicated Gold Nugget Multiplier in the Multipliers section if you want to boost just gold without scaling the rest of the ores.",
-                null,
-                new ConfigurationManagerAttributes {Order = 96}));
-
-        MultiplyBugs = Config.Bind(CategoriesSection, "Multiply Bugs", true,
-            new ConfigDescription(
-                "On: bees, butterflies, moths and maggots you catch or harvest get multiplied. Off: vanilla.",
-                null,
-                new ConfigurationManagerAttributes {Order = 95}));
-
-        MultiplyEnemyDrops = Config.Bind(CategoriesSection, "Multiply Enemy Drops", true,
-            new ConfigDescription(
-                "On: items dropped by enemies - bat wings, slimes, jelly slugs (green/blue/orange/black), spider webs and bloody nails - are multiplied. Off: vanilla.",
-                null,
-                new ConfigurationManagerAttributes {Order = 94}));
-
-        MultiplyMisc = Config.Bind(CategoriesSection, "Multiply Miscellaneous", false,
-            new ConfigDescription(
-                "On: honey, beeswax, ash, peat, salt, water and bucket-of-water, alcohol, chicken eggs, jug of milk, and metal scrap get multiplied. Off: vanilla. Off by default because water/alcohol/eggs can quickly unbalance cooking and potion play.",
-                null,
-                new ConfigurationManagerAttributes {Order = 93}));
-
-        MultiplyBodyParts = Config.Bind(CategoriesSection, "Multiply Body Parts", false,
-            new ConfigDescription(
-                "On: blood, flesh, fat, skin, bone and skull dropped during body preparation get multiplied. Off: vanilla. Only the listed body parts are touched - organs and other specialised parts are always left alone.",
-                null,
-                new ConfigurationManagerAttributes {Order = 92}));
-
-        // ── 4. Crafting ──
-        CraftOutputMultiplier = Config.Bind(CraftingSection, "Craft Output Multiplier", 1f,
-            new ConfigDescription(
-                "Multiplies the quantity of items produced by crafts - for example, setting this to 5 makes one log yield five times as many billets at the sawhorse. 1 = vanilla. Research-point outputs (red/green/blue) are never touched; the Tech Point Multipliers handle those separately.",
-                new AcceptableValueRange<float>(0.1f, 50f),
-                new ConfigurationManagerAttributes {Order = 100}));
-
-        CraftExcludeToolsAndEquipment = Config.Bind(CraftingSection, "Exclude Tools And Equipment", true,
-            new ConfigDescription(
-                "On: tools, weapons, armour and sermon scrolls are never multiplied, so one craft still makes one sword. Off: the multiplier applies to these too, which usually produces multiple equipped items per craft (weird but available).",
-                null,
-                new ConfigurationManagerAttributes {Order = 80}));
-
-        CraftExcludeProgressionCrafts = Config.Bind(CraftingSection, "Exclude Progression Crafts", true,
-            new ConfigDescription(
-                "On: automatically skips crafts that exist solely to upgrade a station, place an object, repair something, or advance quality tiers (e.g. 'upgrade', '0_to_1'). These would trivialise progression if multiplied. Off: every craft is fair game.",
-                null,
-                new ConfigurationManagerAttributes {Order = 79}));
-
-        // Craft-output patch reacts to config changes by restoring snapshots and reapplying.
-        CraftOutputMultiplier.SettingChanged         += OnCraftOutputSettingChanged;
-        CraftExcludeToolsAndEquipment.SettingChanged += OnCraftOutputSettingChanged;
-        CraftExcludeProgressionCrafts.SettingChanged += OnCraftOutputSettingChanged;
-        WaterOutputMultiplier.SettingChanged         += OnCraftOutputSettingChanged;
-
-        // ── 5. Updates ──
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 100);
     }
 
-    private static void OnCraftOutputSettingChanged(object sender, EventArgs e)
+    private static void OnWaterToWgoSettingChanged(object sender, EventArgs e)
     {
-        Patches.RequestCraftOutputReapply();
+        Patches.RequestWaterToWgoReapply();
     }
 }

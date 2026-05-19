@@ -1,0 +1,13 @@
+{
+  "cfg.section.advanced": "Avanzado",
+  "cfg.section.changes": "Cambios",
+  "cfg.section.updates": "Actualizaciones",
+  "cfg.debug_logging.name": "Registro de depuración",
+  "cfg.debug_logging.desc": "Escribe diagnósticos detallados sobre los cambios de calidad de tumbas/decoraciones en la consola de BepInEx. Déjalo desactivado para el juego normal.",
+  "cfg.modify_graves.name": "Modificar tumbas",
+  "cfg.modify_graves.desc": "Eleva al máximo la calidad base de cada objeto de la categoría tumba, para que la puntuación del cementerio esté en el tope desde el inicio.",
+  "cfg.modify_decorations.name": "Modificar decoraciones",
+  "cfg.modify_decorations.desc": "Eleva al máximo la calidad base de los objetos decorativos asociados a tumbas, no solo de las lápidas y vallas.",
+  "cfg.check_for_updates.name": "Buscar actualizaciones",
+  "cfg.check_for_updates.desc": "Muestra un aviso en el menú principal cuando hay una versión más nueva de este mod en NexusMods. Haz clic en el aviso para abrir la página del mod."
+}

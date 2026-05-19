@@ -1,5 +1,15 @@
 {
+  "cfg.section.advanced": "高级",
+  "cfg.section.harvest": "收获",
+  "cfg.section.updates": "更新",
+  "cfg.debug_logging.name": "调试日志",
+  "cfg.debug_logging.desc": "游戏过程中将详细的诊断信息写入 BepInEx 日志。报告 BUG 前请开启，便于日志包含必要上下文。",
+  "cfg.require_farmer_perk.name": "需要农夫天赋",
+  "cfg.require_farmer_perk.desc": "开启：只有在科技树中解锁「农夫」天赋后，附近的菜畦才会一起被收获。这与模组的原始行为一致。关闭：即使在解锁该天赋之前，每次收获也会立即一并采收同种作物的邻近菜畦——想从一开始就享受便利时很有用。",
+  "cfg.cascade_radius_tiles.name": "连锁半径（格）",
+  "cfg.cascade_radius_tiles.desc": "收获连锁从你点击的菜畦向外蔓延多少格。1 包含相邻的 8 格（3x3 = 共 9 格）。2 包含 5x5（25 格）。值越大囊括的邻近菜畦越多，但每次收获要检查的世界对象也越多——除非你拥有非常大的菜畦，否则请保持较小值。",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。",
   "Stage1Header": "强化采集",
-  "Stage1Des": "提高您的园艺技能，自动收获您正在处理的地块周围的地块。",
-  "DebugWarning": "请注意，调试模式已开启。除非有特定目的，否则不建议保持开启状态。"
+  "Stage1Des": "提高您的园艺技能，自动收获您正在处理的地块周围的地块。"
 }

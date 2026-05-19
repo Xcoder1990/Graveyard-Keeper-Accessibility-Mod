@@ -1,5 +1,15 @@
 {
+  "cfg.section.advanced": "詳細設定",
+  "cfg.section.harvest": "収穫",
+  "cfg.section.updates": "アップデート",
+  "cfg.debug_logging.name": "デバッグログ",
+  "cfg.debug_logging.desc": "プレイ中に詳細な診断情報を BepInEx ログに記録します。バグを報告する前にオンにして、ログに必要な情報を残してください。",
+  "cfg.require_farmer_perk.name": "ファーマー特性を必要とする",
+  "cfg.require_farmer_perk.desc": "オン: 技術ツリーで「ファーマー」特性を解放した後にのみ、近隣の畑も一括収穫されます。MOD の本来の挙動と同じです。オフ: 特性を解放する前でも、同じ作物の隣接する畑がすぐに一括で収穫されます。最初から便利さが欲しい人向け。",
+  "cfg.cascade_radius_tiles.name": "連鎖範囲（タイル）",
+  "cfg.cascade_radius_tiles.desc": "クリックした畝から収穫の連鎖がどこまで広がるかをタイル数で指定します。1 では接する 8 マス（3x3 = 9 マス）まで。2 では 5x5（25 マス）まで。値を大きくすると周辺をより取り込めますが、収穫ごとに調べるオブジェクトが増えるため、よほど広い畑でない限り小さめにしてください。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。",
   "Stage1Header": "強化された収集",
-  "Stage1Des": "ガーデニングスキルを強化して、作業中の区画の周囲の区画を自動的に収穫します。",
-  "DebugWarning": "デバッグモードがオンになっています。目的がない限り、オフのままにすることをおすすめします。"
+  "Stage1Des": "ガーデニングスキルを強化して、作業中の区画の周囲の区画を自動的に収穫します。"
 }

@@ -1,0 +1,14 @@
+{
+  "cfg.section.regeneration": "Regeneration",
+  "cfg.section.updates": "Updates",
+  "cfg.show_regeneration_updates.name": "Show Regeneration Updates",
+  "cfg.show_regeneration_updates.desc": "Display updates when life and energy regenerate.",
+  "cfg.life_regeneration_rate.name": "Life Regeneration Rate",
+  "cfg.life_regeneration_rate.desc": "Set the rate at which life regenerates per tick. Set to 0 to disable.",
+  "cfg.energy_regeneration_rate.name": "Energy Regeneration Rate",
+  "cfg.energy_regeneration_rate.desc": "Set the rate at which energy regenerates per tick. Set to 0 to disable.",
+  "cfg.regeneration_delay.name": "Regeneration Delay",
+  "cfg.regeneration_delay.desc": "Set the delay in seconds between each regeneration tick.",
+  "cfg.check_for_updates.name": "Check for Updates",
+  "cfg.check_for_updates.desc": "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page."
+}

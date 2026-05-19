@@ -1,0 +1,8 @@
+{
+  "cfg.section.advanced": "詳細設定",
+  "cfg.section.updates": "アップデート",
+  "cfg.debug_logging.name": "デバッグログ",
+  "cfg.debug_logging.desc": "錬金術レシピの詳細な診断情報を BepInEx コンソールに記録します。通常プレイ時はオフのままにしてください。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
+}

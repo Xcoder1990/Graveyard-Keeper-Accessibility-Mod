@@ -1,4 +1,18 @@
 {
   "Name": "パレット",
-  "ConnectedMessage": "エレベーターに接続"
+  "ConnectedMessage": "エレベーターに接続",
+  "cfg.section.advanced": "詳細設定",
+  "cfg.section.notifications": "通知",
+  "cfg.section.pallet": "パレット",
+  "cfg.section.updates": "アップデート",
+  "cfg.show_pallet_connected_popup.name": "パレット接続ポップアップを表示",
+  "cfg.show_pallet_connected_popup.desc": "地下室で建てた各パレットの上に「エレベーターに接続」と小さく表示します。",
+  "cfg.auto_route_loose_crates.name": "ばらの木箱を自動で振り分け",
+  "cfg.auto_route_loose_crates.desc": "ロード時、ばらの木箱を空きのある最寄りパレットへ。残りは地下室のエレベーターへ。",
+  "cfg.auto_route_carried_crates.name": "運んでいる木箱を自動で振り分け",
+  "cfg.auto_route_carried_crates.desc": "運んでいる木箱を下ろすと空きのある最寄りパレットへ。残りは地下室のエレベーターへ。",
+  "cfg.debug_logging.name": "デバッグログ",
+  "cfg.debug_logging.desc": "パレットとゾーンの詳細な診断情報を BepInEx コンソールに記録します。通常プレイ時はオフ。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
 }

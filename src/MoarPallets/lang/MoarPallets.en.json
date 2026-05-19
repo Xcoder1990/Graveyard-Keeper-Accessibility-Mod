@@ -1,4 +1,18 @@
 {
   "Name": "Pallet",
-  "ConnectedMessage": "Linked to elevator"
+  "ConnectedMessage": "Linked to elevator",
+  "cfg.section.advanced": "Advanced",
+  "cfg.section.notifications": "Notifications",
+  "cfg.section.pallet": "Pallet",
+  "cfg.section.updates": "Updates",
+  "cfg.show_pallet_connected_popup.name": "Show Pallet Connected Popup",
+  "cfg.show_pallet_connected_popup.desc": "Show a small 'Linked to elevator' message above any pallet you build in the cellar.",
+  "cfg.auto_route_loose_crates.name": "Auto-Route Loose Crates",
+  "cfg.auto_route_loose_crates.desc": "On game load, slide any loose crate onto the nearest pallet with space. Leftovers go to the cellar elevator.",
+  "cfg.auto_route_carried_crates.name": "Auto-Route Carried Crates",
+  "cfg.auto_route_carried_crates.desc": "When you drop a carried crate, send it to the nearest pallet with space. Leftovers go to the cellar elevator.",
+  "cfg.debug_logging.name": "Debug Logging",
+  "cfg.debug_logging.desc": "Write verbose pallet-and-zone diagnostics to the BepInEx console. Leave off for normal play.",
+  "cfg.check_for_updates.name": "Check for Updates",
+  "cfg.check_for_updates.desc": "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page."
 }

@@ -30,19 +30,22 @@ public static class LocationLists
         new(Constants.ZoneLClay, string.Empty, string.Empty, new Vector2(6.2f, -33.2f)),
         new(Constants.ZoneLSand, string.Empty, string.Empty, new Vector2(3.5f, 9.1f)),
         new(Constants.ZoneLMill, string.Empty, string.Empty, new Vector2(123.0f, -8.0f)),
-        new(Constants.ZoneLFarmer, string.Empty, string.Empty, new Vector2(122.9f, -33.9f))
+        new(Constants.ZoneLFarmer, string.Empty, string.Empty, new Vector2(122.9f, -33.9f)),
+        new(Constants.ZoneLBlacksmith, string.Empty, string.Empty, new Vector2(184.26f, -32.16f)),
+        new(Constants.ZoneLBodyDump, string.Empty, string.Empty, new Vector2(2.20f, -25.67f)),
+        new(Constants.ZoneLMarketStorage, "storage", string.Empty, new Vector2(181.45f, -136.92f), false, EnvironmentEngine.State.Inside)
     ];
 
-    private static AnswerVisualData Page1Answer => new() { id = Language.GetTranslation(Language.Terms.Page1) };
-    private static AnswerVisualData Page2Answer => new() { id = Language.GetTranslation(Language.Terms.Page2) };
-    private static AnswerVisualData Page3Answer => new() { id = Language.GetTranslation(Language.Terms.Page3) };
-    private static AnswerVisualData Page4Answer => new() { id = Language.GetTranslation(Language.Terms.Page4) };
-    private static AnswerVisualData Page5Answer => new() { id = Language.GetTranslation(Language.Terms.Page5) };
-    private static AnswerVisualData Page6Answer => new() { id = Language.GetTranslation(Language.Terms.Page6) };
-    private static AnswerVisualData Page7Answer => new() { id = Language.GetTranslation(Language.Terms.Page7) };
-    private static AnswerVisualData Page8Answer => new() { id = Language.GetTranslation(Language.Terms.Page8) };
-    private static AnswerVisualData Page9Answer => new() { id = Language.GetTranslation(Language.Terms.Page9) };
-    private static AnswerVisualData Page10Answer => new() { id = Language.GetTranslation(Language.Terms.Page10) };
+    private static AnswerVisualData Page1Answer => new() { id = Constants.Page1 };
+    private static AnswerVisualData Page2Answer => new() { id = Constants.Page2 };
+    private static AnswerVisualData Page3Answer => new() { id = Constants.Page3 };
+    private static AnswerVisualData Page4Answer => new() { id = Constants.Page4 };
+    private static AnswerVisualData Page5Answer => new() { id = Constants.Page5 };
+    private static AnswerVisualData Page6Answer => new() { id = Constants.Page6 };
+    private static AnswerVisualData Page7Answer => new() { id = Constants.Page7 };
+    private static AnswerVisualData Page8Answer => new() { id = Constants.Page8 };
+    private static AnswerVisualData Page9Answer => new() { id = Constants.Page9 };
+    private static AnswerVisualData Page10Answer => new() { id = Constants.Page10 };
     private static AnswerVisualData CancelAnswer => new() { id = Constants.Cancel };
 
     internal static readonly List<List<AnswerVisualData>> Locations = [];

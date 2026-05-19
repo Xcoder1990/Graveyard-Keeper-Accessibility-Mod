@@ -1,0 +1,10 @@
+{
+  "cfg.section.dumper": "Volcador",
+  "cfg.section.updates": "Actualizaciones",
+  "cfg.enabled.name": "Activado",
+  "cfg.enabled.desc": "Interruptor principal. Al activarlo, todo el GameBalance vanilla se vuelca a BepInEx/plugins/GameBalanceDumper/dump/ al iniciar el juego.",
+  "cfg.pretty_print.name": "Formato legible",
+  "cfg.pretty_print.desc": "Activado: indenta el JSON para que sea legible. Desactivado: salida minificada en una sola línea (archivos más pequeños y rápidos).",
+  "cfg.check_for_updates.name": "Buscar actualizaciones",
+  "cfg.check_for_updates.desc": "Muestra un aviso en el menú principal cuando hay una versión más nueva de este mod en NexusMods. Haz clic en el aviso para abrir la página del mod."
+}

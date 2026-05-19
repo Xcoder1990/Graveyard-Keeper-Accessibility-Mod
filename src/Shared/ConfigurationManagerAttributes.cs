@@ -1,3 +1,6 @@
+using System;
+using BepInEx.Configuration;
+
 namespace Shared;
 
 /// <summary>

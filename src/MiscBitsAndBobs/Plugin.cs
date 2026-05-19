@@ -12,25 +12,6 @@ public class Plugin : BaseUnityPlugin
     private const string MiscSection     = "── Misc ──";
     private const string UpdatesSection  = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["00. Advanced"]      = AdvancedSection,
-        ["02. Audio"]         = AudioSection,
-        ["03. UI"]            = UISection,
-        ["04. Gameplay"]      = GameplaySection,
-        ["05. Movement"]      = MovementSection,
-        ["06. Misc"]          = MiscSection,
-        ["09. Church"]        = ChurchSection,
-        ["── 1. Advanced ──"] = AdvancedSection,
-        ["── 2. Audio ──"]    = AudioSection,
-        ["── 3. UI ──"]       = UISection,
-        ["── 4. Gameplay ──"] = GameplaySection,
-        ["── 5. Movement ──"] = MovementSection,
-        ["── 6. Church ──"]   = ChurchSection,
-        ["── 7. Misc ──"]     = MiscSection,
-        ["── 8. Updates ──"]  = UpdatesSection,
-    };
-
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
     internal static ConfigEntry<bool> QuietMusicInGuiConfig { get; private set; }
@@ -58,147 +39,45 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        MigrateRenamedSections();
-        InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        InitConfiguration();
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
-    private void MigrateRenamedSections()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string content;
-        try
-        {
-            content = File.ReadAllText(path);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
-            return;
-        }
-
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
-        {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
-        }
-        if (renamed == 0) return;
-
-        try
-        {
-            File.WriteAllText(path, content);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
-            return;
-        }
-
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── N. Name ──' style. Existing user values preserved.");
-        Config.Reload();
-    }
-
     private void InitConfiguration()
     {
-        // ── 1. Advanced ──
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Write detailed diagnostic info to the BepInEx log while you play. Turn this on before reporting a bug so the log has the context I need to help.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 100);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        // ── 2. Audio ──
-        QuietMusicInGuiConfig = Config.Bind(AudioSection, "Quiet Music In GUI", true,
-            new ConfigDescription("On: the music drops in volume whenever you open an in-game menu so it doesn't drown out the UI. Off: music stays at full volume during menus.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        QuietMusicInGuiConfig = LocalizedConfig.Bind(Config, AudioSection, "Quiet Music In GUI", true, "quiet_music_in_gui", order: 100);
 
-        // ── 3. UI ──
-        CondenseXpBarConfig = Config.Bind(UISection, "Condense XP Bar", true,
-            new ConfigDescription("On: the red/green/blue XP numbers on the HUD compact to a shorter form once they hit four digits (for example 12450 shows as 12.4K). Off: the full numbers are shown.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        CondenseXpBarConfig = LocalizedConfig.Bind(Config, UISection, "Condense XP Bar", true, "condense_xp_bar", order: 100);
+        HideCreditsButtonOnMainMenuConfig = LocalizedConfig.Bind(Config, UISection, "Hide Credits Button On Main Menu", true, "hide_credits_button_on_main_menu", order: 99);
+        CinematicLetterboxingConfig = LocalizedConfig.Bind(Config, UISection, "Remove Cinematic Letterboxing", true, "remove_cinematic_letterboxing", order: 98);
 
-        HideCreditsButtonOnMainMenuConfig = Config.Bind(UISection, "Hide Credits Button On Main Menu", true,
-            new ConfigDescription("On: the Credits button is removed from the main menu. Off: the Credits button is visible as normal.", null,
-                new ConfigurationManagerAttributes {Order = 99}));
+        HalloweenNowConfig = LocalizedConfig.Bind(Config, GameplaySection, "Halloween Now", false, "halloween_now", order: 100);
+        SkipIntroVideoOnNewGameConfig = LocalizedConfig.Bind(Config, GameplaySection, "Skip Intro Video On New Game", false, "skip_intro_video_on_new_game", order: 99);
+        LessenFootprintImpactConfig = LocalizedConfig.Bind(Config, GameplaySection, "Lessen Footprint Impact", false, "lessen_footprint_impact", order: 98);
+        RemovePrayerOnUseConfig = LocalizedConfig.Bind(Config, GameplaySection, "Remove Prayer On Use", false, "remove_prayer_on_use", order: 97);
+        AddCoalToTavernOvenConfig = LocalizedConfig.Bind(Config, GameplaySection, "Add Coal To Tavern Oven", true, "add_coal_to_tavern_oven", order: 96);
+        AddZombiesToPyreAndCrematoriumConfig = LocalizedConfig.Bind(Config, GameplaySection, "Add Zombies To Pyre And Crematorium", true, "add_zombies_to_pyre_and_crematorium", order: 95);
 
-        CinematicLetterboxingConfig = Config.Bind(UISection, "Remove Cinematic Letterboxing", true,
-            new ConfigDescription("On: the black bars shown during cutscenes (sermons, cinematics) are removed so the full screen stays visible. Off: cutscenes play with the original letterboxing.", null,
-                new ConfigurationManagerAttributes {Order = 98}));
+        ModifyPlayerMovementSpeedConfig = LocalizedConfig.Bind(Config, MovementSection, "Modify Player Movement Speed", true, "modify_player_movement_speed", order: 100);
+        PlayerMovementSpeedConfig = LocalizedConfig.Bind(Config, MovementSection, "Player Movement Speed", 1.0f, "player_movement_speed", new AcceptableValueRange<float>(1.0f, 100f), order: 99, dispNamePrefix: "    └ ");
+        ModifyPorterMovementSpeedConfig = LocalizedConfig.Bind(Config, MovementSection, "Modify Porter Movement Speed", true, "modify_porter_movement_speed", order: 98);
+        PorterMovementSpeedConfig = LocalizedConfig.Bind(Config, MovementSection, "Porter Movement Speed", 1.0f, "porter_movement_speed", new AcceptableValueRange<float>(1.0f, 100f), order: 97, dispNamePrefix: "    └ ");
 
-        // ── 4. Gameplay ──
-        HalloweenNowConfig = Config.Bind(GameplaySection, "Halloween Now", false,
-            new ConfigDescription("On: the Halloween event runs year-round. Off: the event is limited to its normal late-October schedule.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        LocalizedConfig.Bind(Config, ChurchSection, "Evict All Church Visitors", true, "evict_all_church_visitors", order: 100,
+            extra: a => { a.HideDefaultButton = true; a.CustomDrawer = EvictVisitorsButton; });
 
-        SkipIntroVideoOnNewGameConfig = Config.Bind(GameplaySection, "Skip Intro Video On New Game", false,
-            new ConfigDescription("On: the opening cinematic is skipped when you start a new game and you drop straight into play. Off: the intro video plays as normal.", null,
-                new ConfigurationManagerAttributes {Order = 99}));
+        KitsuneKitoModeConfig = LocalizedConfig.Bind(Config, MiscSection, "KitsuneKito Mode", false, "kitsunekito_mode", order: 100);
+        OldEnglishThrowback = LocalizedConfig.Bind(Config, MiscSection, "Old English Throwback", false, "old_english_throwback", order: 99);
 
-        LessenFootprintImpactConfig = Config.Bind(GameplaySection, "Lessen Footprint Impact", false,
-            new ConfigDescription("On: new footprints are drawn at roughly half their normal dirt intensity so trails look subtler. Off: footprints leave the game's default amount of dirt.", null,
-                new ConfigurationManagerAttributes {Order = 98}));
-
-        RemovePrayerOnUseConfig = Config.Bind(GameplaySection, "Remove Prayer On Use", false,
-            new ConfigDescription("On: each prayer item is consumed when you pray, so stockpiled prayers become single-use. Off: prayers stay in your inventory after praying like they normally do.", null,
-                new ConfigurationManagerAttributes {Order = 97}));
-
-        AddCoalToTavernOvenConfig = Config.Bind(GameplaySection, "Add Coal To Tavern Oven", true,
-            new ConfigDescription("On: the tavern oven accepts coal as a fuel source alongside its normal firewood. Off: only the vanilla fuel is accepted.", null,
-                new ConfigurationManagerAttributes {Order = 96}));
-
-        AddZombiesToPyreAndCrematoriumConfig = Config.Bind(GameplaySection, "Add Zombies To Pyre And Crematorium", true,
-            new ConfigDescription("On: working zombies and bodies can be loaded into the pyre and crematorium for disposal. Off: only the vanilla inputs are accepted.", null,
-                new ConfigurationManagerAttributes {Order = 95}));
-
-        // ── 5. Movement ──
-        ModifyPlayerMovementSpeedConfig = Config.Bind(MovementSection, "Modify Player Movement Speed", true,
-            new ConfigDescription("On: the player's walking speed is scaled by the multiplier below. Off: the player moves at the game's default speed.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
-
-        PlayerMovementSpeedConfig = Config.Bind(MovementSection, "Player Movement Speed", 1.0f,
-            new ConfigDescription("How much faster the player walks when the toggle above is on. 1 is vanilla speed, 2 is twice as fast, and so on. Don't combine with other speed mods.",
-                new AcceptableValueRange<float>(1.0f, 100f),
-                new ConfigurationManagerAttributes {Order = 99, DispName = "    └ Player Movement Speed"}));
-
-        ModifyPorterMovementSpeedConfig = Config.Bind(MovementSection, "Modify Porter Movement Speed", true,
-            new ConfigDescription("On: porter (backpack-wearing zombie worker) walking speed is overridden by the multiplier below. Off: porters move at their normal game speed.", null,
-                new ConfigurationManagerAttributes {Order = 98}));
-
-        PorterMovementSpeedConfig = Config.Bind(MovementSection, "Porter Movement Speed", 1.0f,
-            new ConfigDescription("How fast porters walk when the toggle above is on. 1 is their vanilla speed.",
-                new AcceptableValueRange<float>(1.0f, 100f),
-                new ConfigurationManagerAttributes {Order = 97, DispName = "    └ Porter Movement Speed"}));
-
-        // ── 6. Church ──
-        Config.Bind(ChurchSection, "Evict All Church Visitors", true,
-            new ConfigDescription("Click to force any stuck church visitors to leave immediately. Use this when villagers have lingered inside and are blocking the pulpit or benches.", null,
-                new ConfigurationManagerAttributes {Order = 100, HideDefaultButton = true, CustomDrawer = EvictVisitorsButton}));
-
-        // ── 7. Misc ──
-        KitsuneKitoModeConfig = Config.Bind(MiscSection, "KitsuneKito Mode", false,
-            new ConfigDescription("A Discord-requested tweak: adding the basic wooden fence to a grave drops a single blue XP orb. Off by default.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
-
-        OldEnglishThrowback = Config.Bind(MiscSection, "Old English Throwback", false,
-            new ConfigDescription("A Discord-requested tweak: changes the sermon line 'Our church is great!' to 'Our church great!' in English. Has no effect in other languages.", null,
-                new ConfigurationManagerAttributes {Order = 99}));
-
-        // ── 8. Updates ──
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 100);
     }
 
     private static bool _showEvictConfirmation;

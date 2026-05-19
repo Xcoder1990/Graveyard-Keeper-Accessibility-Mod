@@ -1,5 +1,15 @@
 {
+  "cfg.section.advanced": "고급",
+  "cfg.section.harvest": "수확",
+  "cfg.section.updates": "업데이트",
+  "cfg.debug_logging.name": "디버그 로깅",
+  "cfg.debug_logging.desc": "플레이 중에 자세한 진단 정보를 BepInEx 로그에 기록합니다. 버그 보고 전에 켜서 도움이 되는 로그를 남기세요.",
+  "cfg.require_farmer_perk.name": "농부 특성 필요",
+  "cfg.require_farmer_perk.desc": "켜기: 기술 트리에서 「농부」 특성을 해금한 뒤에만 인접 텃밭이 함께 수확됩니다. 모드의 원래 동작과 동일합니다. 끄기: 특성 해금 전에도 같은 작물의 이웃 텃밭이 즉시 함께 수확됩니다. 처음부터 편의를 원하는 경우에 좋습니다.",
+  "cfg.cascade_radius_tiles.name": "연쇄 반경 (타일)",
+  "cfg.cascade_radius_tiles.desc": "클릭한 텃밭에서 수확 연쇄가 몇 타일까지 퍼지는지입니다. 1은 인접한 8칸 (3x3 = 9칸)을 포함합니다. 2는 5x5 (25칸)까지 포함합니다. 값이 클수록 더 많은 이웃을 포함하지만 수확마다 더 많은 오브젝트를 확인하므로, 매우 큰 농장이 아니면 낮게 두세요.",
+  "cfg.check_for_updates.name": "업데이트 확인",
+  "cfg.check_for_updates.desc": "NexusMods에 새 버전이 올라오면 메인 메뉴에 알림이 표시됩니다. 알림을 클릭하면 모드 페이지로 이동합니다.",
   "Stage1Header": "향상된 수집",
-  "Stage1Des": "작업 중인 토지 주변의 토지를 자동으로 수확하도록 원예 기술을 향상시킵니다.",
-  "DebugWarning": "디버그 모드가 켜져 있습니다. 특별한 목적이 없다면 켜 두지 않는 것을 권장합니다."
+  "Stage1Des": "작업 중인 토지 주변의 토지를 자동으로 수확하도록 원예 기술을 향상시킵니다."
 }

@@ -1,0 +1,15 @@
+{
+  "cfg.section.dumper": "ダンプ",
+  "cfg.enabled.name": "有効",
+  "cfg.enabled.desc": "主スイッチ。オンにするとゲームが読み込む全ての FlowScript を BepInEx/plugins/FlowScriptDumper/dump/ に書き出します。",
+  "cfg.dump_resources_folder.name": "Resources フォルダをダンプ",
+  "cfg.dump_resources_folder.desc": "メインメニューを開いたときに Resources.LoadAll<FlowScript>(\"FlowCanvas\") を 1 回実行し、そのフォルダ配下を全て書き出します。",
+  "cfg.dump_scene_attached_scripts.name": "シーン付属スクリプトをダンプ",
+  "cfg.dump_scene_attached_scripts.desc": "FlowScriptEngine._scripts を走査し、各 FlowScriptController のグラフを書き出します。これらはゲームシーンに付属するエンジン駆動のグローバルです。",
+  "cfg.hook_get_graph.name": "CustomFlowScript.GetGraph をフック",
+  "cfg.hook_get_graph.desc": "CustomFlowScript.GetGraph に Postfix を当てて、実行時に名前で読み込まれる flow script も書き出します（Resources/FlowCanvas/ 配下以外も拾えます）。",
+  "cfg.write_reference_sidecars.name": "参照サイドカーを出力",
+  "cfg.write_reference_sidecars.desc": "各 <name>.json と並べて、_objectReferences[i] の参照先（型 + Unity オブジェクト名）を一覧化した <name>.refs.tsv を書き出します。JSON 内の \"$ref\":N を解決できます。",
+  "cfg.pretty_print.name": "整形出力",
+  "cfg.pretty_print.desc": "JSON をインデント整形して読みやすくします。オフ: ゲームが保存した素の 1 行文字列をそのまま書き出します。"
+}

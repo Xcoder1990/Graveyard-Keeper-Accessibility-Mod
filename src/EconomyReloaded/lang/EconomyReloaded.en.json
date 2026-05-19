@@ -1,0 +1,14 @@
+{
+  "cfg.section.economy": "Economy",
+  "cfg.section.updates": "Updates",
+  "cfg.dynamic_buy_pricing.name": "Dynamic Buy Pricing",
+  "cfg.dynamic_buy_pricing.desc": "When on, buy prices rise as shops run low on an item. When off, every purchase is at the flat base price.",
+  "cfg.buy_price_multiplier.name": "Buy Price Multiplier",
+  "cfg.buy_price_multiplier.desc": "Final multiplier on every buy price. 1.0 = base, 0.5 = half, 2.0 = double.",
+  "cfg.dynamic_sell_pricing.name": "Dynamic Sell Pricing",
+  "cfg.dynamic_sell_pricing.desc": "When on, sell prices drop as shops fill up. When off, every sale pays the flat sell price.",
+  "cfg.sell_price_multiplier.name": "Sell Price Multiplier",
+  "cfg.sell_price_multiplier.desc": "Final multiplier on every sell price. 0.75 matches base game.",
+  "cfg.check_for_updates.name": "Check for Updates",
+  "cfg.check_for_updates.desc": "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page."
+}

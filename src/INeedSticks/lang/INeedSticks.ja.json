@@ -1,3 +1,6 @@
 {
+  "cfg.section.updates": "アップデート",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。",
   "WoodenStickName": "木の棒"
 }

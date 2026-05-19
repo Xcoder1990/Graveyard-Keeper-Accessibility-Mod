@@ -1,0 +1,8 @@
+{
+  "cfg.section.day_length": "Durata del giorno",
+  "cfg.section.updates": "Aggiornamenti",
+  "cfg.day_length.name": "Durata del giorno",
+  "cfg.day_length.desc": "Imposta la durata di un giorno.",
+  "cfg.check_for_updates.name": "Controlla aggiornamenti",
+  "cfg.check_for_updates.desc": "Mostra un avviso nel menu principale quando è disponibile una nuova versione di questo mod su NexusMods. Clicca sull'avviso per aprire la pagina del mod."
+}

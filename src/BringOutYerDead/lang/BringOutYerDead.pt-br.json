@@ -1,4 +1,22 @@
 {
   "CarrotMessage": "Caramba! Estou sem cenouras para o burro!!",
-  "DebugWarning": "Observe que o modo de depuração está ativado. Não é recomendado deixá-lo ativado a menos que você tenha um propósito para isso."
+  "DebugWarning": "Observe que o modo de depuração está ativado. Não é recomendado deixá-lo ativado a menos que você tenha um propósito para isso.",
+  "cfg.section.advanced": "Avançado",
+  "cfg.section.delivery_times": "Horários de entrega",
+  "cfg.section.donkey": "Burro",
+  "cfg.section.updates": "Atualizações",
+  "cfg.debug_logging.name": "Log de depuração",
+  "cfg.debug_logging.desc": "Escreve diagnósticos detalhados de agendamento de entregas no console do BepInEx - transições de fase, estado do burro, verificações de cenouras e motivos de nova tentativa. Ative ao reportar bugs. Mantenha desativado para jogar.",
+  "cfg.morning_delivery.name": "Entrega da manhã",
+  "cfg.morning_delivery.desc": "Dispara uma entrega de corpo no início da fase da manhã (logo após o nascer do sol). Padrão: ligado.",
+  "cfg.day_delivery.name": "Entrega do dia",
+  "cfg.day_delivery.desc": "Dispara uma entrega de corpo no início do período diurno (perto do meio-dia). Padrão: desligado - ligue se quiser uma entrega extra ao meio-dia.",
+  "cfg.evening_delivery.name": "Entrega da tarde",
+  "cfg.evening_delivery.desc": "Dispara uma entrega de corpo no início da fase do final de tarde. Padrão: ligado.",
+  "cfg.night_delivery.name": "Entrega noturna",
+  "cfg.night_delivery.desc": "Dispara uma entrega de corpo no início da fase noturna (após o pôr do sol). Padrão: desligado - senão o burro chega justo quando você vai dormir.",
+  "cfg.donkey_speed.name": "Velocidade do burro",
+  "cfg.donkey_speed.desc": "Quão rápido o burro vai ao cemitério e volta. Velocidade padrão é 1; valores maiores encurtam o trajeto para cada entrega caber no horário. Aumente para 10-20 se as entregas chegarem tarde demais.",
+  "cfg.check_for_updates.name": "Verificar atualizações",
+  "cfg.check_for_updates.desc": "Mostra um aviso no menu principal quando há uma nova versão deste mod no NexusMods. Clique no aviso para abrir a página do mod."
 }

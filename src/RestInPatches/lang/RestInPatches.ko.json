@@ -1,0 +1,20 @@
+{
+  "Conflict.PlayerJudderFix.Feature": "이동 보정",
+  "Conflict.PlayerJudderFix.Note": "Rest In Patches가 이미 플레이어 이동을 부드럽게 합니다. 둘 다 설치하면 Player Judder Fix는 중복됩니다.",
+  "Conflict.FootprintPerformance.Feature": "발자국 동작",
+  "Conflict.FootprintPerformance.Note": "Rest In Patches에 이미 발자국 수정이 포함되어 있습니다. 둘 다 설치하면 Footprint Performance는 중복됩니다.",
+  "cfg.section.application": "애플리케이션",
+  "cfg.section.drops": "드롭",
+  "cfg.section.footprints": "발자국",
+  "cfg.section.updates": "업데이트",
+  "cfg.keep_running_in_background.name": "백그라운드에서 계속 실행",
+  "cfg.keep_running_in_background.desc": "게임 창이 비활성 상태여도 시뮬레이션을 계속합니다.",
+  "cfg.mute_when_unfocused.name": "비활성 시 음소거",
+  "cfg.mute_when_unfocused.desc": "게임 창이 활성화되지 않은 동안 모든 오디오를 음소거합니다.",
+  "cfg.max_footprints.name": "최대 발자국 수",
+  "cfg.max_footprints.desc": "유지하는 발자국의 최대 수. 초과 시 오래된 것부터 제거. 0이면 상한 없음.",
+  "cfg.apply_trigger_to_all_drops.name": "모든 드롭에 트리거 적용",
+  "cfg.apply_trigger_to_all_drops.desc": "쌓인 드롭이 매 프레임마다 물리적으로 떨어지는 현상을 방지합니다. 기본은 돌, 대리석, 광석, 상자뿐. 켜면 모든 드롭에 적용.",
+  "cfg.check_for_updates.name": "업데이트 확인",
+  "cfg.check_for_updates.desc": "NexusMods에 새 버전이 올라오면 메인 메뉴에 알림이 표시됩니다. 알림을 클릭하면 모드 페이지로 이동합니다."
+}

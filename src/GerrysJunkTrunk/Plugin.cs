@@ -9,15 +9,6 @@ public class Plugin : BaseUnityPlugin
     private const string PriceTooltipsSection = "── Price Tooltips ──";
     private const string UpdatesSection       = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["00. Advanced"]          = AdvancedSection,
-        ["Internal (Dont Touch)"] = AdvancedSection,
-        ["01. Gerry"]             = GerrySection,
-        ["02. Messages"]          = MessagesSection,
-        ["03. Price Tooltips"]    = PriceTooltipsSection,
-    };
-
     // Fraction of vendor value the player keeps when Best Friend perk + Engineer + Wood Processing are all unlocked (Stage 3).
     internal const float BestFriendPayoutFraction = 0.80f;
     internal const float PityPrice = 0.10f;
@@ -82,12 +73,9 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        ConfigMigration.MigrateRenamedSections(Config, Log, SectionRenames);
-        ConfigMigration.MigrateRenamedKeys(Config, Log,
-            new ConfigMigration.KeyRename(GerrySection, "Disable Tax", "Convenience Tax", ConfigMigration.InvertBool));
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         InitInternalConfiguration();
         InitConfiguration();
-        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
@@ -108,19 +96,13 @@ public class Plugin : BaseUnityPlugin
 
     private void InitConfiguration()
     {
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Write verbose Gerry and shipping-box diagnostics to the BepInEx console. Leave off for normal play.", null,
-                new ConfigurationManagerAttributes {Order = 0}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 0);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        EnableGerry = Config.Bind(GerrySection, "Gerry", true,
-            new ConfigDescription("Enable Gerry's buyback service. When on, items left in the shipping box are sold and Gerry arrives to deliver the coin.", null,
-                new ConfigurationManagerAttributes {Order = 6}));
+        EnableGerry = LocalizedConfig.Bind(Config, GerrySection, "Gerry", true, "gerry", order: 6);
 
-        CinematicMode = Config.Bind(GerrySection, "Cinematic Mode", true,
-            new ConfigDescription("When on, the camera focuses on Gerry and you can't move during his visit. When off, Gerry still appears and speaks but the game keeps running normally around you.", null,
-                new ConfigurationManagerAttributes {Order = 5, DispName = "    \u2514 Cinematic Mode"}));
+        CinematicMode = LocalizedConfig.Bind(Config, GerrySection, "Cinematic Mode", true, "cinematic_mode", order: 5, dispNamePrefix: "    \u2514 ");
         CinematicMode.SettingChanged += (_, _) =>
         {
             if (!CinematicMode.Value && _cinematicPlaying)
@@ -130,35 +112,22 @@ public class Plugin : BaseUnityPlugin
             }
         };
 
-        ConvenienceTax = Config.Bind(GerrySection, "Convenience Tax", true,
-            new ConfigDescription("When on, Gerry takes a cut of every sale (30% before the Best Friend perk, 20% after). Disable to pay the full vendor value with no cut taken (bypasses the convenience-tax design).", null,
-                new ConfigurationManagerAttributes {Order = 4, DispName = "    └ Convenience Tax"}));
+        ConvenienceTax = LocalizedConfig.Bind(Config, GerrySection, "Convenience Tax", true, "convenience_tax", order: 4, dispNamePrefix: "    └ ");
         ConvenienceTax.SettingChanged += (_, _) =>
         {
             if (!ConvenienceTax.Value && ShowDisableTaxPopup.Value) _disableTaxPromptDirty = true;
         };
 
-        ShowDisableTaxPopup = Config.Bind(GerrySection, "Show Disable Tax Popup", true,
-            new ConfigDescription("Show the in-game advisory dialog when you turn the Convenience Tax off. Turn off if you've read it once and don't need the reminder.", null,
-                new ConfigurationManagerAttributes {Order = 3, DispName = "        └ Show Disable Tax Popup"}));
+        ShowDisableTaxPopup = LocalizedConfig.Bind(Config, GerrySection, "Show Disable Tax Popup", true, "show_disable_tax_popup", order: 3, dispNamePrefix: "        └ ");
 
-        BoxTintColor = Config.Bind(GerrySection, "Shipping Box Tint", Color.white,
-            new ConfigDescription("Tint colour multiplied over the shipping box sprite. Default white means no tint. Pick a darker colour to make the box less visually loud.", null,
-                new ConfigurationManagerAttributes {Order = 2, DispName = "    └ Shipping Box Tint"}));
+        BoxTintColor = LocalizedConfig.Bind(Config, GerrySection, "Shipping Box Tint", Color.white, "shipping_box_tint", order: 2, dispNamePrefix: "    └ ");
         BoxTintColor.SettingChanged += (_, _) => ApplyBoxTint();
 
-        ShowSoldMessagesOnPlayer = Config.Bind(MessagesSection, "Show Sold Messages On Player", true,
-            new ConfigDescription("Show the earned-coin bubble above your character instead of above the shipping box when Gerry pays out.", null,
-                new ConfigurationManagerAttributes {Order = 5}));
+        ShowSoldMessagesOnPlayer = LocalizedConfig.Bind(Config, MessagesSection, "Show Sold Messages On Player", true, "show_sold_messages_on_player", order: 5);
 
-        ShowItemPriceTooltips = Config.Bind(PriceTooltipsSection, "Show Item Price Tooltips", true,
-            new ConfigDescription("Show each item's shipping-box sale price as a tooltip when hovering over it in inventories.", null,
-                new ConfigurationManagerAttributes {Order = 2}));
+        ShowItemPriceTooltips = LocalizedConfig.Bind(Config, PriceTooltipsSection, "Show Item Price Tooltips", true, "show_item_price_tooltips", order: 2);
 
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true, new ConfigDescription(
-            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-            null,
-            new ConfigurationManagerAttributes { Order = 0 }));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 0);
     }
 
     internal static void WriteLog(string message, bool error = false)

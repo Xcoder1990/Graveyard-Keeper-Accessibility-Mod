@@ -1,4 +1,22 @@
 {
   "CarrotMessage": "Verdammt, ich habe keine Karotten mehr für den Esel!!",
-  "DebugWarning": "Bitte beachten Sie, dass der Debug-Modus aktiviert ist. Es wird nicht empfohlen, diesen eingeschaltet zu lassen, es sei denn, Sie haben einen Zweck dafür."
+  "DebugWarning": "Bitte beachten Sie, dass der Debug-Modus aktiviert ist. Es wird nicht empfohlen, diesen eingeschaltet zu lassen, es sei denn, Sie haben einen Zweck dafür.",
+  "cfg.section.advanced": "Erweitert",
+  "cfg.section.delivery_times": "Lieferzeiten",
+  "cfg.section.donkey": "Esel",
+  "cfg.section.updates": "Aktualisierungen",
+  "cfg.debug_logging.name": "Debug-Logging",
+  "cfg.debug_logging.desc": "Schreibt ausführliche Liefer-Planung-Diagnosen in die BepInEx-Konsole - Phasenwechsel, Esel-Zustand, Karotten-Prüfungen und Wiederholungsgründe. Bei Fehlermeldungen aktivieren. Für normales Spielen ausschalten.",
+  "cfg.morning_delivery.name": "Morgens-Lieferung",
+  "cfg.morning_delivery.desc": "Löst zu Beginn der Morgenphase (kurz nach Sonnenaufgang) eine Leichenlieferung aus. Standard: an.",
+  "cfg.day_delivery.name": "Tages-Lieferung",
+  "cfg.day_delivery.desc": "Löst zu Beginn der Tagesphase (etwa Mittag) eine Leichenlieferung aus. Standard: aus - aktiviere, wenn du eine zusätzliche Lieferung zur Mittagszeit willst.",
+  "cfg.evening_delivery.name": "Abend-Lieferung",
+  "cfg.evening_delivery.desc": "Löst zu Beginn der Abendphase (später Nachmittag) eine Leichenlieferung aus. Standard: an.",
+  "cfg.night_delivery.name": "Nacht-Lieferung",
+  "cfg.night_delivery.desc": "Löst zu Beginn der Nachtphase (nach Sonnenuntergang) eine Leichenlieferung aus. Standard: aus - sonst kommt der Esel genau dann an, wenn du ins Bett gehst.",
+  "cfg.donkey_speed.name": "Esel-Geschwindigkeit",
+  "cfg.donkey_speed.desc": "Wie schnell der Esel zum Friedhof und zurück läuft. Vanilla-Geschwindigkeit ist 1; höhere Werte verkürzen den Weg, sodass jede Lieferung gut innerhalb ihres Zeitfensters fertig wird. 10-20 nehmen, wenn Lieferungen zu spät erscheinen.",
+  "cfg.check_for_updates.name": "Auf Updates prüfen",
+  "cfg.check_for_updates.desc": "Zeigt im Hauptmenü einen Hinweis an, wenn auf NexusMods eine neuere Version dieses Mods verfügbar ist. Klicke auf den Hinweis, um die Modseite zu öffnen."
 }

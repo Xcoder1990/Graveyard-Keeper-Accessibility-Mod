@@ -1,5 +1,27 @@
 {
   "DebugWarning": "请注意，调试模式已开启。除非有特定目的，否则不建议保持开启状态。",
   "Description": "我在我想要的地方建造！",
-  "Header": "随时随地制作"
+  "Header": "随时随地制作",
+  "Conflict.MoveObjects.Feature": "建造流程",
+  "Conflict.MoveObjects.Note": "请在 Move Objects 的设置中启用 'I Build Where I Want Compatibility'。",
+  "cfg.section.advanced": "高级",
+  "cfg.section.collision": "碰撞",
+  "cfg.section.display": "显示",
+  "cfg.section.keybinds": "按键绑定",
+  "cfg.section.controller": "手柄",
+  "cfg.section.updates": "更新",
+  "cfg.debug_logging.name": "调试日志",
+  "cfg.debug_logging.desc": "向 BepInEx 控制台输出建造菜单的详细诊断信息。普通游玩时请关闭。",
+  "cfg.building_collision.name": "建筑碰撞",
+  "cfg.building_collision.desc": "强制建筑之间发生碰撞。关闭后已放置的结构可以重叠。",
+  "cfg.grid.name": "网格",
+  "cfg.grid.desc": "放置结构时显示建造模式的网格。",
+  "cfg.grey_overlay.name": "灰色叠层",
+  "cfg.grey_overlay.desc": "拆除结构时显示灰色的删除模式叠层。",
+  "cfg.menu_key_bind.name": "菜单按键",
+  "cfg.menu_key_bind.desc": "打开「随处建造」菜单的按键。",
+  "cfg.menu_controller_button.name": "菜单手柄按钮",
+  "cfg.menu_controller_button.desc": "打开「随处建造」菜单的手柄按钮。",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。"
 }

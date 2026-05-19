@@ -3,5 +3,20 @@
   "DebugWarning": "デバッグモードがオンになっています。目的がない限り、オフのままにすることをおすすめします。",
   "No": "いいえ",
   "ResetButton": "木をリセット",
-  "Yes": "はい"
+  "Yes": "はい",
+  "cfg.section.advanced": "詳細設定",
+  "cfg.section.trees": "木",
+  "cfg.section.stumps": "切り株",
+  "cfg.section.reset": "リセット",
+  "cfg.section.updates": "アップデート",
+  "cfg.debug_logging.name": "デバッグログ",
+  "cfg.debug_logging.desc": "プレイ中に詳細な診断情報を BepInEx ログに記録します。バグ報告前にオンにしてください。",
+  "cfg.tree_search_distance.name": "木の検索距離",
+  "cfg.tree_search_distance.desc": "記録済みの木の周りをどこまで探すかです。既定値 2 は同じ木だけを捉えます。",
+  "cfg.instant_stump_removal.name": "切り株を即座に除去",
+  "cfg.instant_stump_removal.desc": "オン: 倒れた瞬間に切り株も消えます。オフ: 自分で取り除くまで残ります。",
+  "cfg.reset_trees.name": "木をリセット",
+  "cfg.reset_trees.desc": "次回ゲーム起動時に伐採したすべての木を復元します。「伐った木」の記録は消去されます。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
 }

@@ -1,0 +1,15 @@
+{
+  "cfg.section.dumper": "Eksporter",
+  "cfg.enabled.name": "Włączone",
+  "cfg.enabled.desc": "Główny przełącznik. Włączony zrzuca każdy FlowScript wczytany przez grę do BepInEx/plugins/FlowScriptDumper/dump/.",
+  "cfg.dump_resources_folder.name": "Eksportuj folder Resources",
+  "cfg.dump_resources_folder.desc": "Uruchamia Resources.LoadAll<FlowScript>(\"FlowCanvas\") raz po otwarciu menu głównego i zrzuca wszystko z tego folderu.",
+  "cfg.dump_scene_attached_scripts.name": "Eksportuj skrypty sceny",
+  "cfg.dump_scene_attached_scripts.desc": "Przechodzi przez FlowScriptEngine._scripts i zapisuje wykres każdego FlowScriptController. To sterowane silnikiem globalne dołączone do sceny rozgrywki.",
+  "cfg.hook_get_graph.name": "Podepnij CustomFlowScript.GetGraph",
+  "cfg.hook_get_graph.desc": "Postfix na CustomFlowScript.GetGraph, dzięki czemu każdy flow script wczytywany po nazwie w runtime też trafia do zrzutu (łapie to, co nie leży w Resources/FlowCanvas/).",
+  "cfg.write_reference_sidecars.name": "Zapisz pliki referencji",
+  "cfg.write_reference_sidecars.desc": "Obok każdego <name>.json zapisuje <name>.refs.tsv z listą tego, na co wskazuje każde _objectReferences[i] (typ + nazwa obiektu Unity). Pozwala rozwiązać tokeny \"$ref\":N w JSON.",
+  "cfg.pretty_print.name": "Czytelne formatowanie",
+  "cfg.pretty_print.desc": "Wcina JSON dla czytelności. Wyłączone: zapisuje surowy jednoliniowy ciąg tak, jak zapisała go gra."
+}

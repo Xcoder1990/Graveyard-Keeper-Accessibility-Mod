@@ -1,0 +1,10 @@
+{
+  "cfg.section.dumper": "ダンプ",
+  "cfg.section.updates": "アップデート",
+  "cfg.enabled.name": "有効",
+  "cfg.enabled.desc": "主スイッチ。オンにするとゲーム開始時にバニラの GameBalance 全体を BepInEx/plugins/GameBalanceDumper/dump/ に書き出します。",
+  "cfg.pretty_print.name": "整形出力",
+  "cfg.pretty_print.desc": "オン: JSON をインデント整形して読みやすくします。オフ: 1 行の縮小出力（小さく、書き込みも速い）。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
+}

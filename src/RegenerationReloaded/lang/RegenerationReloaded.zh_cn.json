@@ -1,0 +1,14 @@
+{
+  "cfg.section.regeneration": "恢复",
+  "cfg.section.updates": "更新",
+  "cfg.show_regeneration_updates.name": "显示恢复提示",
+  "cfg.show_regeneration_updates.desc": "当生命与精力恢复时显示提示。",
+  "cfg.life_regeneration_rate.name": "生命恢复速率",
+  "cfg.life_regeneration_rate.desc": "设置每个 tick 恢复的生命值。设为 0 即禁用。",
+  "cfg.energy_regeneration_rate.name": "精力恢复速率",
+  "cfg.energy_regeneration_rate.desc": "设置每个 tick 恢复的精力值。设为 0 即禁用。",
+  "cfg.regeneration_delay.name": "恢复间隔",
+  "cfg.regeneration_delay.desc": "设置每次恢复 tick 之间的间隔秒数。",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。"
+}

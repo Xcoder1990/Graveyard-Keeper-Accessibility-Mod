@@ -1,4 +1,10 @@
 {
   "Name": "Poço de pedra",
-  "PumpName": "Poço com bomba"
+  "PumpName": "Poço com bomba",
+  "cfg.section.unlocks": "Desbloqueios",
+  "cfg.section.updates": "Atualizações",
+  "cfg.require_engineer_for_pump_well.name": "Exigir tec. de Engenheiro para o poço com bomba",
+  "cfg.require_engineer_for_pump_well.desc": "Mantém a exigência original da tec. de Engenheiro antes de poder construir o poço com bomba. Desative para liberar o poço com bomba desde o início, junto ao poço básico.",
+  "cfg.check_for_updates.name": "Verificar atualizações",
+  "cfg.check_for_updates.desc": "Mostra um aviso no menu principal quando há uma nova versão deste mod no NexusMods. Clique no aviso para abrir a página do mod."
 }

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <BepInExPluginGuid>p1xel8ted.gyk.flowscriptdumper</BepInExPluginGuid>
+        <BepInExPluginName>Flow Script Dumper</BepInExPluginName>
+        <NexusGroupId>0</NexusGroupId>
+        <Version>0.1.0</Version>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="..\Shared\LogHelper.cs" Link="LogHelper.cs"/>
+        <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
+    </ItemGroup>
+</Project>

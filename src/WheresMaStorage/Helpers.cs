@@ -593,6 +593,13 @@ public static class Helpers
                 continue;
             }
 
+            // Crates belong on cellar pallets, not by the house. Leave them wherever they are.
+            if (drop.res?.definition?.is_crate == true)
+            {
+                if (Plugin.DebugEnabled) Log($"Skipping crate: {drop.res.id} from '{drop.zone_id}'");
+                continue;
+            }
+
             var distSq = ((Vector2) drop.transform.position - (Vector2) NearHouseDropSpot).sqrMagnitude;
             if (distSq <= dumpZoneRadiusSq)
             {

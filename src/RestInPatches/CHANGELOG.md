@@ -3,6 +3,7 @@
 ## 0.1.2 | 17 May 2026
 
 - The +/- arrows are now also restored on items already sitting in your craft queue, not just the recipe list
+- Mod settings menu (F1) labels now follow your in-game language
 - Settings menu reorganised. Existing values preserved.
 - Reduced per-frame work for smoother performance
 - Quarry piles and cellar crates stop drifting off the map. New optional setting extends the fix to other dropped items.

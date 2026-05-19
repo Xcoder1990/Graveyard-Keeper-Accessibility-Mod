@@ -1,0 +1,33 @@
+{
+  "cm.window.title": "플러그인 / 모드 설정",
+  "cm.cat.shortcuts": "단축키",
+  "cm.plugins_no_options": "설정 항목이 없는 플러그인",
+
+  "cm.tip.click_to_expand": "팁: 플러그인 이름을 클릭하면 펼쳐집니다. 설정 또는 그룹 이름을 클릭하면 설명이 표시됩니다.",
+  "cm.tip.drag_window": "팁: 이 창을 드래그하여 옮길 수 있습니다. 옮긴 후에는 게임을 조작하는 동안에도 창이 열려 있습니다.",
+
+  "cm.filter.normal": "일반 설정",
+  "cm.filter.keybinds": "단축키",
+  "cm.filter.advanced": "고급 설정",
+  "cm.filter.debug": "디버그 정보",
+
+  "cm.button.open_log": "로그 열기",
+  "cm.button.close": "닫기",
+  "cm.button.clear": "지우기",
+  "cm.button.cancel": "취소",
+  "cm.button.expand_all": "모두 펼치기",
+  "cm.button.collapse_all": "모두 접기",
+  "cm.button.url": "URL",
+  "cm.button.reset": "초기화",
+  "cm.button.set": "설정...",
+  "cm.button.set_tooltip": "키보드의 아무 키나 눌러 키를 설정합니다.",
+
+  "cm.label.search": "검색",
+  "cm.label.hex": "Hex",
+  "cm.label.press_any_key": "아무 키나 누르세요",
+  "cm.label.press_any_key_combo": "키 조합을 누르세요",
+  "cm.label.draw_failure": "이 항목을 표시하지 못했습니다. 자세한 내용은 로그를 확인하세요.",
+
+  "cm.bool.enabled": "활성화",
+  "cm.bool.disabled": "비활성화"
+}

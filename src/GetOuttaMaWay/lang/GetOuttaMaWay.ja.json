@@ -1,0 +1,17 @@
+{
+  "cfg.section.advanced": "詳細設定",
+  "cfg.section.general": "一般",
+  "cfg.section.updates": "アップデート",
+  "cfg.debug_logging.name": "デバッグログ",
+  "cfg.debug_logging.desc": "詳細な診断情報を BepInEx ログに記録します。バグ報告前にオンにしてください。",
+  "cfg.npc_collision.name": "NPC との衝突",
+  "cfg.npc_collision.desc": "NPC が進路を塞ぐようにします。オフにすると NPC をすり抜けて通れます。",
+  "cfg.drop_heavies_away_from_player.name": "重い物をプレイヤーから離して落とす",
+  "cfg.drop_heavies_away_from_player.desc": "丸太、石、掘り出したブロックが、プレイヤーの足元ではなく木や岩のそばに落ちます。",
+  "cfg.heavy_drop_grace_period.name": "重い物の落下後の猶予時間",
+  "cfg.heavy_drop_grace_period.desc": "落ちたばかりの丸太・石・ブロックは、着地から少しの間プレイヤーを押せなくなります。後からは押し動かせます。",
+  "cfg.grace_period_seconds.name": "猶予時間（秒）",
+  "cfg.grace_period_seconds.desc": "落ちたばかりの丸太・石・ブロックが再びプレイヤーを押せるようになるまでの秒数。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
+}

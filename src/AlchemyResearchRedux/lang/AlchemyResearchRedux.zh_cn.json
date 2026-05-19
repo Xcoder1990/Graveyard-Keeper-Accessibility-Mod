@@ -1,0 +1,8 @@
+{
+  "cfg.section.advanced": "高级",
+  "cfg.section.updates": "更新",
+  "cfg.debug_logging.name": "调试日志",
+  "cfg.debug_logging.desc": "向 BepInEx 控制台输出炼金配方相关的详细诊断信息。普通游玩时请关闭。",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。"
+}

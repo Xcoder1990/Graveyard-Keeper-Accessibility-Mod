@@ -1,0 +1,14 @@
+{
+  "cfg.section.regeneration": "Regeneracja",
+  "cfg.section.updates": "Aktualizacje",
+  "cfg.show_regeneration_updates.name": "Pokaż powiadomienia regeneracji",
+  "cfg.show_regeneration_updates.desc": "Wyświetla powiadomienia, gdy regeneruje się życie i energia.",
+  "cfg.life_regeneration_rate.name": "Tempo regeneracji życia",
+  "cfg.life_regeneration_rate.desc": "Określa, ile życia regeneruje się na tick. Ustaw 0, aby wyłączyć.",
+  "cfg.energy_regeneration_rate.name": "Tempo regeneracji energii",
+  "cfg.energy_regeneration_rate.desc": "Określa, ile energii regeneruje się na tick. Ustaw 0, aby wyłączyć.",
+  "cfg.regeneration_delay.name": "Opóźnienie regeneracji",
+  "cfg.regeneration_delay.desc": "Określa opóźnienie w sekundach między tickami regeneracji.",
+  "cfg.check_for_updates.name": "Sprawdź aktualizacje",
+  "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
+}

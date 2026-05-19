@@ -1,0 +1,14 @@
+{
+  "cfg.section.user_interface": "Interface utilisateur",
+  "cfg.section.visual_feedback": "Retour visuel",
+  "cfg.section.audio_feedback": "Retour audio",
+  "cfg.section.updates": "Mises à jour",
+  "cfg.always_show_xp_bar.name": "Toujours afficher la barre d'XP",
+  "cfg.always_show_xp_bar.desc": "Affiche en permanence la barre d'expérience, même sans gain actif.",
+  "cfg.show_point_gain_above_keeper.name": "Afficher les points gagnés au-dessus du gardien",
+  "cfg.show_point_gain_above_keeper.desc": "Affiche les points gagnés au-dessus de la tête du gardien.",
+  "cfg.still_play_collect_audio.name": "Toujours jouer le son de collecte",
+  "cfg.still_play_collect_audio.desc": "Continue à jouer le son de collecte lorsque les points gagnés sont affichés au-dessus de la tête du gardien.",
+  "cfg.check_for_updates.name": "Vérifier les mises à jour",
+  "cfg.check_for_updates.desc": "Affiche un avis dans le menu principal lorsqu'une nouvelle version de ce mod est disponible sur NexusMods. Clique sur l'avis pour ouvrir la page du mod."
+}

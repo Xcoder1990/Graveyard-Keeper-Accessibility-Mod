@@ -9,6 +9,34 @@ public static class Patches
     private static int KnownZoneCount;
     private static int KnownNpcCount;
 
+    // English-text -> JSON key map used by the SpeechBubble postfix below.
+    // The zone strings double as stable zone IDs (see LocationLists + Helpers.UnusualMaps),
+    // so they have to stay English on the wire; this map just routes display through Lang.
+    private static readonly Dictionary<string, string> EnglishToKey = new(StringComparer.Ordinal)
+    {
+        [Constants.ZoneLLighthouse]    = "zone.lighthouse",
+        [Constants.ZoneLQuarry]        = "zone.quarry",
+        [Constants.ZoneLFellingsite]   = "zone.felling_site",
+        [Constants.ZoneLCoal]          = "zone.coal",
+        [Constants.ZoneLClay]          = "zone.clay",
+        [Constants.ZoneLSand]          = "zone.sand",
+        [Constants.ZoneLMill]          = "zone.mill",
+        [Constants.ZoneLFarmer]        = "zone.farmer",
+        [Constants.ZoneLBlacksmith]    = "zone.blacksmith",
+        [Constants.ZoneLBodyDump]      = "zone.body_dump",
+        [Constants.ZoneLMarketStorage] = "zone.market_storage",
+        [Constants.Page1]  = "runtime.page.1",
+        [Constants.Page2]  = "runtime.page.2",
+        [Constants.Page3]  = "runtime.page.3",
+        [Constants.Page4]  = "runtime.page.4",
+        [Constants.Page5]  = "runtime.page.5",
+        [Constants.Page6]  = "runtime.page.6",
+        [Constants.Page7]  = "runtime.page.7",
+        [Constants.Page8]  = "runtime.page.8",
+        [Constants.Page9]  = "runtime.page.9",
+        [Constants.Page10] = "runtime.page.10"
+    };
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
     public static void GameSave_GlobalEventsCheck()
@@ -198,7 +226,7 @@ public static class Patches
         {
             if (Helpers.IsInDungeon)
             {
-                Helpers.SpawnGerry(Language.GetTranslation(Language.Terms.CantUseHere), Vector3.zero);
+                Helpers.SpawnGerry(Lang.Get("runtime.cant_use_here"), Vector3.zero);
             }
             else
             {
@@ -212,7 +240,7 @@ public static class Patches
         }
         else
         {
-            Helpers.SpawnGerry(Language.GetTranslation(Language.Terms.WhereIsIt), Vector3.zero);
+            Helpers.SpawnGerry(Lang.Get("runtime.where_is_it"), Vector3.zero);
         }
     }
 
@@ -228,11 +256,8 @@ public static class Patches
     [HarmonyPatch(typeof(SpeechBubbleGUI), nameof(SpeechBubbleGUI.SpeechText), typeof(string))]
     public static void SpeechBubbleGUI_SpeechText(string s, ref string __result)
     {
-        var term = Language.GetTerm(s);
-
-        if (term is Language.Terms.None) return;
-
-        __result = Language.GetTranslation(term);
+        if (s == null || !EnglishToKey.TryGetValue(s, out var key)) return;
+        __result = Lang.Get(key);
     }
 
     [HarmonyPrefix]

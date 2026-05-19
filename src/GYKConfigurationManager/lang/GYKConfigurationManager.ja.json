@@ -1,0 +1,33 @@
+{
+  "cm.window.title": "プラグイン / MOD 設定",
+  "cm.cat.shortcuts": "キーボードショートカット",
+  "cm.plugins_no_options": "設定項目のないプラグイン",
+
+  "cm.tip.click_to_expand": "ヒント: プラグイン名をクリックすると展開できます。設定名やグループ名をクリックすると説明が表示されます。",
+  "cm.tip.drag_window": "ヒント: このウィンドウはドラッグして移動できます。移動後はゲームを操作している間も開いたままになります。",
+
+  "cm.filter.normal": "通常設定",
+  "cm.filter.keybinds": "キーボードショートカット",
+  "cm.filter.advanced": "詳細設定",
+  "cm.filter.debug": "デバッグ情報",
+
+  "cm.button.open_log": "ログを開く",
+  "cm.button.close": "閉じる",
+  "cm.button.clear": "クリア",
+  "cm.button.cancel": "キャンセル",
+  "cm.button.expand_all": "すべて展開",
+  "cm.button.collapse_all": "すべて折りたたむ",
+  "cm.button.url": "URL",
+  "cm.button.reset": "リセット",
+  "cm.button.set": "設定...",
+  "cm.button.set_tooltip": "キーボードの任意のキーを押して設定します。",
+
+  "cm.label.search": "検索",
+  "cm.label.hex": "Hex",
+  "cm.label.press_any_key": "いずれかのキーを押してください",
+  "cm.label.press_any_key_combo": "キーの組み合わせを押してください",
+  "cm.label.draw_failure": "この項目を描画できませんでした。詳細はログを確認してください。",
+
+  "cm.bool.enabled": "有効",
+  "cm.bool.disabled": "無効"
+}

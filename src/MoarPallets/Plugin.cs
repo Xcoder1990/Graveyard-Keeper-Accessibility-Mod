@@ -27,27 +27,14 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-
-        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true,
-            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.");
-
-        ShowConnectedPopup = Config.Bind("── Notifications ──", "Show Pallet Connected Popup", true,
-            new ConfigDescription("Show a small 'Linked to elevator' message above any pallet you build in the cellar, confirming the elevator and the porter will use it. Turn off for a quieter cellar.", null,
-                new ConfigurationManagerAttributes { Order = 100 }));
-
-        AutoRouteLooseCrates = Config.Bind("── Pallet ──", "Auto-Route Loose Crates", true,
-            new ConfigDescription("On game load, slide any loose crate lying around onto the nearest pallet with space. Crates left over when every pallet is full get parked at the cellar elevator instead.", null,
-                new ConfigurationManagerAttributes { Order = 200 }));
-
-        AutoRouteCarriedCrates = Config.Bind("── Pallet ──", "Auto-Route Carried Crates", true,
-            new ConfigDescription("When you drop a crate you're carrying, send it straight to the nearest pallet with space instead of leaving it on the floor. Anything left over when every pallet is full ends up at the cellar elevator.", null,
-                new ConfigurationManagerAttributes { Order = 199 }));
-
-        Debug = Config.Bind("── Advanced ──", "Debug Logging", true,
-            new ConfigDescription("Write verbose pallet-and-zone diagnostics to the BepInEx console. Useful while figuring out why a pallet isn't getting filled. Leave off for normal play.", null,
-                new ConfigurationManagerAttributes { Order = 599 }));
-
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
+
+        CheckForUpdates = LocalizedConfig.Bind(Config, "── Updates ──", "Check for Updates", true, "check_for_updates");
+        ShowConnectedPopup = LocalizedConfig.Bind(Config, "── Notifications ──", "Show Pallet Connected Popup", true, "show_pallet_connected_popup", order: 100);
+        AutoRouteLooseCrates = LocalizedConfig.Bind(Config, "── Pallet ──", "Auto-Route Loose Crates", true, "auto_route_loose_crates", order: 200);
+        AutoRouteCarriedCrates = LocalizedConfig.Bind(Config, "── Pallet ──", "Auto-Route Carried Crates", true, "auto_route_carried_crates", order: 199);
+        Debug = LocalizedConfig.Bind(Config, "── Advanced ──", "Debug Logging", true, "debug_logging", order: 599);
+
         UpdateChecker.Register(Info, CheckForUpdates);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }

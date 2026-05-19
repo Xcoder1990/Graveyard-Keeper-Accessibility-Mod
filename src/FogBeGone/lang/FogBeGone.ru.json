@@ -1,0 +1,12 @@
+{
+  "cfg.section.general": "Общие",
+  "cfg.section.updates": "Обновления",
+  "cfg.remove_fog.name": "Убрать туман",
+  "cfg.remove_fog.desc": "Убирает туман в погоде на улице и в помещениях.",
+  "cfg.remove_wind.name": "Убрать ветер",
+  "cfg.remove_wind.desc": "Убирает погодные эффекты ветра.",
+  "cfg.remove_rain.name": "Убрать дождь",
+  "cfg.remove_rain.desc": "Убирает погодные эффекты дождя.",
+  "cfg.check_for_updates.name": "Проверять обновления",
+  "cfg.check_for_updates.desc": "Показывать в главном меню уведомление, когда на NexusMods появляется более новая версия этого мода. Нажмите на уведомление, чтобы открыть страницу мода."
+}

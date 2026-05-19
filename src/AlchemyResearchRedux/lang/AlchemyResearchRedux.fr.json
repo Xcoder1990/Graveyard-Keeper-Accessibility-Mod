@@ -1,0 +1,8 @@
+{
+  "cfg.section.advanced": "Avancé",
+  "cfg.section.updates": "Mises à jour",
+  "cfg.debug_logging.name": "Journal de débogage",
+  "cfg.debug_logging.desc": "Écrit des diagnostics détaillés des recettes d'alchimie dans la console BepInEx. Laisse désactivé pour le jeu normal.",
+  "cfg.check_for_updates.name": "Vérifier les mises à jour",
+  "cfg.check_for_updates.desc": "Affiche un avis dans le menu principal lorsqu'une nouvelle version de ce mod est disponible sur NexusMods. Clique sur l'avis pour ouvrir la page du mod."
+}

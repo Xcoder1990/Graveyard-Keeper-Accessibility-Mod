@@ -11,15 +11,6 @@ public class Plugin : BaseUnityPlugin
     private const string UnlimitedStatsSection = "── Unlimited Stats ──";
     private const string UpdatesSection        = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["01. Tools"]            = ToolsSection,
-        ["02. Meditation"]       = MeditationSection,
-        ["03. Sleep"]            = SleepSection,
-        ["04. Gameplay"]         = GameplaySection,
-        ["05. Unlimited Stats"]  = UnlimitedStatsSection,
-    };
-
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
 
@@ -43,106 +34,81 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        MigrateRenamedSections();
-        InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        InitConfiguration();
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
-    }
-
-    private void MigrateRenamedSections()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string content;
-        try { content = File.ReadAllText(path); }
-        catch (Exception ex) { Log.LogWarning($"[Migration] Could not read {path}: {ex.Message}"); return; }
-
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
+        ConflictWarningRegistry.Register(MyPluginInfo.PLUGIN_NAME, () => new[]
         {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
-        }
-        if (renamed == 0) return;
-
-        try { File.WriteAllText(path, content); }
-        catch (Exception ex) { Log.LogWarning($"[Migration] Could not write {path}: {ex.Message}"); return; }
-
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
-        Config.Reload();
+            new ConflictEntry(
+                theirGuid: "codesprint.energy_edit",
+                theirName: "Energy Edit",
+                feature: Lang.Get("Conflict.EnergyEdit.Feature"),
+                severity: ConflictSeverity.Race,
+                note: Lang.Get("Conflict.EnergyEdit.Note")),
+        });
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     private void InitConfiguration()
     {
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Write verbose tool, meditation, sleep and energy diagnostics to the BepInEx console. Leave off for normal play.", null,
-                new ConfigurationManagerAttributes {Order = 50}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 50);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        AutoEquipNewTool = Config.Bind(ToolsSection, "Auto Equip New Tool", true, new ConfigDescription("Automatically equip a new tool if the current one breaks", null, new ConfigurationManagerAttributes {Order = 49}));
-        MakeToolsLastLonger = Config.Bind(ToolsSection, "Make Tools Last Longer", true, new ConfigDescription("Increase the durability of tools", null, new ConfigurationManagerAttributes {Order = 48}));
+        AutoEquipNewTool = LocalizedConfig.Bind(Config, ToolsSection, "Auto Equip New Tool", true, "auto_equip_new_tool", order: 49);
+        MakeToolsLastLonger = LocalizedConfig.Bind(Config, ToolsSection, "Make Tools Last Longer", true, "make_tools_last_longer", order: 48);
 
-        AutoWakeFromMeditationWhenStatsFull = Config.Bind(MeditationSection, "Auto Wake From Meditation When Stats Full", true, new ConfigDescription("Automatically wake up when meditation is complete", null, new ConfigurationManagerAttributes {Order = 47}));
-        SpeedUpMeditation = Config.Bind(MeditationSection, "Speed Up Meditation", true, new ConfigDescription("Reduce the time needed for meditation", null, new ConfigurationManagerAttributes {Order = 46}));
+        AutoWakeFromMeditationWhenStatsFull = LocalizedConfig.Bind(Config, MeditationSection, "Auto Wake From Meditation When Stats Full", true, "auto_wake_from_meditation_when_stats_full", order: 47);
+        SpeedUpMeditation = LocalizedConfig.Bind(Config, MeditationSection, "Speed Up Meditation", true, "speed_up_meditation", order: 46);
 
-        EnergySpendBeforeSleepDebuff = Config.Bind(SleepSection, "Energy Spend Before Sleep Debuff", 1200, new ConfigDescription("Set the total energy spent in a day required (game's default is 300) before sleep debuff is applied", new AcceptableValueRange<int>(350, 50000), new ConfigurationManagerAttributes {Order = 45}));
-        SpeedUpSleep = Config.Bind(SleepSection, "Speed Up Sleep", true, new ConfigDescription("Decrease the time needed for sleep", null, new ConfigurationManagerAttributes {Order = 44}));
+        EnergySpendBeforeSleepDebuff = LocalizedConfig.Bind(Config, SleepSection, "Energy Spend Before Sleep Debuff", 1200, "energy_spend_before_sleep_debuff", new AcceptableValueRange<int>(350, 50000), order: 45);
+        SpeedUpSleep = LocalizedConfig.Bind(Config, SleepSection, "Speed Up Sleep", true, "speed_up_sleep", order: 44);
 
-        SpendHalfEnergy = Config.Bind(GameplaySection, "Spend Half Energy", true, new ConfigDescription("Reduce energy consumption by half. Enabling this will disable Unlimited Energy.", null, new ConfigurationManagerAttributes {Order = 43}));
+        SpendHalfEnergy = LocalizedConfig.Bind(Config, GameplaySection, "Spend Half Energy", true, "spend_half_energy", order: 43);
         SpendHalfEnergy.SettingChanged += (_, _) =>
         {
-            if(SpendHalfEnergy.Value)
+            if (SpendHalfEnergy.Value)
                 UnlimitedEnergy.Value = false;
         };
-        
-        
-        SpendHalfGratitude = Config.Bind(GameplaySection, "Spend Half Gratitude", true, new ConfigDescription("Reduce gratitude consumption by half. Enabling this will disable Unlimited Gratitude.", null, new ConfigurationManagerAttributes {Order = 42}));
+
+        SpendHalfGratitude = LocalizedConfig.Bind(Config, GameplaySection, "Spend Half Gratitude", true, "spend_half_gratitude", order: 42);
         SpendHalfGratitude.SettingChanged += (_, _) =>
         {
-            if(SpendHalfGratitude.Value)
+            if (SpendHalfGratitude.Value)
                 UnlimitedGratitude.Value = false;
         };
-        
-        SpendHalfSanity = Config.Bind(GameplaySection, "Spend Half Sanity", true, new ConfigDescription("Reduce sanity consumption by half. Enabling this will disable Unlimited Sanity.", null, new ConfigurationManagerAttributes {Order = 41}));
+
+        SpendHalfSanity = LocalizedConfig.Bind(Config, GameplaySection, "Spend Half Sanity", true, "spend_half_sanity", order: 41);
         SpendHalfSanity.SettingChanged += (_, _) =>
         {
-            if(SpendHalfSanity.Value)
+            if (SpendHalfSanity.Value)
                 UnlimitedSanity.Value = false;
         };
-        
-        UnlimitedEnergy = Config.Bind(UnlimitedStatsSection, "Unlimited Energy", false, new ConfigDescription("Unlimited energy. Enabling this will disable Spend Half Energy.", null, new ConfigurationManagerAttributes { Order = 40 }));
+
+        UnlimitedEnergy = LocalizedConfig.Bind(Config, UnlimitedStatsSection, "Unlimited Energy", false, "unlimited_energy", order: 40);
         UnlimitedEnergy.SettingChanged += (_, _) =>
         {
-            if(UnlimitedEnergy.Value)
+            if (UnlimitedEnergy.Value)
                 SpendHalfEnergy.Value = false;
         };
-        UnlimitedGratitude = Config.Bind(UnlimitedStatsSection, "Unlimited Gratitude", false, new ConfigDescription("Unlimited gratitude. Enabling this will disable Spend Half Gratitude.", null, new ConfigurationManagerAttributes { Order = 39 }));
+        UnlimitedGratitude = LocalizedConfig.Bind(Config, UnlimitedStatsSection, "Unlimited Gratitude", false, "unlimited_gratitude", order: 39);
         UnlimitedGratitude.SettingChanged += (_, _) =>
         {
-            if(UnlimitedGratitude.Value)
+            if (UnlimitedGratitude.Value)
                 SpendHalfGratitude.Value = false;
-        }; 
-        UnlimitedSanity = Config.Bind(UnlimitedStatsSection, "Unlimited Sanity", false, new ConfigDescription("Unlimited sanity. This overrides Spend Half Sanity. Enabling this will disable Spend Half Sanity.", null, new ConfigurationManagerAttributes { Order = 38 }));
+        };
+        UnlimitedSanity = LocalizedConfig.Bind(Config, UnlimitedStatsSection, "Unlimited Sanity", false, "unlimited_sanity", order: 38);
         UnlimitedSanity.SettingChanged += (_, _) =>
         {
-            if(UnlimitedSanity.Value)
+            if (UnlimitedSanity.Value)
                 SpendHalfSanity.Value = false;
         };
-        
-        UnlimitedHealth = Config.Bind(UnlimitedStatsSection, "Unlimited Health", false, new ConfigDescription("Unlimited health.", null, new ConfigurationManagerAttributes { Order = 37 }));
 
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true, new ConfigDescription(
-            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-            null,
-            new ConfigurationManagerAttributes { Order = 36 }));
+        UnlimitedHealth = LocalizedConfig.Bind(Config, UnlimitedStatsSection, "Unlimited Health", false, "unlimited_health", order: 37);
+
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 36);
     }
 
 }

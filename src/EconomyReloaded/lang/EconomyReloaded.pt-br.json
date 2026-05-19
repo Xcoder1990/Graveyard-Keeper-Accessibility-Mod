@@ -1,0 +1,14 @@
+{
+  "cfg.section.economy": "Economia",
+  "cfg.section.updates": "Atualizações",
+  "cfg.dynamic_buy_pricing.name": "Preços de compra dinâmicos",
+  "cfg.dynamic_buy_pricing.desc": "Quando ativo, os preços sobem com pouco estoque. Desativado, sempre preço base.",
+  "cfg.buy_price_multiplier.name": "Multiplicador de preço de compra",
+  "cfg.buy_price_multiplier.desc": "Multiplicador final. 1.0 = base, 0.5 = metade, 2.0 = dobro.",
+  "cfg.dynamic_sell_pricing.name": "Preços de venda dinâmicos",
+  "cfg.dynamic_sell_pricing.desc": "Quando ativo, os preços caem com estoque cheio. Desativado, sempre preço base.",
+  "cfg.sell_price_multiplier.name": "Multiplicador de preço de venda",
+  "cfg.sell_price_multiplier.desc": "Multiplicador final. 0.75 corresponde ao jogo base.",
+  "cfg.check_for_updates.name": "Verificar atualizações",
+  "cfg.check_for_updates.desc": "Mostra um aviso no menu principal quando há uma nova versão deste mod no NexusMods. Clique no aviso para abrir a página do mod."
+}

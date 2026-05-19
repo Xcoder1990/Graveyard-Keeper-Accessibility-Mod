@@ -10,15 +10,6 @@ public class Plugin : BaseUnityPlugin
     private const string AdvancedSection         = "── Advanced ──";
     private const string UpdatesSection          = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["1. Player Garden"]     = PlayerGardenSection,
-        ["2. Harvesting"]        = HarvestingSection,
-        ["3. World Environment"] = WorldEnvironmentSection,
-        ["4. Economy"]           = EconomySection,
-        ["5. Advanced"]          = AdvancedSection,
-    };
-
     internal static TimestampedLogger Log { get; private set; }
 
     internal static ConfigEntry<bool> Debug { get; private set; }
@@ -38,94 +29,31 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        MigrateRenamedSections();
-        InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        InitConfiguration();
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
-    private void MigrateRenamedSections()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string content;
-        try
-        {
-            content = File.ReadAllText(path);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
-            return;
-        }
-
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
-        {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
-        }
-        if (renamed == 0) return;
-
-        try
-        {
-            File.WriteAllText(path, content);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
-            return;
-        }
-
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
-        Config.Reload();
-    }
-
     private void InitConfiguration()
     {
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Write verbose harvest and respawn diagnostics to the BepInEx console. Leave off for normal play.", null,
-                new ConfigurationManagerAttributes {Order = 2}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 2);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        IncludeGardenBerryBushes = Config.Bind(PlayerGardenSection, "Include Garden Berry Bushes", true,
-            new ConfigDescription("Apply the mod's respawn and harvest fixes to berry bushes you've planted in your garden.", null,
-                new ConfigurationManagerAttributes {Order = 9}));
-        IncludeGardenTrees = Config.Bind(PlayerGardenSection, "Include Garden Trees", true,
-            new ConfigDescription("Apply the mod's respawn and harvest fixes to fruit trees you've planted in your garden.", null,
-                new ConfigurationManagerAttributes {Order = 8}));
-        IncludeGardenBeeHives = Config.Bind(PlayerGardenSection, "Include Garden Bee Hives", false,
-            new ConfigDescription("Apply the mod's respawn and harvest fixes to bee hives you've placed in your garden.", null,
-                new ConfigurationManagerAttributes {Order = 7}));
+        IncludeGardenBerryBushes = LocalizedConfig.Bind(Config, PlayerGardenSection, "Include Garden Berry Bushes", true, "include_garden_berry_bushes", order: 9);
+        IncludeGardenTrees = LocalizedConfig.Bind(Config, PlayerGardenSection, "Include Garden Trees", true, "include_garden_trees", order: 8);
+        IncludeGardenBeeHives = LocalizedConfig.Bind(Config, PlayerGardenSection, "Include Garden Bee Hives", false, "include_garden_bee_hives", order: 7);
 
-        RealisticHarvest = Config.Bind(HarvestingSection, "Realistic Harvest", true,
-            new ConfigDescription("Randomise the harvest amount and drop timing slightly so yields don't feel mechanical.", null,
-                new ConfigurationManagerAttributes {Order = 6}));
-        ShowHarvestReadyMessages = Config.Bind(HarvestingSection, "Show Harvest Ready Messages", true,
-            new ConfigDescription("Show a small floating message when trees, bushes, or hives are ready to harvest.", null,
-                new ConfigurationManagerAttributes {Order = 5}));
+        RealisticHarvest = LocalizedConfig.Bind(Config, HarvestingSection, "Realistic Harvest", true, "realistic_harvest", order: 6);
+        ShowHarvestReadyMessages = LocalizedConfig.Bind(Config, HarvestingSection, "Show Harvest Ready Messages", true, "show_harvest_ready_messages", order: 5);
 
-        IncludeWorldBerryBushes = Config.Bind(WorldEnvironmentSection, "Include World Berry Bushes", false,
-            new ConfigDescription("Apply the mod's fixes to wild berry bushes out in the world, not just garden-planted ones. Not recommended without Where's Ma' Storage - world bushes produce large amounts of loose items.", null,
-                new ConfigurationManagerAttributes {Order = 4}));
+        IncludeWorldBerryBushes = LocalizedConfig.Bind(Config, WorldEnvironmentSection, "Include World Berry Bushes", false, "include_world_berry_bushes", order: 4);
+        BeeKeeperBuyback = LocalizedConfig.Bind(Config, EconomySection, "Bee Keeper Buyback", false, "bee_keeper_buyback", order: 3);
 
-        BeeKeeperBuyback = Config.Bind(EconomySection, "Bee Keeper Buyback", false,
-            new ConfigDescription("Let the beekeeper buy bees back from you, so surplus hives are worth selling.", null,
-                new ConfigurationManagerAttributes {Order = 3}));
-
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes { Order = 1 }));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 1);
     }
 
     internal static void CleanUpTrees()

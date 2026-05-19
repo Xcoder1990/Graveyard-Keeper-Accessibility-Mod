@@ -1,0 +1,14 @@
+{
+  "cfg.section.user_interface": "Interfejs użytkownika",
+  "cfg.section.visual_feedback": "Sygnał wizualny",
+  "cfg.section.audio_feedback": "Sygnał dźwiękowy",
+  "cfg.section.updates": "Aktualizacje",
+  "cfg.always_show_xp_bar.name": "Zawsze pokazuj pasek XP",
+  "cfg.always_show_xp_bar.desc": "Wyświetla pasek doświadczenia stale, nawet bez aktywnego zdobywania XP.",
+  "cfg.show_point_gain_above_keeper.name": "Pokaż zdobyte punkty nad strażnikiem",
+  "cfg.show_point_gain_above_keeper.desc": "Wyświetla zdobyte punkty nad głową strażnika.",
+  "cfg.still_play_collect_audio.name": "Nadal odtwarzaj dźwięk zbierania",
+  "cfg.still_play_collect_audio.desc": "Nadal odtwarza dźwięk zbierania, gdy zdobyte punkty są pokazywane nad głową strażnika.",
+  "cfg.check_for_updates.name": "Sprawdź aktualizacje",
+  "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
+}

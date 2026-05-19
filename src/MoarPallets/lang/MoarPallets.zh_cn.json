@@ -1,4 +1,18 @@
 {
   "Name": "托盘",
-  "ConnectedMessage": "已连接到升降机"
+  "ConnectedMessage": "已连接到升降机",
+  "cfg.section.advanced": "高级",
+  "cfg.section.notifications": "通知",
+  "cfg.section.pallet": "托盘",
+  "cfg.section.updates": "更新",
+  "cfg.show_pallet_connected_popup.name": "显示托盘已连接弹窗",
+  "cfg.show_pallet_connected_popup.desc": "在地下室的每个托盘上方显示「已连接到电梯」。",
+  "cfg.auto_route_loose_crates.name": "自动整理散落木箱",
+  "cfg.auto_route_loose_crates.desc": "载入时把散落木箱滑到最近有空位的托盘。剩余的去地下室电梯。",
+  "cfg.auto_route_carried_crates.name": "自动整理手持木箱",
+  "cfg.auto_route_carried_crates.desc": "放下手持木箱时滑到最近有空位的托盘。剩余的去地下室电梯。",
+  "cfg.debug_logging.name": "调试日志",
+  "cfg.debug_logging.desc": "向 BepInEx 控制台输出托盘和区域的详细诊断信息。普通游玩时请关闭。",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。"
 }

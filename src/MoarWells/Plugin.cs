@@ -31,17 +31,12 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-
-        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true,
-            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.");
-
-        RequireEngineerForPumpWell = Config.Bind("── Unlocks ──", "Require Engineer Tech For Pump Well", true,
-            new ConfigDescription(
-                "Keep the vanilla Engineer tech requirement before the pump well becomes buildable. Turn this off to unlock the pump well from the start, alongside the basic well.",
-                null,
-                new ConfigurationManagerAttributes { Order = 0 }));
-
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
+
+        CheckForUpdates = LocalizedConfig.Bind(Config, "── Updates ──", "Check for Updates", true, "check_for_updates");
+
+        RequireEngineerForPumpWell = LocalizedConfig.Bind(Config, "── Unlocks ──", "Require Engineer Tech For Pump Well", true, "require_engineer_for_pump_well");
+
         UpdateChecker.Register(Info, CheckForUpdates);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }

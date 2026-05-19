@@ -1,4 +1,22 @@
 {
   "CarrotMessage": "なんてこった！ロバのニンジンがなくなっちゃった！ ！",
-  "DebugWarning": "デバッグモードがオンになっています。目的がない限り、オフのままにすることをおすすめします。"
+  "DebugWarning": "デバッグモードがオンになっています。目的がない限り、オフのままにすることをおすすめします。",
+  "cfg.section.advanced": "詳細設定",
+  "cfg.section.delivery_times": "配送時間帯",
+  "cfg.section.donkey": "ロバ",
+  "cfg.section.updates": "アップデート",
+  "cfg.debug_logging.name": "デバッグログ",
+  "cfg.debug_logging.desc": "配送スケジュールの詳細な診断情報を BepInEx コンソールに記録します - 時間帯の遷移、ロバの状態、にんじんチェック、再試行理由。バグ報告時にオンに。通常プレイ時はオフ。",
+  "cfg.morning_delivery.name": "朝の配送",
+  "cfg.morning_delivery.desc": "朝の時間帯（日の出直後）の開始時に遺体配送を実行します。既定: オン。",
+  "cfg.day_delivery.name": "昼の配送",
+  "cfg.day_delivery.desc": "昼の時間帯（正午頃）の開始時に遺体配送を実行します。既定: オフ - 朝・夕に加えて昼にも追加で配送したい場合にオン。",
+  "cfg.evening_delivery.name": "夕方の配送",
+  "cfg.evening_delivery.desc": "夕方の時間帯（午後遅め）の開始時に遺体配送を実行します。既定: オン。",
+  "cfg.night_delivery.name": "夜の配送",
+  "cfg.night_delivery.desc": "夜の時間帯（日没後）の開始時に遺体配送を実行します。既定: オフ - そうしないと、就寝直前にロバが到着してしまいます。",
+  "cfg.donkey_speed.name": "ロバの速度",
+  "cfg.donkey_speed.desc": "ロバが墓地まで往復する速度。バニラ速度は 1。高くすると往復が短縮され、各配送が時間枠内に余裕で終わります。配送が遅すぎると感じたら 10-20 に上げてください。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
 }

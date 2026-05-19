@@ -8,12 +8,6 @@ public class Plugin : BaseUnityPlugin
     private const string FootprintsSection  = "── Footprints ──";
     private const string UpdatesSection     = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["01. Application"] = ApplicationSection,
-        ["02. Footprints"]  = FootprintsSection,
-    };
-
     internal static TimestampedLogger Log { get; set; }
     internal static Sprite ArrowLeftSprite { get; private set; }
     internal static Sprite ArrowUpSprite { get; private set; }
@@ -27,7 +21,7 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Log = new TimestampedLogger(Logger);
-        MigrateRenamedSections();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         InitConfiguration();
         ArrowLeftSprite = LoadEmbeddedSprite("RestInPatches.Resources.ui_btn_arrow_left.png", "ui_btn_arrow_left");
         if (ArrowLeftSprite == null)
@@ -52,62 +46,43 @@ public class Plugin : BaseUnityPlugin
 
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
-    }
-
-    private void MigrateRenamedSections()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string content;
-        try { content = File.ReadAllText(path); }
-        catch (Exception ex) { Log.LogWarning($"[Migration] Could not read {path}: {ex.Message}"); return; }
-
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
+        ConflictWarningRegistry.Register(MyPluginInfo.PLUGIN_NAME, () => new[]
         {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
-        }
-        if (renamed == 0) return;
-
-        try { File.WriteAllText(path, content); }
-        catch (Exception ex) { Log.LogWarning($"[Migration] Could not write {path}: {ex.Message}"); return; }
-
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
-        Config.Reload();
+            new ConflictEntry(
+                theirGuid: "Aze.GYK.PlayerJudderFix",
+                theirName: "Player Judder Fix",
+                feature: Lang.Get("Conflict.PlayerJudderFix.Feature"),
+                severity: ConflictSeverity.Hint,
+                note: Lang.Get("Conflict.PlayerJudderFix.Note")),
+            new ConflictEntry(
+                theirGuid: "Aze.GYK.FootprintPerformance",
+                theirName: "Footprint Performance",
+                feature: Lang.Get("Conflict.FootprintPerformance.Feature"),
+                severity: ConflictSeverity.Hint,
+                note: Lang.Get("Conflict.FootprintPerformance.Note")),
+        });
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     private void InitConfiguration()
     {
-        KeepRunningInBackground = Config.Bind(ApplicationSection, "Keep Running In Background", true,
-            "Keeps the game simulating when its window isn't focused.");
+        KeepRunningInBackground = LocalizedConfig.Bind(Config, ApplicationSection, "Keep Running In Background", true, "keep_running_in_background");
         KeepRunningInBackground.SettingChanged += (_, _) =>
         {
             Application.runInBackground = KeepRunningInBackground.Value;
         };
 
-        MuteWhenUnfocused = Config.Bind(ApplicationSection, "Mute When Unfocused", true,
-            "Mutes all audio while the game window isn't focused.");
+        MuteWhenUnfocused = LocalizedConfig.Bind(Config, ApplicationSection, "Mute When Unfocused", true, "mute_when_unfocused");
         MuteWhenUnfocused.SettingChanged += (_, _) =>
         {
             AudioListener.volume = MuteWhenUnfocused.Value && !Application.isFocused ? 0f : 1f;
         };
 
-        MaxFootprints = Config.Bind(FootprintsSection, "Max Footprints", 1000,
-            new ConfigDescription("Maximum number of footprints kept in the world before the oldest are removed. 0 disables the cap.",
-                new AcceptableValueRange<int>(0, 10000)));
-
-        ApplyTriggerToAllDrops = Config.Bind(DropsSection, "Apply Trigger To All Drops", false,
-            "Stops stacked drops from physically separating each frame. By default this only applies to stones, marble, ore (quarry items) and crates (which pile up at the cellar elevator). Turn this on to extend the same fix to every other drop in the world - wood, dropped loot, the lot. Applies live: toggle either way and existing drops update immediately.");
+        MaxFootprints = LocalizedConfig.Bind(Config, FootprintsSection, "Max Footprints", 1000, "max_footprints", new AcceptableValueRange<int>(0, 10000));
+        ApplyTriggerToAllDrops = LocalizedConfig.Bind(Config, DropsSection, "Apply Trigger To All Drops", false, "apply_trigger_to_all_drops");
         ApplyTriggerToAllDrops.SettingChanged += (_, _) => Patches.DropColliderPatches.ReapplyAllExistingDrops();
 
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.");
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates");
     }
 
     private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)

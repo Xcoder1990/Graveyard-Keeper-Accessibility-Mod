@@ -1,0 +1,15 @@
+{
+  "cfg.section.dumper": "Exporteur",
+  "cfg.enabled.name": "Activé",
+  "cfg.enabled.desc": "Interrupteur principal. Activé, chaque FlowScript chargé par le jeu est exporté vers BepInEx/plugins/FlowScriptDumper/dump/.",
+  "cfg.dump_resources_folder.name": "Exporter le dossier Resources",
+  "cfg.dump_resources_folder.desc": "Exécute Resources.LoadAll<FlowScript>(\"FlowCanvas\") une fois à l'ouverture du menu principal et exporte tout ce qui s'y trouve.",
+  "cfg.dump_scene_attached_scripts.name": "Exporter les scripts de la scène",
+  "cfg.dump_scene_attached_scripts.desc": "Parcourt FlowScriptEngine._scripts et exporte le graphe de chaque FlowScriptController. Ce sont les globaux pilotés par le moteur, attachés à la scène de jeu.",
+  "cfg.hook_get_graph.name": "Brancher CustomFlowScript.GetGraph",
+  "cfg.hook_get_graph.desc": "Postfix sur CustomFlowScript.GetGraph pour exporter aussi tout flow script chargé par nom à l'exécution (attrape ce qui n'est pas sous Resources/FlowCanvas/).",
+  "cfg.write_reference_sidecars.name": "Écrire les fichiers de références",
+  "cfg.write_reference_sidecars.desc": "À côté de chaque <name>.json, écrit <name>.refs.tsv listant ce que pointe chaque _objectReferences[i] (type + nom de l'objet Unity). Permet de résoudre les jetons \"$ref\":N dans le JSON.",
+  "cfg.pretty_print.name": "Mise en forme lisible",
+  "cfg.pretty_print.desc": "Indente le JSON pour la lisibilité. Désactivé : écrit la chaîne brute sur une ligne telle que stockée par le jeu."
+}

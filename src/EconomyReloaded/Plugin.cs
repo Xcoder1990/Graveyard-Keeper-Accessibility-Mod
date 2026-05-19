@@ -6,11 +6,6 @@ public class Plugin : BaseUnityPlugin
     private const string EconomySection = "── Economy ──";
     private const string UpdatesSection = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["01. Economy"] = EconomySection,
-    };
-
     internal static TimestampedLogger Log { get; private set; }
 
     internal static ConfigEntry<bool> DynamicBuyPricing { get; private set; }
@@ -22,173 +17,19 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Log = new TimestampedLogger(Logger);
-        var legacy = MigrateConfig();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         InitConfiguration();
-        ApplyLegacyMigration(legacy);
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
-    // Rewrites legacy section headers to the "── Name ──" style and strips out the
-    // pre-1.4 "Inflation" / "Deflation" keys so the new settings bind cleanly.
-    // Returns the parsed legacy values so ApplyLegacyMigration can port them across.
-    private LegacyConfigValues MigrateConfig()
-    {
-        var result = new LegacyConfigValues();
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return result;
-
-        string content;
-        try { content = File.ReadAllText(path); }
-        catch (Exception ex) { Log.LogWarning($"[Migration] Could not read {path}: {ex.Message}"); return result; }
-
-        var modified = false;
-
-        foreach (var kv in SectionRenames)
-        {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            modified = true;
-        }
-
-        result.Inflation = ExtractAndStripBoolEntry(ref content, "Inflation", ref modified);
-        result.Deflation = ExtractAndStripBoolEntry(ref content, "Deflation", ref modified);
-
-        if (!modified) return result;
-
-        try { File.WriteAllText(path, content); }
-        catch (Exception ex) { Log.LogWarning($"[Migration] Could not write {path}: {ex.Message}"); return result; }
-
-        Log.LogInfo("[Migration] Legacy Economy Reloaded config format updated to the new settings layout.");
-        Config.Reload();
-        return result;
-    }
-
-    // Reads a boolean value out of the INI text and removes both the key and its auto-generated comment block.
-    private static bool? ExtractAndStripBoolEntry(ref string content, string key, ref bool modified)
-    {
-        var normalised = content.Replace("\r\n", "\n");
-        var lines = normalised.Split('\n');
-        var kept = new List<string>(lines.Length);
-        var commentStart = -1;
-        bool? extracted = null;
-
-        foreach (var line in lines)
-        {
-            var trimmed = line.TrimStart();
-
-            if (trimmed.Length == 0 || trimmed.StartsWith("["))
-            {
-                commentStart = -1;
-                kept.Add(line);
-                continue;
-            }
-
-            if (trimmed.StartsWith("#"))
-            {
-                if (commentStart == -1) commentStart = kept.Count;
-                kept.Add(line);
-                continue;
-            }
-
-            if (IsKeyAssignment(trimmed, key))
-            {
-                var eq = trimmed.IndexOf('=');
-                if (eq > 0)
-                {
-                    var value = trimmed.Substring(eq + 1).Trim();
-                    if (bool.TryParse(value, out var parsed)) extracted = parsed;
-                }
-                if (commentStart >= 0)
-                {
-                    kept.RemoveRange(commentStart, kept.Count - commentStart);
-                }
-                commentStart = -1;
-                modified = true;
-                continue;
-            }
-
-            commentStart = -1;
-            kept.Add(line);
-        }
-
-        if (extracted.HasValue)
-        {
-            content = string.Join("\n", kept);
-        }
-        return extracted;
-    }
-
-    private static bool IsKeyAssignment(string trimmedLine, string key)
-    {
-        if (!trimmedLine.StartsWith(key)) return false;
-        var rest = trimmedLine.Substring(key.Length).TrimStart();
-        return rest.StartsWith("=");
-    }
-
     private void InitConfiguration()
     {
-        DynamicBuyPricing = Config.Bind(EconomySection, "Dynamic Buy Pricing", true,
-            new ConfigDescription(
-                "When on, buy prices rise as shops run low on an item (the base game's inflation). When off, every purchase is at the flat base price no matter how much the shop has in stock.",
-                null,
-                new ConfigurationManagerAttributes { Order = 4 }));
-
-        BuyPriceMultiplier = Config.Bind(EconomySection, "Buy Price Multiplier", 1.0f,
-            new ConfigDescription(
-                "Final multiplier applied to every buy price. 1.0 is the base rate, 0.5 is half price, 2.0 is double. Works together with the Dynamic Buy Pricing setting above.",
-                new AcceptableValueRange<float>(0.1f, 5.0f),
-                new ConfigurationManagerAttributes { Order = 3 }));
-
-        DynamicSellPricing = Config.Bind(EconomySection, "Dynamic Sell Pricing", true,
-            new ConfigDescription(
-                "When on, sell prices drop as shops fill up on an item (the base game's deflation). When off, every sale pays the flat sell price no matter how many the shop already has.",
-                null,
-                new ConfigurationManagerAttributes { Order = 2 }));
-
-        SellPriceMultiplier = Config.Bind(EconomySection, "Sell Price Multiplier", 0.75f,
-            new ConfigDescription(
-                "Final multiplier applied to every sell price. 0.75 matches the base game (shops pay three-quarters of the base price). Raise it for easier income, lower it for a tighter economy. Works together with the Dynamic Sell Pricing setting above.",
-                new AcceptableValueRange<float>(0.1f, 5.0f),
-                new ConfigurationManagerAttributes { Order = 1 }));
-
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true, new ConfigDescription(
-            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-            null,
-            new ConfigurationManagerAttributes { Order = 0 }));
-    }
-
-    // Ports old Inflation/Deflation settings onto the new sliders so existing installs behave the same after upgrade.
-    private void ApplyLegacyMigration(LegacyConfigValues legacy)
-    {
-        var changed = false;
-
-        if (legacy.Inflation.HasValue)
-        {
-            DynamicBuyPricing.Value = legacy.Inflation.Value;
-            changed = true;
-        }
-
-        if (legacy.Deflation.HasValue)
-        {
-            // true matches the old dynamic 0.75 sell behaviour; false matches the old flat 1.0x sell.
-            DynamicSellPricing.Value = legacy.Deflation.Value;
-            SellPriceMultiplier.Value = legacy.Deflation.Value ? 0.75f : 1.0f;
-            changed = true;
-        }
-
-        if (!changed) return;
-
-        Log.LogInfo("[Migration] Carried over your previous Inflation/Deflation choices to the new settings.");
-        Config.Save();
-    }
-
-    private sealed class LegacyConfigValues
-    {
-        public bool? Inflation;
-        public bool? Deflation;
+        DynamicBuyPricing = LocalizedConfig.Bind(Config, EconomySection, "Dynamic Buy Pricing", true, "dynamic_buy_pricing", order: 4);
+        BuyPriceMultiplier = LocalizedConfig.Bind(Config, EconomySection, "Buy Price Multiplier", 1.0f, "buy_price_multiplier", new AcceptableValueRange<float>(0.1f, 5.0f), order: 3);
+        DynamicSellPricing = LocalizedConfig.Bind(Config, EconomySection, "Dynamic Sell Pricing", true, "dynamic_sell_pricing", order: 2);
+        SellPriceMultiplier = LocalizedConfig.Bind(Config, EconomySection, "Sell Price Multiplier", 0.75f, "sell_price_multiplier", new AcceptableValueRange<float>(0.1f, 5.0f), order: 1);
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates");
     }
 }

@@ -1,4 +1,18 @@
 {
   "Name": "Поддон",
-  "ConnectedMessage": "Подключён к лифту"
+  "ConnectedMessage": "Подключён к лифту",
+  "cfg.section.advanced": "Расширенные",
+  "cfg.section.notifications": "Уведомления",
+  "cfg.section.pallet": "Поддон",
+  "cfg.section.updates": "Обновления",
+  "cfg.show_pallet_connected_popup.name": "Показывать всплывающее «поддон подключён»",
+  "cfg.show_pallet_connected_popup.desc": "Показывает «Подключено к лифту» над каждым поддоном в подвале.",
+  "cfg.auto_route_loose_crates.name": "Авто-распределение свободных ящиков",
+  "cfg.auto_route_loose_crates.desc": "При загрузке свободные ящики идут на ближайший поддон со свободным местом. Остаток - к лифту подвала.",
+  "cfg.auto_route_carried_crates.name": "Авто-распределение переносимых ящиков",
+  "cfg.auto_route_carried_crates.desc": "При сбросе переносимого ящика он идёт на ближайший поддон со свободным местом. Остаток - к лифту подвала.",
+  "cfg.debug_logging.name": "Отладочный лог",
+  "cfg.debug_logging.desc": "Записывает подробные диагностические сведения о поддонах и зонах в консоль BepInEx. Оставьте выключенным.",
+  "cfg.check_for_updates.name": "Проверять обновления",
+  "cfg.check_for_updates.desc": "Показывать в главном меню уведомление, когда на NexusMods появляется более новая версия этого мода. Нажмите на уведомление, чтобы открыть страницу мода."
 }

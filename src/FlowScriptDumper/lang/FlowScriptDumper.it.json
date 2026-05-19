@@ -1,0 +1,15 @@
+{
+  "cfg.section.dumper": "Esportatore",
+  "cfg.enabled.name": "Attivo",
+  "cfg.enabled.desc": "Interruttore principale. Acceso, ogni FlowScript caricato dal gioco viene esportato in BepInEx/plugins/FlowScriptDumper/dump/.",
+  "cfg.dump_resources_folder.name": "Esporta cartella Resources",
+  "cfg.dump_resources_folder.desc": "Esegue Resources.LoadAll<FlowScript>(\"FlowCanvas\") una volta all'apertura del menu principale ed esporta tutto in quella cartella.",
+  "cfg.dump_scene_attached_scripts.name": "Esporta script della scena",
+  "cfg.dump_scene_attached_scripts.desc": "Scorre FlowScriptEngine._scripts ed esporta il grafico di ogni FlowScriptController. Sono i globali guidati dal motore, attaccati alla scena di gioco.",
+  "cfg.hook_get_graph.name": "Aggancia CustomFlowScript.GetGraph",
+  "cfg.hook_get_graph.desc": "Postfix su CustomFlowScript.GetGraph così ogni flow script caricato per nome a runtime viene esportato (cattura tutto ciò che non sta sotto Resources/FlowCanvas/).",
+  "cfg.write_reference_sidecars.name": "Scrivi file di riferimenti",
+  "cfg.write_reference_sidecars.desc": "Accanto a ogni <name>.json scrive <name>.refs.tsv elencando a cosa punta ogni _objectReferences[i] (tipo + nome dell'oggetto Unity). Serve a risolvere i token \"$ref\":N nel JSON.",
+  "cfg.pretty_print.name": "Formato leggibile",
+  "cfg.pretty_print.desc": "Indenta il JSON per leggibilità. Spento: scrive la stringa grezza su una riga come l'ha salvata il gioco."
+}

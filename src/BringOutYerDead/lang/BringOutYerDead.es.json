@@ -1,4 +1,22 @@
 {
   "CarrotMessage": "¡Se me acabaron las zanahorias por el burro!",
-  "DebugWarning": "Ten en cuenta que el modo de depuración está activado. No se recomienda dejarlo activado a menos que tengas un propósito para ello."
+  "DebugWarning": "Ten en cuenta que el modo de depuración está activado. No se recomienda dejarlo activado a menos que tengas un propósito para ello.",
+  "cfg.section.advanced": "Avanzado",
+  "cfg.section.delivery_times": "Horarios de entrega",
+  "cfg.section.donkey": "Burro",
+  "cfg.section.updates": "Actualizaciones",
+  "cfg.debug_logging.name": "Registro de depuración",
+  "cfg.debug_logging.desc": "Escribe diagnósticos detallados de programación de entregas en la consola de BepInEx: transiciones de fase, estado del burro, comprobaciones de zanahorias y motivos de reintento. Actívalo al reportar errores. Apágalo para jugar.",
+  "cfg.morning_delivery.name": "Entrega matutina",
+  "cfg.morning_delivery.desc": "Activa una entrega de cuerpo al inicio de la fase de la mañana (justo después del amanecer). Por defecto: activado.",
+  "cfg.day_delivery.name": "Entrega diurna",
+  "cfg.day_delivery.desc": "Activa una entrega de cuerpo al inicio del día (alrededor del mediodía). Por defecto: desactivado: actívalo si quieres una entrega extra al mediodía.",
+  "cfg.evening_delivery.name": "Entrega vespertina",
+  "cfg.evening_delivery.desc": "Activa una entrega de cuerpo al inicio de la tarde-noche. Por defecto: activado.",
+  "cfg.night_delivery.name": "Entrega nocturna",
+  "cfg.night_delivery.desc": "Activa una entrega de cuerpo al inicio de la noche (tras el ocaso). Por defecto: desactivado - el burro llegaría justo cuando te vas a dormir.",
+  "cfg.donkey_speed.name": "Velocidad del burro",
+  "cfg.donkey_speed.desc": "Lo rápido que el burro va al cementerio y vuelve. Velocidad vanilla = 1; valores mayores acortan el viaje y cada entrega encaja en su franja horaria. Sube a 10-20 si las entregas llegan tarde.",
+  "cfg.check_for_updates.name": "Buscar actualizaciones",
+  "cfg.check_for_updates.desc": "Muestra un aviso en el menú principal cuando hay una versión más nueva de este mod en NexusMods. Haz clic en el aviso para abrir la página del mod."
 }

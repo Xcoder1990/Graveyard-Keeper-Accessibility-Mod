@@ -1,0 +1,17 @@
+{
+  "cfg.section.advanced": "Avanzate",
+  "cfg.section.general": "Generale",
+  "cfg.section.updates": "Aggiornamenti",
+  "cfg.debug_logging.name": "Log di debug",
+  "cfg.debug_logging.desc": "Scrive informazioni diagnostiche dettagliate nel log di BepInEx. Attiva prima di segnalare bug.",
+  "cfg.npc_collision.name": "Collisione NPC",
+  "cfg.npc_collision.desc": "Permette agli NPC di bloccarti il cammino. Disattiva per attraversarli senza dover schivare.",
+  "cfg.drop_heavies_away_from_player.name": "Rilascia oggetti pesanti lontano dal giocatore",
+  "cfg.drop_heavies_away_from_player.desc": "Tronchi, pietre e blocchi minati cadono accanto all'albero o alla roccia, non ai tuoi piedi.",
+  "cfg.heavy_drop_grace_period.name": "Periodo di grazia per oggetti pesanti",
+  "cfg.heavy_drop_grace_period.desc": "Un tronco, pietra o blocco appena rilasciato non può spingerti per un breve istante dopo l'atterraggio. Puoi comunque spostarli in seguito.",
+  "cfg.grace_period_seconds.name": "Secondi periodo di grazia",
+  "cfg.grace_period_seconds.desc": "Secondi prima che un tronco, pietra o blocco appena rilasciato possa di nuovo spingerti.",
+  "cfg.check_for_updates.name": "Controlla aggiornamenti",
+  "cfg.check_for_updates.desc": "Mostra un avviso nel menu principale quando è disponibile una nuova versione di questo mod su NexusMods. Clicca sull'avviso per aprire la pagina del mod."
+}

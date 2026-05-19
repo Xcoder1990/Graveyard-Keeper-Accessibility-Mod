@@ -1,0 +1,8 @@
+{
+  "cfg.section.day_length": "Długość dnia",
+  "cfg.section.updates": "Aktualizacje",
+  "cfg.day_length.name": "Długość dnia",
+  "cfg.day_length.desc": "Ustaw długość jednego dnia.",
+  "cfg.check_for_updates.name": "Sprawdź aktualizacje",
+  "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
+}

@@ -3,6 +3,9 @@
 ## 3.1.7 | 17 May 2026
 
 - Fixed a launch crash on the 32-bit GOG build with certain mod combinations
+- Mod settings menu (F1) labels now follow your in-game language
+- Fixed Farmer and Miller missing from the teleport list after you've discovered them
+- Added Blacksmith, Body Dump, and Market Storage as teleport destinations
 
 ## 3.1.6 | 3 May 2026
 

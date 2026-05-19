@@ -1,0 +1,13 @@
+{
+  "cfg.section.advanced": "Avancé",
+  "cfg.section.changes": "Modifications",
+  "cfg.section.updates": "Mises à jour",
+  "cfg.debug_logging.name": "Journal de débogage",
+  "cfg.debug_logging.desc": "Écrit des diagnostics détaillés sur les changements de qualité des tombes et décorations dans la console BepInEx. Laisse désactivé pour le jeu normal.",
+  "cfg.modify_graves.name": "Modifier les tombes",
+  "cfg.modify_graves.desc": "Pousse au maximum la qualité de base de chaque objet de la catégorie tombe, pour que ton score de cimetière soit au plafond dès le départ.",
+  "cfg.modify_decorations.name": "Modifier les décorations",
+  "cfg.modify_decorations.desc": "Pousse aussi au maximum la qualité de base des décorations associées aux tombes - pas seulement des pierres tombales et clôtures.",
+  "cfg.check_for_updates.name": "Vérifier les mises à jour",
+  "cfg.check_for_updates.desc": "Affiche un avis dans le menu principal lorsqu'une nouvelle version de ce mod est disponible sur NexusMods. Clique sur l'avis pour ouvrir la page du mod."
+}

@@ -1,4 +1,18 @@
 {
   "Name": "팔레트",
-  "ConnectedMessage": "엘리베이터에 연결됨"
+  "ConnectedMessage": "엘리베이터에 연결됨",
+  "cfg.section.advanced": "고급",
+  "cfg.section.notifications": "알림",
+  "cfg.section.pallet": "팰릿",
+  "cfg.section.updates": "업데이트",
+  "cfg.show_pallet_connected_popup.name": "팰릿 연결 팝업 표시",
+  "cfg.show_pallet_connected_popup.desc": "지하실의 각 팰릿 위에 「엘리베이터에 연결됨」을 표시합니다.",
+  "cfg.auto_route_loose_crates.name": "흩어진 상자 자동 배치",
+  "cfg.auto_route_loose_crates.desc": "로드 시 흩어진 상자를 빈 자리가 있는 가장 가까운 팰릿으로. 남은 것은 지하 엘리베이터로.",
+  "cfg.auto_route_carried_crates.name": "운반 중인 상자 자동 배치",
+  "cfg.auto_route_carried_crates.desc": "운반 중인 상자를 내려놓으면 빈 자리가 있는 가장 가까운 팰릿으로. 남은 것은 지하 엘리베이터로.",
+  "cfg.debug_logging.name": "디버그 로깅",
+  "cfg.debug_logging.desc": "팰릿과 영역에 대한 자세한 진단 정보를 BepInEx 콘솔에 기록합니다. 일반 플레이 시에는 꺼두세요.",
+  "cfg.check_for_updates.name": "업데이트 확인",
+  "cfg.check_for_updates.desc": "NexusMods에 새 버전이 올라오면 메인 메뉴에 알림이 표시됩니다. 알림을 클릭하면 모드 페이지로 이동합니다."
 }

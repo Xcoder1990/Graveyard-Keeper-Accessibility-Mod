@@ -1,0 +1,20 @@
+{
+  "Conflict.PlayerJudderFix.Feature": "移动平滑",
+  "Conflict.PlayerJudderFix.Note": "Rest In Patches 已经平滑了玩家移动。同时安装 Player Judder Fix 是多余的。",
+  "Conflict.FootprintPerformance.Feature": "脚印行为",
+  "Conflict.FootprintPerformance.Note": "Rest In Patches 已经包含脚印修复。同时安装 Footprint Performance 是多余的。",
+  "cfg.section.application": "应用程序",
+  "cfg.section.drops": "掉落物",
+  "cfg.section.footprints": "脚印",
+  "cfg.section.updates": "更新",
+  "cfg.keep_running_in_background.name": "后台运行",
+  "cfg.keep_running_in_background.desc": "当游戏窗口未获得焦点时也继续模拟。",
+  "cfg.mute_when_unfocused.name": "失焦时静音",
+  "cfg.mute_when_unfocused.desc": "当游戏窗口未获得焦点时静音全部音频。",
+  "cfg.max_footprints.name": "最大脚印数",
+  "cfg.max_footprints.desc": "保留脚印的最大数量，超出后从最旧的开始移除。0 表示不限。",
+  "cfg.apply_trigger_to_all_drops.name": "将触发器应用于所有掉落物",
+  "cfg.apply_trigger_to_all_drops.desc": "防止堆叠的掉落物每帧物理分离。默认仅作用于石头、大理石、矿石和板条箱。开启则应用于所有掉落物。",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。"
+}

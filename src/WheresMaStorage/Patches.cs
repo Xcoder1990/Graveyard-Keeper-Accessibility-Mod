@@ -4,6 +4,8 @@ namespace WheresMaStorage;
 
 [Harmony]
 [HarmonyPriority(0)]
+// Run after known external mods that mutate the same balance data, so this mod's config wins.
+[HarmonyAfter("com.oyasumi.infinitestack")]
 public static class Patches
 {
     [HarmonyPostfix]
@@ -18,6 +20,16 @@ public static class Patches
     public static void GameBalance_LoadGameBalance()
     {
         Helpers.GameBalanceLoad();
+    }
+
+    // Oyasumi Infinite Stack postfixes OnGameStartedPlaying and rewrites every item's
+    // stack_count to its own value, clobbering our LoadGameBalance work. Class-level
+    // HarmonyAfter on this Patches class ensures we run last; re-apply here.
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.OnGameStartedPlaying))]
+    public static void MainGame_OnGameStartedPlaying_ReapplyStackSizes()
+    {
+        Helpers.UpdateStackSizes();
     }
 
     [HarmonyPrefix]

@@ -1,6 +1,9 @@
 ﻿namespace Exhaustless;
 
 [Harmony]
+// Run after known external mods that also write the TrySpendEnergy ref param, so this
+// mod's percent/zero-out has the final say.
+[HarmonyAfter("codesprint.energy_edit")]
 public static class Patches
 {
     private static readonly ItemDefinition.ItemType[] ToolItems =

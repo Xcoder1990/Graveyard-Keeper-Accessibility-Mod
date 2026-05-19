@@ -1,4 +1,10 @@
 {
   "Name": "Kamienna studnia",
-  "PumpName": "Studnia z pompą"
+  "PumpName": "Studnia z pompą",
+  "cfg.section.unlocks": "Odblokowania",
+  "cfg.section.updates": "Aktualizacje",
+  "cfg.require_engineer_for_pump_well.name": "Wymagaj tech. Inżynier do pompy studni",
+  "cfg.require_engineer_for_pump_well.desc": "Zachowuje oryginalny wymóg technologii Inżynier, zanim można zbudować studnię z pompą. Wyłącz, aby odblokować studnię z pompą od początku, razem ze studnią podstawową.",
+  "cfg.check_for_updates.name": "Sprawdź aktualizacje",
+  "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
 }

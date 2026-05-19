@@ -1,0 +1,12 @@
+{
+  "cfg.section.general": "一般",
+  "cfg.section.updates": "アップデート",
+  "cfg.remove_fog.name": "霧を除去",
+  "cfg.remove_fog.desc": "屋外と屋内の天候から霧を除去します。",
+  "cfg.remove_wind.name": "風を除去",
+  "cfg.remove_wind.desc": "風による天候エフェクトを除去します。",
+  "cfg.remove_rain.name": "雨を除去",
+  "cfg.remove_rain.desc": "雨による天候エフェクトを除去します。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
+}

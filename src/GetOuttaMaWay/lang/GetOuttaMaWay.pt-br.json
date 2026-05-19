@@ -1,0 +1,17 @@
+{
+  "cfg.section.advanced": "Avançado",
+  "cfg.section.general": "Geral",
+  "cfg.section.updates": "Atualizações",
+  "cfg.debug_logging.name": "Log de depuração",
+  "cfg.debug_logging.desc": "Escreve informações de diagnóstico detalhadas no log do BepInEx. Ative antes de reportar bugs.",
+  "cfg.npc_collision.name": "Colisão com NPC",
+  "cfg.npc_collision.desc": "Permite que NPCs bloqueiem seu caminho. Desative para atravessar qualquer NPC sem desviar.",
+  "cfg.drop_heavies_away_from_player.name": "Soltar pesados longe do jogador",
+  "cfg.drop_heavies_away_from_player.desc": "Toras, pedras e blocos minerados caem ao lado da árvore ou pedra em vez de irem aos seus pés.",
+  "cfg.heavy_drop_grace_period.name": "Período de carência após soltar pesados",
+  "cfg.heavy_drop_grace_period.desc": "Toras, pedras ou blocos recém-soltos não conseguem te empurrar por um instante após pousarem. Você ainda pode movê-los depois.",
+  "cfg.grace_period_seconds.name": "Segundos do período de carência",
+  "cfg.grace_period_seconds.desc": "Segundos antes que uma tora, pedra ou bloco recém-solto possa te empurrar novamente.",
+  "cfg.check_for_updates.name": "Verificar atualizações",
+  "cfg.check_for_updates.desc": "Mostra um aviso no menu principal quando há uma nova versão deste mod no NexusMods. Clique no aviso para abrir a página do mod."
+}

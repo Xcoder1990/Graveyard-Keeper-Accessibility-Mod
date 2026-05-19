@@ -13,6 +13,8 @@
         <EmbeddedResource Include="Resources\ui_btn_arrow_dn.png" />
     </ItemGroup>
     <ItemGroup>
+    </ItemGroup>
+    <ItemGroup>
         <Reference Include="UnityEngine.ImageConversionModule">
             <HintPath>..\..\libs\UnityEngine.ImageConversionModule.dll</HintPath>
         </Reference>

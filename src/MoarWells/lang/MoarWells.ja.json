@@ -1,4 +1,10 @@
 {
   "Name": "石の井戸",
-  "PumpName": "ポンプ井戸"
+  "PumpName": "ポンプ井戸",
+  "cfg.section.unlocks": "アンロック",
+  "cfg.section.updates": "アップデート",
+  "cfg.require_engineer_for_pump_well.name": "ポンプ式井戸にエンジニア技術を必要とする",
+  "cfg.require_engineer_for_pump_well.desc": "ポンプ式井戸を建てる前にエンジニア技術が必要というバニラの条件を維持します。オフにすると、基本の井戸と一緒に最初からポンプ式井戸を解放します。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
 }

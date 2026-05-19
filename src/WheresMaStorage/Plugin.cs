@@ -3,24 +3,13 @@ namespace WheresMaStorage;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    // Section names. New scheme: ── Foo ── (alphabetical sort in CM).
-    // Legacy section names get rewritten to these by MigrateRenamedSections() on first launch
-    // of the new version, so existing user customisations are preserved.
+    // Section names sort alphabetically in CM's display.
     private const string AdvancedSection = "── Advanced ──";
     private const string InventorySection = "── Inventory ──";
     private const string ItemStackingSection = "── Item Stacking ──";
     private const string GameplaySection = "── Gameplay ──";
     private const string UISection = "── UI ──";
     private const string UpdatesSection = "── Updates ──";
-
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["00. Advanced"] = AdvancedSection,
-        ["3. Inventory"] = InventorySection,
-        ["4. Item Stacking"] = ItemStackingSection,
-        ["5. Gameplay"] = GameplaySection,
-        ["6. UI"] = UISection,
-    };
 
     internal static TimestampedLogger Log { get; private set; }
     internal static bool DebugEnabled;
@@ -65,270 +54,127 @@ public class Plugin : BaseUnityPlugin
     public static ConfigEntry<bool> AllowZombiesAccessToSharedInventory { get; set; }
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
-    // Hidden migration entries.
-    private static ConfigEntry<int> LegacyAdditionalInventorySpace { get; set; }
-    private static ConfigEntry<bool> LegacySliderMigrated { get; set; }
-
 
     private void Awake()
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        MigrateRenamedSections();
-        InitConfiguration();
-        MigrateLegacySlider();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        InitConfiguration();
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
+        ConflictWarningRegistry.Register(MyPluginInfo.PLUGIN_NAME, () => new[]
+        {
+            new ConflictEntry(
+                theirGuid: "com.oyasumi.infinitestack",
+                theirName: "Oyasumi Infinite Stack",
+                feature: Lang.Get("Conflict.Oyasumi.Feature"),
+                severity: ConflictSeverity.Race,
+                note: Lang.Get("Conflict.Oyasumi.Note")),
+            new ConflictEntry(
+                theirGuid: "MoreInventorySlots",
+                theirName: "More Inventory Slots",
+                feature: Lang.Get("Conflict.MoreInventorySlots.Feature"),
+                severity: ConflictSeverity.Race,
+                note: Lang.Get("Conflict.MoreInventorySlots.Note")),
+        });
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
-    private void MigrateRenamedSections()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string content;
-        try
-        {
-            content = File.ReadAllText(path);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
-            return;
-        }
-
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
-        {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
-        }
-        if (renamed == 0) return;
-
-        try
-        {
-            File.WriteAllText(path, content);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
-            return;
-        }
-
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
-        Config.Reload();
-    }
-
-    // Copies the pre-split AdditionalInventorySpace value into the new player+container sliders
-    // on first launch of the split version, so users don't lose their customisation.
-    private static void MigrateLegacySlider()
-    {
-        if (LegacySliderMigrated.Value) return;
-
-        if (LegacyAdditionalInventorySpace.Value != 20)
-        {
-            AdditionalPlayerInventorySpace.Value = LegacyAdditionalInventorySpace.Value;
-            AdditionalContainerInventorySpace.Value = LegacyAdditionalInventorySpace.Value;
-            Log.LogInfo($"[Migration] Migrated legacy 'Additional Inventory Space' value ({LegacyAdditionalInventorySpace.Value}) to both Player and Container sliders.");
-        }
-        LegacySliderMigrated.Value = true;
-    }
-
-
     private void InitConfiguration()
     {
-        // ── Advanced ──
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Enable or disable debug logging.", null,
-                new ConfigurationManagerAttributes {Order = 90}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 90);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        LegacySliderMigrated = Config.Bind(AdvancedSection, "Legacy Slider Migrated", false,
-            new ConfigDescription("Internal: marks whether the old single inventory-space slider has been split into Player/Container.", null,
-                new ConfigurationManagerAttributes {Browsable = false, IsAdvanced = true, HideDefaultButton = true, ReadOnly = true}));
+        DebugTagScanKeybind = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Tag Scan Keybind", new KeyboardShortcut(KeyCode.F7), "debug_tag_scan_keybind", order: 80, dispNamePrefix: "    └ ");
 
-        DebugTagScanKeybind = Config.Bind(AdvancedSection, "Debug Tag Scan Keybind", new KeyboardShortcut(KeyCode.F7),
-            new ConfigDescription("Press this key in-game to log every world object's id, custom tag, and position within the scan radius of the player. Useful for finding anchor tags (e.g. locating a good outdoor spot near your house). Output goes to the BepInEx console and LogOutput.log.", null,
-                new ConfigurationManagerAttributes {Order = 80, DispName = "    └ Tag Scan Keybind"}));
+        DebugTagScanRadius = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Tag Scan Radius", 10f, "debug_tag_scan_radius", new AcceptableValueRange<float>(1f, 100f), order: 79, dispNamePrefix: "    └ ");
 
-        DebugTagScanRadius = Config.Bind(AdvancedSection, "Debug Tag Scan Radius", 10f,
-            new ConfigDescription("Radius (in tiles) to scan around the player when pressing the Tag Scan Keybind.",
-                new AcceptableValueRange<float>(1f, 100f),
-                new ConfigurationManagerAttributes {Order = 79, DispName = "    └ Tag Scan Radius (tiles)"}));
+        SharedInventory = LocalizedConfig.Bind(Config, InventorySection, "Shared Inventory", true, "shared_inventory", order: 100);
 
-        // ── Inventory ──
-        SharedInventory = Config.Bind(InventorySection, "Shared Inventory", true,
-            new ConfigDescription("Enable or disable shared inventory when crafting.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
-
-        AllowZombiesAccessToSharedInventory = Config.Bind(InventorySection, "Allow Zombies Access To Shared Inventory", false,
-            new ConfigDescription("Enable or disable allowing zombies access to shared inventory.", null,
-                new ConfigurationManagerAttributes {Order = 99, DispName = "    └ Allow Zombies Access"}));
+        AllowZombiesAccessToSharedInventory = LocalizedConfig.Bind(Config, InventorySection, "Allow Zombies Access To Shared Inventory", false, "allow_zombies_access", order: 99, dispNamePrefix: "    └ ");
         AllowZombiesAccessToSharedInventory.SettingChanged += (_, _) => Fields.InventoriesLoaded = false;
 
-        ExcludeWellsFromSharedInventory = Config.Bind(InventorySection, "Exclude Wells From Shared Inventory", true,
-            new ConfigDescription("Enable or disable excluding wells from shared inventory.", null,
-                new ConfigurationManagerAttributes {Order = 98, DispName = "    └ Exclude Wells"}));
+        ExcludeWellsFromSharedInventory = LocalizedConfig.Bind(Config, InventorySection, "Exclude Wells From Shared Inventory", true, "exclude_wells", order: 98, dispNamePrefix: "    └ ");
         ExcludeWellsFromSharedInventory.SettingChanged += (_, _) => Fields.InventoriesLoaded = false;
 
-        ExcludeZombieMillFromSharedInventory = Config.Bind(InventorySection, "Exclude Zombie Mill From Shared Inventory", true,
-            new ConfigDescription("Enable or disable excluding the zombie mill from shared inventory.", null,
-                new ConfigurationManagerAttributes {Order = 97, DispName = "    └ Exclude Zombie Mill"}));
+        ExcludeZombieMillFromSharedInventory = LocalizedConfig.Bind(Config, InventorySection, "Exclude Zombie Mill From Shared Inventory", true, "exclude_zombie_mill", order: 97, dispNamePrefix: "    └ ");
         ExcludeZombieMillFromSharedInventory.SettingChanged += (_, _) => Fields.InventoriesLoaded = false;
 
-        ExcludeQuarryFromSharedInventory = Config.Bind(InventorySection, "Exclude Quarry From Shared Inventory", true,
-            new ConfigDescription("Enable or disable excluding the quarry from shared inventory.", null,
-                new ConfigurationManagerAttributes {Order = 96, DispName = "    └ Exclude Quarry"}));
+        ExcludeQuarryFromSharedInventory = LocalizedConfig.Bind(Config, InventorySection, "Exclude Quarry From Shared Inventory", true, "exclude_quarry", order: 96, dispNamePrefix: "    └ ");
         ExcludeQuarryFromSharedInventory.SettingChanged += (_, _) => Fields.InventoriesLoaded = false;
 
-        SortByDistanceFromCrafter = Config.Bind(InventorySection, "Sort By Distance From Crafter", true,
-            new ConfigDescription(
-                "When on, crafts pull ingredients from the closest storage first. When off, ordering follows the game's zone discovery order and per-object priority - which can mean a far chest gets drained before a nearby one.",
-                null,
-                new ConfigurationManagerAttributes {Order = 95, DispName = "    └ Sort By Distance From Crafter"}));
+        SortByDistanceFromCrafter = LocalizedConfig.Bind(Config, InventorySection, "Sort By Distance From Crafter", true, "sort_by_distance_from_crafter", order: 95, dispNamePrefix: "    └ ");
 
-        ModifyInventorySize = Config.Bind(InventorySection, "Modify Inventory Size", true,
-            new ConfigDescription("Enable or disable modifying the inventory size for the player and chests.", null,
-                new ConfigurationManagerAttributes {Order = 90}));
+        ModifyInventorySize = LocalizedConfig.Bind(Config, InventorySection, "Modify Inventory Size", true, "modify_inventory_size", order: 90);
         ModifyInventorySize.SettingChanged += (_, _) =>
         {
             Fields.InventorySizesDirty = true;
             Fields.InventoriesLoaded = false;
         };
 
-        AdditionalPlayerInventorySpace = Config.Bind(InventorySection, "Additional Player Inventory Space", 20,
-            new ConfigDescription("Number of additional inventory spaces granted to the player (0 means vanilla size). Requires Modify Inventory Size to be on.",
-                new AcceptableValueRange<int>(0, 500),
-                new ConfigurationManagerAttributes {Order = 89, DispName = "    └ Additional Player Inventory Space"}));
+        AdditionalPlayerInventorySpace = LocalizedConfig.Bind(Config, InventorySection, "Additional Player Inventory Space", 20, "additional_player_inventory_space", new AcceptableValueRange<int>(0, 500), order: 89, dispNamePrefix: "    └ ");
         AdditionalPlayerInventorySpace.SettingChanged += (_, _) =>
         {
             Fields.InventorySizesDirty = true;
             Fields.InventoriesLoaded = false;
         };
 
-        AdditionalContainerInventorySpace = Config.Bind(InventorySection, "Additional Container Inventory Space", 20,
-            new ConfigDescription("Number of additional inventory spaces granted to chests, racks, cabinets, and other shareable storage. Requires Modify Inventory Size to be on.",
-                new AcceptableValueRange<int>(0, 500),
-                new ConfigurationManagerAttributes {Order = 88, DispName = "    └ Additional Container Inventory Space"}));
+        AdditionalContainerInventorySpace = LocalizedConfig.Bind(Config, InventorySection, "Additional Container Inventory Space", 20, "additional_container_inventory_space", new AcceptableValueRange<int>(0, 500), order: 88, dispNamePrefix: "    └ ");
         AdditionalContainerInventorySpace.SettingChanged += (_, _) =>
         {
             Fields.InventorySizesDirty = true;
             Fields.InventoriesLoaded = false;
         };
 
-        // Legacy single slider - kept bound so it loads from existing .cfg files for migration.
-        // Hidden from CM. Once MigrateLegacySlider has run, this value is unused.
-        LegacyAdditionalInventorySpace = Config.Bind(InventorySection, "Additional Inventory Space", 20,
-            new ConfigDescription("Legacy single slider - superseded by the Player and Container sliders above. Kept for one-time migration of existing user values.",
-                new AcceptableValueRange<int>(0, 500),
-                new ConfigurationManagerAttributes {Browsable = false, IsAdvanced = true, HideDefaultButton = true, ReadOnly = true}));
+        ShowOnlyPersonalInventory = LocalizedConfig.Bind(Config, InventorySection, "Show Only Personal Inventory", true, "show_only_personal_inventory", order: 80);
+        DontShowEmptyRowsInInventory = LocalizedConfig.Bind(Config, InventorySection, "Dont Show Empty Rows In Inventory", true, "dont_show_empty_rows_in_inventory", order: 79);
+        ShowUsedSpaceInTitles = LocalizedConfig.Bind(Config, InventorySection, "Show Used Space In Titles", true, "show_used_space_in_titles", order: 78);
+        DisableInventoryDimming = LocalizedConfig.Bind(Config, InventorySection, "Inventory Dimming", true, "inventory_dimming", order: 77);
+        ShowWorldZoneInTitles = LocalizedConfig.Bind(Config, InventorySection, "Show World Zone In Titles", true, "show_world_zone_in_titles", order: 76);
+        HideInvalidSelections = LocalizedConfig.Bind(Config, InventorySection, "Hide Invalid Selections", true, "hide_invalid_selections", order: 75);
+        RemoveGapsBetweenSections = LocalizedConfig.Bind(Config, InventorySection, "Remove Gaps Between Sections", true, "remove_gaps_between_sections", order: 74);
+        RemoveGapsBetweenSectionsVendor = LocalizedConfig.Bind(Config, InventorySection, "Remove Gaps Between Sections Vendor", true, "remove_gaps_between_sections_vendor", order: 73);
 
-        ShowOnlyPersonalInventory = Config.Bind(InventorySection, "Show Only Personal Inventory", true,
-            new ConfigDescription("Enable or disable showing only personal inventory.", null,
-                new ConfigurationManagerAttributes {Order = 80}));
-        DontShowEmptyRowsInInventory = Config.Bind(InventorySection, "Dont Show Empty Rows In Inventory", true,
-            new ConfigDescription("Enable or disable displaying empty rows in the inventory.", null,
-                new ConfigurationManagerAttributes {Order = 79}));
-        ShowUsedSpaceInTitles = Config.Bind(InventorySection, "Show Used Space In Titles", true,
-            new ConfigDescription("Enable or disable showing used space in inventory titles.", null,
-                new ConfigurationManagerAttributes {Order = 78}));
-        DisableInventoryDimming = Config.Bind(InventorySection, "Inventory Dimming", true,
-            new ConfigDescription("Enable or disable inventory dimming.", null,
-                new ConfigurationManagerAttributes {Order = 77}));
-        ShowWorldZoneInTitles = Config.Bind(InventorySection, "Show World Zone In Titles", true,
-            new ConfigDescription("Enable or disable showing world zone information in inventory titles.", null,
-                new ConfigurationManagerAttributes {Order = 76}));
-        HideInvalidSelections = Config.Bind(InventorySection, "Hide Invalid Selections", true,
-            new ConfigDescription("Enable or disable hiding invalid item selections in the inventory.", null,
-                new ConfigurationManagerAttributes {Order = 75}));
-        RemoveGapsBetweenSections = Config.Bind(InventorySection, "Remove Gaps Between Sections", true,
-            new ConfigDescription("Enable or disable removing gaps between inventory sections.", null,
-                new ConfigurationManagerAttributes {Order = 74}));
-        RemoveGapsBetweenSectionsVendor = Config.Bind(InventorySection, "Remove Gaps Between Sections Vendor", true,
-            new ConfigDescription("Enable or disable removing gaps between sections in the vendor inventory.", null,
-                new ConfigurationManagerAttributes {Order = 73}));
-
-        // ── Item Stacking ──
-        ModifyStackSize = Config.Bind(ItemStackingSection, "Modify Stack Size", true,
-            new ConfigDescription("Enable or disable modifying the stack size of items.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        ModifyStackSize = LocalizedConfig.Bind(Config, ItemStackingSection, "Modify Stack Size", true, "modify_stack_size", order: 100);
         ModifyStackSize.SettingChanged += (_, _) => Fields.StackSizesDirty = true;
 
-        StackSizeForStackables = Config.Bind(ItemStackingSection, "Stack Size For Stackables", 999,
-            new ConfigDescription("Set the maximum stack size for stackable items",
-                new AcceptableValueRange<int>(1, 999),
-                new ConfigurationManagerAttributes {Order = 99, DispName = "    └ Stack Size For Stackables"}));
+        StackSizeForStackables = LocalizedConfig.Bind(Config, ItemStackingSection, "Stack Size For Stackables", 999, "stack_size_for_stackables", new AcceptableValueRange<int>(1, 999), order: 99, dispNamePrefix: "    └ ");
         StackSizeForStackables.SettingChanged += (_, _) => Fields.StackSizesDirty = true;
 
-        EnableGraveItemStacking = Config.Bind(ItemStackingSection, "Grave Item Stacking", false,
-            new ConfigDescription("Allow grave items to stack", null,
-                new ConfigurationManagerAttributes {Order = 98, DispName = "    └ Grave Item Stacking"}));
+        EnableGraveItemStacking = LocalizedConfig.Bind(Config, ItemStackingSection, "Grave Item Stacking", false, "grave_item_stacking", order: 98, dispNamePrefix: "    └ ");
         EnableGraveItemStacking.SettingChanged += (_, _) => Fields.StackSizesDirty = true;
 
-        EnablePenPaperInkStacking = Config.Bind(ItemStackingSection, "Pen Paper Ink Stacking", false,
-            new ConfigDescription("Allow pen, paper, and ink items to stack", null,
-                new ConfigurationManagerAttributes {Order = 97, DispName = "    └ Pen Paper Ink Stacking"}));
+        EnablePenPaperInkStacking = LocalizedConfig.Bind(Config, ItemStackingSection, "Pen Paper Ink Stacking", false, "pen_paper_ink_stacking", order: 97, dispNamePrefix: "    └ ");
         EnablePenPaperInkStacking.SettingChanged += (_, _) => Fields.StackSizesDirty = true;
 
-        EnableChiselStacking = Config.Bind(ItemStackingSection, "Chisel Stacking", false,
-            new ConfigDescription("Allow chisel items to stack", null,
-                new ConfigurationManagerAttributes {Order = 96, DispName = "    └ Chisel Stacking"}));
+        EnableChiselStacking = LocalizedConfig.Bind(Config, ItemStackingSection, "Chisel Stacking", false, "chisel_stacking", order: 96, dispNamePrefix: "    └ ");
         EnableChiselStacking.SettingChanged += (_, _) => Fields.StackSizesDirty = true;
 
-        EnableToolStacking = Config.Bind(ItemStackingSection, "Tool Stacking", true,
-            new ConfigDescription("Allow tool items to stack", null,
-                new ConfigurationManagerAttributes {Order = 95, DispName = "    └ Tool Stacking"}));
+        EnableToolStacking = LocalizedConfig.Bind(Config, ItemStackingSection, "Tool Stacking", true, "tool_stacking", order: 95, dispNamePrefix: "    └ ");
         EnableToolStacking.SettingChanged += (_, _) => Fields.StackSizesDirty = true;
 
-        EnablePrayerStacking = Config.Bind(ItemStackingSection, "Prayer Stacking", true,
-            new ConfigDescription("Allow prayer items to stack", null,
-                new ConfigurationManagerAttributes {Order = 94, DispName = "    └ Prayer Stacking"}));
+        EnablePrayerStacking = LocalizedConfig.Bind(Config, ItemStackingSection, "Prayer Stacking", true, "prayer_stacking", order: 94, dispNamePrefix: "    └ ");
         EnablePrayerStacking.SettingChanged += (_, _) => Fields.StackSizesDirty = true;
 
-        EnableWeaponStacking = Config.Bind(ItemStackingSection, "Weapon Stacking", true,
-            new ConfigDescription("Allow weapon items to stack", null,
-                new ConfigurationManagerAttributes {Order = 93, DispName = "    └ Weapon Stacking"}));
+        EnableWeaponStacking = LocalizedConfig.Bind(Config, ItemStackingSection, "Weapon Stacking", true, "weapon_stacking", order: 93, dispNamePrefix: "    └ ");
         EnableWeaponStacking.SettingChanged += (_, _) => Fields.StackSizesDirty = true;
 
-        EnableEquipmentStacking = Config.Bind(ItemStackingSection, "Equipment Stacking", true,
-            new ConfigDescription("Allow equipment items to stack", null,
-                new ConfigurationManagerAttributes {Order = 92, DispName = "    └ Equipment Stacking"}));
+        EnableEquipmentStacking = LocalizedConfig.Bind(Config, ItemStackingSection, "Equipment Stacking", true, "equipment_stacking", order: 92, dispNamePrefix: "    └ ");
         EnableEquipmentStacking.SettingChanged += (_, _) => Fields.StackSizesDirty = true;
 
-        // ── Gameplay ──
-        AllowHandToolDestroy = Config.Bind(GameplaySection, "Allow Hand Tool Destroy", true,
-            new ConfigDescription("Enable or disable destroying objects with hand tools", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        AllowHandToolDestroy = LocalizedConfig.Bind(Config, GameplaySection, "Allow Hand Tool Destroy", true, "allow_hand_tool_destroy", order: 100);
         AllowHandToolDestroy.SettingChanged += (_, _) => Fields.ToolDestroyDirty = true;
 
-        CollectDropsOnGameLoad = Config.Bind(GameplaySection, "Collect Drops On Game Load", true,
-            new ConfigDescription("Enable or disable collecting drops on game load", null,
-                new ConfigurationManagerAttributes {Order = 99}));
+        CollectDropsOnGameLoad = LocalizedConfig.Bind(Config, GameplaySection, "Collect Drops On Game Load", true, "collect_drops_on_game_load", order: 99);
 
-        DropHandlingOnGameLoad = Config.Bind(GameplaySection, "Drop Handling On Game Load", DropHandlingMode.CollectToInventory,
-            new ConfigDescription(
-                "Where scattered loot goes when you load a save. 'CollectToInventory' pulls everything straight into your pockets (anything that doesn't fit ends up by the meditation spot, same as before). 'MoveNearKeepersHouse' leaves your inventory alone and piles every loose item - small and large - next to your house so you can sort it yourself.",
-                null,
-                new ConfigurationManagerAttributes {Order = 98, DispName = "    └ Drop Handling"}));
+        DropHandlingOnGameLoad = LocalizedConfig.Bind(Config, GameplaySection, "Drop Handling On Game Load", DropHandlingMode.CollectToInventory, "drop_handling_on_game_load", order: 98, dispNamePrefix: "    └ ");
 
-        NearHouseDumpZoneRadius = Config.Bind(GameplaySection, "Near-House Dump Zone Radius", 8,
-            new ConfigDescription(
-                "Radius (in tiles) around the dump spot that counts as 'already placed'. Items already inside this zone are left alone on load instead of being re-scattered. Raise this if you want a larger safe area around your house where loose items won't be touched.",
-                new AcceptableValueRange<int>(1, 30),
-                new ConfigurationManagerAttributes {Order = 97, DispName = "    └ Near-House Dump Zone Radius (tiles)"}));
+        NearHouseDumpZoneRadius = LocalizedConfig.Bind(Config, GameplaySection, "Near-House Dump Zone Radius", 8, "near_house_dump_zone_radius", new AcceptableValueRange<int>(1, 30), order: 97, dispNamePrefix: "    └ ");
 
-        PlayerLootMagnetRange = Config.Bind(GameplaySection, "Player Loot Magnet Range", 2.0f,
-            new ConfigDescription(
-                "How close you have to be (in tiles) for nearby loot to fly toward you and auto-pickup. Vanilla is 1.8 tiles - slide upward in 0.25-tile steps to sweep up drops from further away.",
-                new AcceptableValueRange<float>(2.0f, 20f),
-                new ConfigurationManagerAttributes {Order = 95, DispName = "Player Loot Magnet Range (tiles)"}));
+        PlayerLootMagnetRange = LocalizedConfig.Bind(Config, GameplaySection, "Player Loot Magnet Range", 2.0f, "player_loot_magnet_range", new AcceptableValueRange<float>(2.0f, 20f), order: 95);
         // Snap the slider to a 0.25-tile grid. The guard prevents the assignment
         // from re-firing SettingChanged into infinite recursion. Also called once
         // immediately to migrate any pre-existing off-grid persisted value.
@@ -341,29 +187,13 @@ public class Plugin : BaseUnityPlugin
         PlayerLootMagnetRange.SettingChanged += (_, _) => SnapMagnetRange();
         SnapMagnetRange();
 
-        // ── UI ──
-        HideStockpileWidgets = Config.Bind(UISection, "Hide Stockpile Widgets", true,
-            new ConfigDescription("Enable or disable hiding stockpile widgets", null,
-                new ConfigurationManagerAttributes {Order = 100}));
-        HideTavernWidgets = Config.Bind(UISection, "Hide Tavern Widgets", true,
-            new ConfigDescription("Enable or disable hiding tavern widgets", null,
-                new ConfigurationManagerAttributes {Order = 99}));
-        HideSoulWidgets = Config.Bind(UISection, "Hide Soul Widgets", true,
-            new ConfigDescription("Enable or disable hiding soul widgets", null,
-                new ConfigurationManagerAttributes {Order = 98}));
-        HideWarehouseShopWidgets = Config.Bind(UISection, "Hide Warehouse Shop Widgets", true,
-            new ConfigDescription("Enable or disable hiding warehouse shop widgets", null,
-                new ConfigurationManagerAttributes {Order = 97}));
-        HideBagWidgets = Config.Bind(UISection, "Hide Bag Widgets", true,
-            new ConfigDescription("Hide bags and backpacks from the inventory panel list. Open them with the right-click 'Open Bag' menu instead. Turn this off to keep each bag expanded inline the way the mod showed them before.", null,
-                new ConfigurationManagerAttributes {Order = 96}));
+        HideStockpileWidgets = LocalizedConfig.Bind(Config, UISection, "Hide Stockpile Widgets", true, "hide_stockpile_widgets", order: 100);
+        HideTavernWidgets = LocalizedConfig.Bind(Config, UISection, "Hide Tavern Widgets", true, "hide_tavern_widgets", order: 99);
+        HideSoulWidgets = LocalizedConfig.Bind(Config, UISection, "Hide Soul Widgets", true, "hide_soul_widgets", order: 98);
+        HideWarehouseShopWidgets = LocalizedConfig.Bind(Config, UISection, "Hide Warehouse Shop Widgets", true, "hide_warehouse_shop_widgets", order: 97);
+        HideBagWidgets = LocalizedConfig.Bind(Config, UISection, "Hide Bag Widgets", true, "hide_bag_widgets", order: 96);
 
-        // ── Updates ──
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 100);
 
         Fields.GameBalanceAlreadyRun = false;
     }

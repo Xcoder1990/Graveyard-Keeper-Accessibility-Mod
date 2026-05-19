@@ -16,8 +16,8 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Log = new TimestampedLogger(Logger);
-        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true,
-            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.");
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        CheckForUpdates = LocalizedConfig.Bind(Config, "── Updates ──", "Check for Updates", true, "check_for_updates");
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);

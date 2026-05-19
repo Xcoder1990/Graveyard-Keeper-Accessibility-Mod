@@ -1,0 +1,10 @@
+{
+  "cfg.section.dumper": "Дампер",
+  "cfg.section.updates": "Обновления",
+  "cfg.enabled.name": "Включено",
+  "cfg.enabled.desc": "Главный переключатель. При включении весь ванильный GameBalance выгружается в BepInEx/plugins/GameBalanceDumper/dump/ при старте игры.",
+  "cfg.pretty_print.name": "Читаемый формат",
+  "cfg.pretty_print.desc": "Вкл: JSON с отступами для читаемости. Выкл: однострочный минифицированный вывод (файлы меньше, пишутся быстрее).",
+  "cfg.check_for_updates.name": "Проверять обновления",
+  "cfg.check_for_updates.desc": "Показывать в главном меню уведомление, когда на NexusMods появляется более новая версия этого мода. Нажмите на уведомление, чтобы открыть страницу мода."
+}

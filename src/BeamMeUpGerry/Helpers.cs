@@ -50,10 +50,10 @@ public static class Helpers
     {
         var messageList = new List<string>
         {
-            Language.GetTranslation(Language.Terms.M1), Language.GetTranslation(Language.Terms.M2), Language.GetTranslation(Language.Terms.M3),
-            Language.GetTranslation(Language.Terms.M4), Language.GetTranslation(Language.Terms.M5), Language.GetTranslation(Language.Terms.M6),
-            Language.GetTranslation(Language.Terms.M7), Language.GetTranslation(Language.Terms.M8), Language.GetTranslation(Language.Terms.M9),
-            Language.GetTranslation(Language.Terms.M10)
+            Lang.Get("runtime.money.1"), Lang.Get("runtime.money.2"), Lang.Get("runtime.money.3"),
+            Lang.Get("runtime.money.4"), Lang.Get("runtime.money.5"), Lang.Get("runtime.money.6"),
+            Lang.Get("runtime.money.7"), Lang.Get("runtime.money.8"), Lang.Get("runtime.money.9"),
+            Lang.Get("runtime.money.10")
         };
         return messageList.RandomElement();
     }
@@ -101,8 +101,8 @@ public static class Helpers
     {
         var messageList = new List<string>
         {
-            Language.GetTranslation(Language.Terms.M4), Language.GetTranslation(Language.Terms.M7),
-            Language.GetTranslation(Language.Terms.M8), Language.GetTranslation(Language.Terms.M9)
+            Lang.Get("runtime.money.4"), Lang.Get("runtime.money.7"),
+            Lang.Get("runtime.money.8"), Lang.Get("runtime.money.9")
         };
         return messageList.RandomElement();
     }
@@ -206,8 +206,8 @@ public static class Helpers
         { "@lighthouse", "sealight" },
         { "@quarry", "stone_workyard" },
         { "@players_tavern", "players_tavern" },
-        { "@zone_nountain_fort", "camp" }, //no match, this is close enough
-        { "@zone_refugees_camp_tp", "refugees_camp" }
+        { "@zone_refugees_camp_tp", "refugees_camp" },
+        { Constants.ZoneLBodyDump, "swamp" }
     };
 
     internal static bool RemoveZone(Location location)
@@ -232,19 +232,10 @@ public static class Helpers
 
         var wheatExists = MainGame.me.save.known_world_zones.Exists(a => a.Equals(Constants.ZoneWheatLand));
 
-        if (location.zone.Contains("farmer"))
+        if (location.zone.Equals(Constants.ZoneLFarmer, StringComparison.OrdinalIgnoreCase))
         {
             var knowsFarmer = MainGame.me.save.known_npcs.npcs.Exists(a => a.npc_id.Contains(Constants.Farmer));
-            bool remove;
-
-            if (wheatExists)
-            {
-                remove = !knowsFarmer;
-            }
-            else
-            {
-                remove = false;
-            }
+            var remove = wheatExists && !knowsFarmer;
 
             if (Plugin.DebugEnabled)
             {
@@ -253,23 +244,53 @@ public static class Helpers
             return remove;
         }
 
-        if (location.zone.Contains("mill") && !location.zone.Contains("zombie"))
+        if (location.zone.Equals(Constants.ZoneLMill, StringComparison.OrdinalIgnoreCase))
         {
             var knowsMiller = MainGame.me.save.known_npcs.npcs.Exists(a => a.npc_id.Contains(Constants.Miller));
-            bool remove;
-
-            if (wheatExists)
-            {
-                remove = !knowsMiller;
-            }
-            else
-            {
-                remove = false;
-            }
+            var remove = wheatExists && !knowsMiller;
 
             if (Plugin.DebugEnabled)
             {
                 Plugin.Log.LogInfo($"[RemoveZone-Miller] - {remove} - {location.zone} - Seen Wheat Land?: {wheatExists}, Talked to Miller?: {knowsMiller}");
+            }
+            return remove;
+        }
+
+        if (location.zone.Equals(Constants.ZoneLBlacksmith, StringComparison.OrdinalIgnoreCase))
+        {
+            var knowsBlacksmith = MainGame.me.save.known_npcs.npcs.Exists(a => a.npc_id.Contains(Constants.Blacksmith));
+            var remove = !knowsBlacksmith;
+
+            if (Plugin.DebugEnabled)
+            {
+                Plugin.Log.LogInfo($"[RemoveZone-Blacksmith] - {remove} - {location.zone} - Talked to Blacksmith?: {knowsBlacksmith}");
+            }
+            return remove;
+        }
+
+        if (location.zone.Equals(Constants.ZoneLMarketStorage, StringComparison.OrdinalIgnoreCase))
+        {
+            var seenStorage = MainGame.me.save.known_world_zones.Exists(a => a.Equals("storage"));
+            var remove = !seenStorage;
+
+            if (Plugin.DebugEnabled)
+            {
+                Plugin.Log.LogInfo($"[RemoveZone-MarketStorage] - {remove} - {location.zone} - Seen storage zone?: {seenStorage}");
+            }
+            return remove;
+        }
+
+        // The mountain fort teleport lands the player in the in-game "camp"
+        // zone, so gate on that exact zone - substring match would falsely
+        // accept "refugees_camp" too.
+        if (location.zone.Equals("@zone_nountain_fort", StringComparison.OrdinalIgnoreCase))
+        {
+            var seenCamp = MainGame.me.save.known_world_zones.Exists(a => a.Equals("camp"));
+            var remove = !seenCamp;
+
+            if (Plugin.DebugEnabled)
+            {
+                Plugin.Log.LogInfo($"[RemoveZone-MountainFort] - {remove} - {location.zone} - Seen camp zone?: {seenCamp}");
             }
             return remove;
         }
@@ -327,7 +348,7 @@ public static class Helpers
 
         if (MainGame.me.player.data.money >= GenerateFee()) return true;
 
-        SpawnGerry(Language.GetTranslation(Language.Terms.MoreCoin), MessagePositioning());
+        SpawnGerry(Lang.Get("runtime.more_coin"), MessagePositioning());
         return false;
     }
 

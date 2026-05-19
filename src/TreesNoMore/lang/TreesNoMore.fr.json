@@ -3,5 +3,20 @@
   "DebugWarning": "Veuillez noter que le mode débogage est activé. Il n'est pas recommandé de le laisser activé sauf si vous en avez besoin.",
   "No": "Non",
   "ResetButton": "Réinitialiser les arbres",
-  "Yes": "Oui"
+  "Yes": "Oui",
+  "cfg.section.advanced": "Avancé",
+  "cfg.section.trees": "Arbres",
+  "cfg.section.stumps": "Souches",
+  "cfg.section.reset": "Réinitialiser",
+  "cfg.section.updates": "Mises à jour",
+  "cfg.debug_logging.name": "Journal de débogage",
+  "cfg.debug_logging.desc": "Écrit des informations de diagnostic détaillées dans le log BepInEx pendant que tu joues. Active-le avant de signaler un bug.",
+  "cfg.tree_search_distance.name": "Distance de recherche d'arbres",
+  "cfg.tree_search_distance.desc": "Distance de recherche autour d'un arbre mémorisé. Par défaut 2 attrape le même arbre sans les voisins.",
+  "cfg.instant_stump_removal.name": "Suppression instantanée des souches",
+  "cfg.instant_stump_removal.desc": "Activé : les souches disparaissent dès la chute. Désactivé : restent jusqu'à ce que tu les retires.",
+  "cfg.reset_trees.name": "Réinitialiser les arbres",
+  "cfg.reset_trees.desc": "Restaure chaque arbre abattu au prochain lancement. L'enregistrement des arbres coupés est effacé.",
+  "cfg.check_for_updates.name": "Vérifier les mises à jour",
+  "cfg.check_for_updates.desc": "Affiche un avis dans le menu principal lorsqu'une nouvelle version de ce mod est disponible sur NexusMods. Clique sur l'avis pour ouvrir la page du mod."
 }

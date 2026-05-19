@@ -1,0 +1,10 @@
+{
+  "cfg.section.dumper": "Eksporter",
+  "cfg.section.updates": "Aktualizacje",
+  "cfg.enabled.name": "Włączone",
+  "cfg.enabled.desc": "Główny przełącznik. Włączony zapisuje cały waniliowy GameBalance do BepInEx/plugins/GameBalanceDumper/dump/ przy starcie gry.",
+  "cfg.pretty_print.name": "Czytelne formatowanie",
+  "cfg.pretty_print.desc": "Włączone: JSON wcięty dla czytelności. Wyłączone: zminimalizowane wyjście w jednej linii (mniejsze pliki, szybszy zapis).",
+  "cfg.check_for_updates.name": "Sprawdź aktualizacje",
+  "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
+}

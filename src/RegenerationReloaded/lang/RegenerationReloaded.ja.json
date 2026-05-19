@@ -1,0 +1,14 @@
+{
+  "cfg.section.regeneration": "リジェネレーション",
+  "cfg.section.updates": "アップデート",
+  "cfg.show_regeneration_updates.name": "リジェネ通知を表示",
+  "cfg.show_regeneration_updates.desc": "ライフとエネルギーが回復するときに通知を表示します。",
+  "cfg.life_regeneration_rate.name": "ライフ回復量",
+  "cfg.life_regeneration_rate.desc": "1 ティックあたりに回復するライフ量を設定します。0 で無効化。",
+  "cfg.energy_regeneration_rate.name": "エネルギー回復量",
+  "cfg.energy_regeneration_rate.desc": "1 ティックあたりに回復するエネルギー量を設定します。0 で無効化。",
+  "cfg.regeneration_delay.name": "回復間隔",
+  "cfg.regeneration_delay.desc": "各回復ティックの間隔を秒で設定します。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
+}

@@ -47,178 +47,67 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        InitConfiguration();
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
+        ConflictWarningRegistry.Register(MyPluginInfo.PLUGIN_NAME, () => new[]
+        {
+            new ConflictEntry(
+                theirGuid: "com.bongk.craftspeedcontroller",
+                theirName: "Craft Speed Controller",
+                feature: Lang.Get("Conflict.CraftSpeedController.Feature"),
+                severity: ConflictSeverity.Race,
+                note: Lang.Get("Conflict.CraftSpeedController.Note")),
+        });
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     private void InitConfiguration()
     {
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription(
-                "Write verbose crafting diagnostics to the BepInEx console - which workbench, which craft, which speed branch was applied. Useful for reporting bugs. Leave off for normal play.",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 100);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        CraftSpeedMultiplier = Config.Bind(SpeedSection, "Craft Speed Multiplier", 2f,
-            new ConfigDescription(
-                "Multiplier applied to crafts at regular workbenches (anvils, alchemy, cooking, study desks, etc.). Repair crafts are always excluded to protect per-frame energy cost. Gardens, composting, and zombie-worked stations are not covered by this - each has its own toggle further down.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 100}));
+        CraftSpeedMultiplier = LocalizedConfig.Bind(Config, SpeedSection, "Craft Speed Multiplier", 2f, "craft_speed_multiplier", new AcceptableValueRange<float>(1f, 50f), order: 100);
 
-        IncreaseBuildAndDestroySpeed = Config.Bind(SpeedSection, "Faster Build And Destroy", true,
-            new ConfigDescription(
-                "When on, placing new structures and tearing down old ones happens faster.",
-                null,
-                new ConfigurationManagerAttributes {Order = 99}));
+        IncreaseBuildAndDestroySpeed = LocalizedConfig.Bind(Config, SpeedSection, "Faster Build And Destroy", true, "faster_build_and_destroy", order: 99);
+        BuildAndDestroySpeed = LocalizedConfig.Bind(Config, SpeedSection, "Build And Destroy Speed", 4f, "build_and_destroy_speed", new AcceptableValueRange<float>(2f, 10f), order: 98, dispNamePrefix: "    └ ");
 
-        BuildAndDestroySpeed = Config.Bind(SpeedSection, "Build And Destroy Speed", 4f,
-            new ConfigDescription(
-                "Multiplier for the build/destroy speed when the toggle above is on.",
-                new AcceptableValueRange<float>(2f, 10f),
-                new ConfigurationManagerAttributes {Order = 98, DispName = "    └ Build And Destroy Speed"}));
+        ModifyCompostSpeed = LocalizedConfig.Bind(Config, CompostingSection, "Speed Up Composting", false, "speed_up_composting", order: 100);
+        CompostSpeedMultiplier = LocalizedConfig.Bind(Config, CompostingSection, "Composting Multiplier", 2f, "composting_multiplier", new AcceptableValueRange<float>(1f, 50f), order: 99, dispNamePrefix: "    └ ");
 
-        ModifyCompostSpeed = Config.Bind(CompostingSection, "Speed Up Composting", false,
-            new ConfigDescription(
-                "Speed up the compost heap so it turns waste into fertiliser faster.",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        ModifyPlayerGardenSpeed = LocalizedConfig.Bind(Config, GardensSection, "Speed Up Your Garden", false, "speed_up_your_garden", order: 100);
+        PlayerGardenSpeedMultiplier = LocalizedConfig.Bind(Config, GardensSection, "Your Garden Multiplier", 2f, "your_garden_multiplier", new AcceptableValueRange<float>(1f, 50f), order: 99, dispNamePrefix: "    └ ");
 
-        CompostSpeedMultiplier = Config.Bind(CompostingSection, "Composting Multiplier", 2f,
-            new ConfigDescription(
-                "How much faster compost heaps run when the toggle above is on.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 99, DispName = "    └ Composting Multiplier"}));
+        ModifyRefugeeGardenSpeed = LocalizedConfig.Bind(Config, GardensSection, "Speed Up Refugee Garden", false, "speed_up_refugee_garden", order: 98);
+        RefugeeGardenSpeedMultiplier = LocalizedConfig.Bind(Config, GardensSection, "Refugee Garden Multiplier", 2f, "refugee_garden_multiplier", new AcceptableValueRange<float>(1f, 50f), order: 97, dispNamePrefix: "    └ ");
 
-        ModifyPlayerGardenSpeed = Config.Bind(GardensSection, "Speed Up Your Garden", false,
-            new ConfigDescription(
-                "Speed up your own garden beds so crops grow faster.",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        ModifyZombieGardenSpeed = LocalizedConfig.Bind(Config, GardensSection, "Speed Up Zombie Garden", false, "speed_up_zombie_garden", order: 96);
+        ZombieGardenSpeedMultiplier = LocalizedConfig.Bind(Config, GardensSection, "Zombie Garden Multiplier", 2f, "zombie_garden_multiplier", new AcceptableValueRange<float>(1f, 50f), order: 95, dispNamePrefix: "    └ ");
 
-        PlayerGardenSpeedMultiplier = Config.Bind(GardensSection, "Your Garden Multiplier", 2f,
-            new ConfigDescription(
-                "How much faster your garden crops grow when the toggle above is on.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 99, DispName = "    └ Your Garden Multiplier"}));
+        ModifyWaterPumpSpeed = LocalizedConfig.Bind(Config, WellsSection, "Speed Up Water Pump", false, "speed_up_water_pump", order: 100);
+        WaterPumpSpeedMultiplier = LocalizedConfig.Bind(Config, WellsSection, "Water Pump Multiplier", 2f, "water_pump_multiplier", new AcceptableValueRange<float>(1f, 50f), order: 99, dispNamePrefix: "    └ ");
 
-        ModifyRefugeeGardenSpeed = Config.Bind(GardensSection, "Speed Up Refugee Garden", false,
-            new ConfigDescription(
-                "Speed up the refugee camp's garden beds (Game Of Crone DLC).",
-                null,
-                new ConfigurationManagerAttributes {Order = 98}));
+        ModifyZombieMinesSpeed = LocalizedConfig.Bind(Config, ProductionSection, "Speed Up Zombie Mines", false, "speed_up_zombie_mines", order: 100);
+        ZombieMinesSpeedMultiplier = LocalizedConfig.Bind(Config, ProductionSection, "Zombie Mines Multiplier", 2f, "zombie_mines_multiplier", new AcceptableValueRange<float>(1f, 50f), order: 99, dispNamePrefix: "    └ ");
 
-        RefugeeGardenSpeedMultiplier = Config.Bind(GardensSection, "Refugee Garden Multiplier", 2f,
-            new ConfigDescription(
-                "How much faster refugee garden crops grow when the toggle above is on.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 97, DispName = "    └ Refugee Garden Multiplier"}));
+        ModifyZombieSawmillSpeed = LocalizedConfig.Bind(Config, ProductionSection, "Speed Up Zombie Sawmill", false, "speed_up_zombie_sawmill", order: 98);
+        ZombieSawmillSpeedMultiplier = LocalizedConfig.Bind(Config, ProductionSection, "Zombie Sawmill Multiplier", 2f, "zombie_sawmill_multiplier", new AcceptableValueRange<float>(1f, 50f), order: 97, dispNamePrefix: "    └ ");
 
-        ModifyZombieGardenSpeed = Config.Bind(GardensSection, "Speed Up Zombie Garden", false,
-            new ConfigDescription(
-                "Speed up zombie-tended garden beds.",
-                null,
-                new ConfigurationManagerAttributes {Order = 96}));
+        ModifyZombieVineyardSpeed = LocalizedConfig.Bind(Config, ProductionSection, "Speed Up Zombie Vineyard", false, "speed_up_zombie_vineyard", order: 96);
+        ZombieVineyardSpeedMultiplier = LocalizedConfig.Bind(Config, ProductionSection, "Zombie Vineyard Multiplier", 2f, "zombie_vineyard_multiplier", new AcceptableValueRange<float>(1f, 50f), order: 95, dispNamePrefix: "    └ ");
 
-        ZombieGardenSpeedMultiplier = Config.Bind(GardensSection, "Zombie Garden Multiplier", 2f,
-            new ConfigDescription(
-                "How much faster zombie garden crops grow when the toggle above is on.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 95, DispName = "    └ Zombie Garden Multiplier"}));
+        ModifyZombieBrewerySpeed = LocalizedConfig.Bind(Config, ProductionSection, "Speed Up Zombie Brewery", false, "speed_up_zombie_brewery", order: 94);
+        ZombieBrewerySpeedMultiplier = LocalizedConfig.Bind(Config, ProductionSection, "Zombie Brewery Multiplier", 2f, "zombie_brewery_multiplier", new AcceptableValueRange<float>(1f, 50f), order: 93, dispNamePrefix: "    └ ");
 
-        ModifyWaterPumpSpeed = Config.Bind(WellsSection, "Speed Up Water Pump", false,
-            new ConfigDescription(
-                "Speed up your upgraded water pump so it produces water faster. Basic wells (Quarry, Village) are interaction-only and aren't affected.",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        ModifyZombieWinemakingSpeed = LocalizedConfig.Bind(Config, ProductionSection, "Speed Up Zombie Winemaking", false, "speed_up_zombie_winemaking", order: 92);
+        ZombieWinemakingSpeedMultiplier = LocalizedConfig.Bind(Config, ProductionSection, "Zombie Winemaking Multiplier", 2f, "zombie_winemaking_multiplier", new AcceptableValueRange<float>(1f, 50f), order: 91, dispNamePrefix: "    └ ");
 
-        WaterPumpSpeedMultiplier = Config.Bind(WellsSection, "Water Pump Multiplier", 2f,
-            new ConfigDescription(
-                "How much faster the water pump generates water when the toggle above is on.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 99, DispName = "    └ Water Pump Multiplier"}));
+        ModifyZombieCraftingTableSpeed = LocalizedConfig.Bind(Config, ProductionSection, "Speed Up Zombie Crafting Table", false, "speed_up_zombie_crafting_table", order: 90);
+        ZombieCraftingTableSpeedMultiplier = LocalizedConfig.Bind(Config, ProductionSection, "Zombie Crafting Table Multiplier", 2f, "zombie_crafting_table_multiplier", new AcceptableValueRange<float>(1f, 50f), order: 89, dispNamePrefix: "    └ ");
 
-        ModifyZombieMinesSpeed = Config.Bind(ProductionSection, "Speed Up Zombie Mines", false,
-            new ConfigDescription(
-                "Speed up ore output from zombie-staffed mines in the stone yard, marble deposit, and iron mine.",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
-
-        ZombieMinesSpeedMultiplier = Config.Bind(ProductionSection, "Zombie Mines Multiplier", 2f,
-            new ConfigDescription(
-                "How much faster zombie mines produce ore when the toggle above is on.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 99, DispName = "    └ Zombie Mines Multiplier"}));
-
-        ModifyZombieSawmillSpeed = Config.Bind(ProductionSection, "Speed Up Zombie Sawmill", false,
-            new ConfigDescription(
-                "Speed up plank and log output from the zombie sawmill.",
-                null,
-                new ConfigurationManagerAttributes {Order = 98}));
-
-        ZombieSawmillSpeedMultiplier = Config.Bind(ProductionSection, "Zombie Sawmill Multiplier", 2f,
-            new ConfigDescription(
-                "How much faster the zombie sawmill produces when the toggle above is on.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 97, DispName = "    └ Zombie Sawmill Multiplier"}));
-
-        ModifyZombieVineyardSpeed = Config.Bind(ProductionSection, "Speed Up Zombie Vineyard", false,
-            new ConfigDescription(
-                "Speed up grape and wine output from the zombie vineyard.",
-                null,
-                new ConfigurationManagerAttributes {Order = 96}));
-
-        ZombieVineyardSpeedMultiplier = Config.Bind(ProductionSection, "Zombie Vineyard Multiplier", 2f,
-            new ConfigDescription(
-                "How much faster the zombie vineyard produces when the toggle above is on.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 95, DispName = "    └ Zombie Vineyard Multiplier"}));
-
-        ModifyZombieBrewerySpeed = Config.Bind(ProductionSection, "Speed Up Zombie Brewery", false,
-            new ConfigDescription(
-                "Speed up beer output from the zombie brewery.",
-                null,
-                new ConfigurationManagerAttributes {Order = 94}));
-
-        ZombieBrewerySpeedMultiplier = Config.Bind(ProductionSection, "Zombie Brewery Multiplier", 2f,
-            new ConfigDescription(
-                "How much faster the zombie brewery produces when the toggle above is on.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 93, DispName = "    └ Zombie Brewery Multiplier"}));
-
-        ModifyZombieWinemakingSpeed = Config.Bind(ProductionSection, "Speed Up Zombie Winemaking", false,
-            new ConfigDescription(
-                "Speed up bottled wine output from the zombie winemaking station.",
-                null,
-                new ConfigurationManagerAttributes {Order = 92}));
-
-        ZombieWinemakingSpeedMultiplier = Config.Bind(ProductionSection, "Zombie Winemaking Multiplier", 2f,
-            new ConfigDescription(
-                "How much faster the zombie winemaking station produces when the toggle above is on.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 91, DispName = "    └ Zombie Winemaking Multiplier"}));
-
-        ModifyZombieCraftingTableSpeed = Config.Bind(ProductionSection, "Speed Up Zombie Crafting Table", false,
-            new ConfigDescription(
-                "Speed up output from the general-purpose zombie crafting table.",
-                null,
-                new ConfigurationManagerAttributes {Order = 90}));
-
-        ZombieCraftingTableSpeedMultiplier = Config.Bind(ProductionSection, "Zombie Crafting Table Multiplier", 2f,
-            new ConfigDescription(
-                "How much faster the zombie crafting table produces when the toggle above is on.",
-                new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 89, DispName = "    └ Zombie Crafting Table Multiplier"}));
-
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 100);
     }
 }

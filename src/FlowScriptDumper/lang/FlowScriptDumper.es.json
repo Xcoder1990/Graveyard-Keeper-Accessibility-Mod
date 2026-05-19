@@ -1,0 +1,15 @@
+{
+  "cfg.section.dumper": "Volcador",
+  "cfg.enabled.name": "Activado",
+  "cfg.enabled.desc": "Interruptor principal. Al activarlo, cada FlowScript cargado por el juego se vuelca a BepInEx/plugins/FlowScriptDumper/dump/.",
+  "cfg.dump_resources_folder.name": "Volcar carpeta de recursos",
+  "cfg.dump_resources_folder.desc": "Ejecuta Resources.LoadAll<FlowScript>(\"FlowCanvas\") una vez al abrir el menú principal y vuelca todo lo que hay en esa carpeta.",
+  "cfg.dump_scene_attached_scripts.name": "Volcar scripts de la escena",
+  "cfg.dump_scene_attached_scripts.desc": "Recorre FlowScriptEngine._scripts y vuelca el grafo de cada FlowScriptController. Son los globales que conduce el motor en la escena de juego.",
+  "cfg.hook_get_graph.name": "Enganchar CustomFlowScript.GetGraph",
+  "cfg.hook_get_graph.desc": "Hace postfix de CustomFlowScript.GetGraph para volcar también cualquier flow-script cargado por nombre en tiempo de ejecución (captura lo que no está bajo Resources/FlowCanvas/).",
+  "cfg.write_reference_sidecars.name": "Escribir archivos de referencias",
+  "cfg.write_reference_sidecars.desc": "Junto a cada <name>.json escribe <name>.refs.tsv listando a qué apunta cada _objectReferences[i] (tipo + nombre del objeto Unity). Sirve para resolver los tokens \"$ref\":N en el JSON.",
+  "cfg.pretty_print.name": "Formato legible",
+  "cfg.pretty_print.desc": "Indenta el JSON para que sea legible. Desactivado: escribe la cadena de una sola línea tal como la guardó el juego."
+}

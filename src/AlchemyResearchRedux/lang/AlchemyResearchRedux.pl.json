@@ -1,0 +1,8 @@
+{
+  "cfg.section.advanced": "Zaawansowane",
+  "cfg.section.updates": "Aktualizacje",
+  "cfg.debug_logging.name": "Logi debugowania",
+  "cfg.debug_logging.desc": "Zapisuje szczegółowe informacje diagnostyczne o recepturach alchemii w konsoli BepInEx. Pozostaw wyłączone podczas normalnej rozgrywki.",
+  "cfg.check_for_updates.name": "Sprawdź aktualizacje",
+  "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
+}

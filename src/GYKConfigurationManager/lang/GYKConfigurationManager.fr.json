@@ -1,0 +1,33 @@
+{
+  "cm.window.title": "Paramètres des plugins / mods",
+  "cm.cat.shortcuts": "Raccourcis clavier",
+  "cm.plugins_no_options": "Plugins sans options disponibles",
+
+  "cm.tip.click_to_expand": "Astuce : Clique sur le nom d'un plugin pour le déplier. Clique sur le nom d'un paramètre ou d'un groupe pour voir sa description.",
+  "cm.tip.drag_window": "Astuce : Tu peux déplacer cette fenêtre en la faisant glisser. Elle restera ouverte pendant que tu joues.",
+
+  "cm.filter.normal": "Paramètres normaux",
+  "cm.filter.keybinds": "Raccourcis clavier",
+  "cm.filter.advanced": "Paramètres avancés",
+  "cm.filter.debug": "Infos de débogage",
+
+  "cm.button.open_log": "Ouvrir le journal",
+  "cm.button.close": "Fermer",
+  "cm.button.clear": "Effacer",
+  "cm.button.cancel": "Annuler",
+  "cm.button.expand_all": "Tout déplier",
+  "cm.button.collapse_all": "Tout replier",
+  "cm.button.url": "URL",
+  "cm.button.reset": "Réinitialiser",
+  "cm.button.set": "Définir...",
+  "cm.button.set_tooltip": "Appuie sur n'importe quelle touche du clavier pour la définir.",
+
+  "cm.label.search": "Rechercher",
+  "cm.label.hex": "Hex",
+  "cm.label.press_any_key": "Appuie sur une touche",
+  "cm.label.press_any_key_combo": "Appuie sur une combinaison de touches",
+  "cm.label.draw_failure": "Impossible d'afficher ce champ. Consulte le journal pour plus de détails.",
+
+  "cm.bool.enabled": "Activé",
+  "cm.bool.disabled": "Désactivé"
+}

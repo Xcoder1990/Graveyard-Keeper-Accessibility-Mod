@@ -85,6 +85,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetOuttaMaWay", "GetOuttaMa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraveChangesRedux", "GraveChangesRedux\GraveChangesRedux.csproj", "{6BB59156-1A13-4683-8A1B-CC62B82AD872}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GYKConfigurationManager", "GYKConfigurationManager\GYKConfigurationManager.csproj", "{B2C7E5D1-9F4A-4E8C-AB31-C1F2D6A07B59}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_archive", "_archive", "{82B952D6-41EF-4222-B0F4-8C679A8B698D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvictChurchVisitors", "_archive\EvictChurchVisitors\EvictChurchVisitors.csproj", "{D8C6B999-60CF-4B57-B111-E2DEBC9A5DD6}"
@@ -92,6 +94,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GYKHelper", "_archive\GYKHelper\GYKHelper.csproj", "{CD83FC00-EDC7-44E4-A845-87EC73D207FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBalanceDumper", "GameBalanceDumper\GameBalanceDumper.csproj", "{1164718D-4B80-4B75-984C-33C219C77D2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowScriptDumper", "FlowScriptDumper\FlowScriptDumper.csproj", "{49982115-6F0F-42EA-9A43-6F4D6F613AAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -268,6 +272,12 @@ Global
 		{CD83FC00-EDC7-44E4-A845-87EC73D207FA}.Release-Upload|Any CPU.Build.0 = Debug|Any CPU
 		{1164718D-4B80-4B75-984C-33C219C77D2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1164718D-4B80-4B75-984C-33C219C77D2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49982115-6F0F-42EA-9A43-6F4D6F613AAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49982115-6F0F-42EA-9A43-6F4D6F613AAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C7E5D1-9F4A-4E8C-AB31-C1F2D6A07B59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C7E5D1-9F4A-4E8C-AB31-C1F2D6A07B59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C7E5D1-9F4A-4E8C-AB31-C1F2D6A07B59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C7E5D1-9F4A-4E8C-AB31-C1F2D6A07B59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

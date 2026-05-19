@@ -1,5 +1,15 @@
 {
+  "cfg.section.advanced": "Zaawansowane",
+  "cfg.section.harvest": "Zbiory",
+  "cfg.section.updates": "Aktualizacje",
+  "cfg.debug_logging.name": "Logi debugowania",
+  "cfg.debug_logging.desc": "Zapisuje szczegółowe informacje diagnostyczne do logu BepInEx podczas gry. Włącz to przed zgłoszeniem błędu, aby log zawierał potrzebny kontekst.",
+  "cfg.require_farmer_perk.name": "Wymagaj umiejętności Rolnik",
+  "cfg.require_farmer_perk.desc": "Włączone: sąsiednie grządki są zbierane masowo dopiero po odblokowaniu umiejętności Rolnik w drzewku technologii. Zgodne z oryginalnym zachowaniem moda. Wyłączone: każde zbieranie od razu ścina sąsiednie grządki z tą samą uprawą, nawet przed odblokowaniem umiejętności - przydatne, gdy chcesz mieć wygodę od pierwszego dnia.",
+  "cfg.cascade_radius_tiles.name": "Promień kaskady (kratki)",
+  "cfg.cascade_radius_tiles.desc": "Jak daleko sięga kaskada zbiorów od kliknietej grządki, mierzona w kratkach gry. 1 obejmuje 8 sąsiednich grządek (3x3 = łącznie 9). 2 obejmuje 5x5 (25 grządek). Wyższe wartości łapią więcej sąsiadów, ale sprawdzają więcej obiektów przy każdym zbieraniu, więc trzymaj nisko, chyba że masz bardzo duże poletka.",
+  "cfg.check_for_updates.name": "Sprawdź aktualizacje",
+  "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda.",
   "Stage1Header": "Ulepszone zbieranie",
-  "Stage1Des": "Zwiększa twoje umiejętności ogrodnicze, aby automatycznie zbierać plony z działek otaczających działkę, nad którą pracujesz.",
-  "DebugWarning": "Tryb debugowania jest włączony. Nie zaleca się pozostawiania go włączonego, chyba że masz ku temu powód."
+  "Stage1Des": "Zwiększa twoje umiejętności ogrodnicze, aby automatycznie zbierać plony z działek otaczających działkę, nad którą pracujesz."
 }

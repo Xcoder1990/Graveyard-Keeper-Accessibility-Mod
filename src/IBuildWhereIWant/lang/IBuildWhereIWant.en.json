@@ -1,5 +1,27 @@
 {
   "DebugWarning": "Please note you have debug mode turned on. It isn't recommended to leave this on unless you have a purpose for it.",
   "Description": "I build where I want!",
-  "Header": "Craft Anywhere"
+  "Header": "Craft Anywhere",
+  "Conflict.MoveObjects.Feature": "Build flow",
+  "Conflict.MoveObjects.Note": "Turn on 'I Build Where I Want Compatibility' in Move Objects' settings.",
+  "cfg.section.advanced": "Advanced",
+  "cfg.section.collision": "Collision",
+  "cfg.section.display": "Display",
+  "cfg.section.keybinds": "Keybinds",
+  "cfg.section.controller": "Controller",
+  "cfg.section.updates": "Updates",
+  "cfg.debug_logging.name": "Debug Logging",
+  "cfg.debug_logging.desc": "Write verbose build-menu diagnostics to the BepInEx console. Leave off for normal play.",
+  "cfg.building_collision.name": "Building Collision",
+  "cfg.building_collision.desc": "Enforce collision between buildings. Turn off to let placed structures overlap.",
+  "cfg.grid.name": "Grid",
+  "cfg.grid.desc": "Show the build-mode grid overlay while placing structures.",
+  "cfg.grey_overlay.name": "Grey Overlay",
+  "cfg.grey_overlay.desc": "Show the grey removal-mode overlay when tearing structures down.",
+  "cfg.menu_key_bind.name": "Menu Key Bind",
+  "cfg.menu_key_bind.desc": "Keybind for opening the build-anywhere crafts menu.",
+  "cfg.menu_controller_button.name": "Menu Controller Button",
+  "cfg.menu_controller_button.desc": "Gamepad button for opening the build-anywhere crafts menu.",
+  "cfg.check_for_updates.name": "Check for Updates",
+  "cfg.check_for_updates.desc": "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page."
 }

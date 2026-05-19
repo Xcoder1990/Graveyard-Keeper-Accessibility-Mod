@@ -16,18 +16,11 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
 
-        Enabled = Config.Bind(DumperSection, "Enabled", true,
-            new ConfigDescription("Master switch. When on, the entire vanilla GameBalance is dumped to BepInEx/plugins/GameBalanceDumper/dump/ on game start.", null,
-                new ConfigurationManagerAttributes { Order = 100 }));
-
-        PrettyPrint = Config.Bind(DumperSection, "Pretty Print", true,
-            new ConfigDescription("On: indent the JSON for readability. Off: minified single-line output (smaller files, faster to write).", null,
-                new ConfigurationManagerAttributes { Order = 99 }));
-
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription("Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.", null,
-                new ConfigurationManagerAttributes { Order = 100 }));
+        Enabled = LocalizedConfig.Bind(Config, DumperSection, "Enabled", true, "enabled", order: 100);
+        PrettyPrint = LocalizedConfig.Bind(Config, DumperSection, "Pretty Print", true, "pretty_print", order: 99);
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 100);
 
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);

@@ -1,0 +1,14 @@
+{
+  "cfg.section.user_interface": "ユーザーインターフェース",
+  "cfg.section.visual_feedback": "ビジュアルフィードバック",
+  "cfg.section.audio_feedback": "オーディオフィードバック",
+  "cfg.section.updates": "アップデート",
+  "cfg.always_show_xp_bar.name": "常に XP バーを表示",
+  "cfg.always_show_xp_bar.desc": "経験値の獲得がなくても、常に経験値バーを表示します。",
+  "cfg.show_point_gain_above_keeper.name": "キーパーの頭上に獲得ポイントを表示",
+  "cfg.show_point_gain_above_keeper.desc": "獲得したポイントをキーパーの頭上に表示します。",
+  "cfg.still_play_collect_audio.name": "収集音を引き続き再生",
+  "cfg.still_play_collect_audio.desc": "ポイント獲得がキーパーの頭上に表示されるときも収集音を再生し続けます。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
+}

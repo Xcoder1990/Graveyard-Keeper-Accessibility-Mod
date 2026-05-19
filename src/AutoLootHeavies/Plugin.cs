@@ -9,14 +9,6 @@ public class Plugin : BaseUnityPlugin
     private const string AdvancedSection  = "── Advanced ──";
     private const string UpdatesSection   = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["1. Features"]  = FeaturesSection,
-        ["2. Locations"] = LocationsSection,
-        ["3. Keybinds"]  = KeybindsSection,
-        ["4. Advanced"]  = AdvancedSection,
-    };
-
     private const float EnergyRequirement = 3f;
 
     internal static TimestampedLogger Log { get; private set; }
@@ -45,107 +37,37 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        MigrateRenamedSections();
-        InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        InitConfiguration();
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
-    private void MigrateRenamedSections()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string content;
-        try
-        {
-            content = File.ReadAllText(path);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
-            return;
-        }
-
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
-        {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
-        }
-        if (renamed == 0) return;
-
-        try
-        {
-            File.WriteAllText(path, content);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
-            return;
-        }
-
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
-        Config.Reload();
-    }
-
     private void InitConfiguration()
     {
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Write verbose stockpile-scan and teleport diagnostics to the BepInEx console. Leave off for normal play.", null,
-                new ConfigurationManagerAttributes {Order = 2}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 2);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        ScanChunkSize = Config.Bind(AdvancedSection, "Performance Smoothness", 250,
-            new ConfigDescription(
-                "If you notice brief hitches when entering a new area on an older PC, try lowering this. Lower = smoother but the mod takes slightly longer to notice newly-built stockpiles. Higher = faster catch-up but can cause a small hitch on slow hardware. Leave at the default if everything feels smooth.",
-                new AcceptableValueRange<int>(50, 2000),
-                new ConfigurationManagerAttributes {Order = 1}));
+        ScanChunkSize = LocalizedConfig.Bind(Config, AdvancedSection, "Performance Smoothness", 250, "performance_smoothness", new AcceptableValueRange<int>(50, 2000), order: 1);
         CachedScanChunkSize = ScanChunkSize.Value;
         ScanChunkSize.SettingChanged += (_, _) => CachedScanChunkSize = ScanChunkSize.Value;
 
-        TeleportToDumpSiteWhenAllStockPilesFull = Config.Bind(FeaturesSection, "Teleport To Dump Site When Full", true,
-            new ConfigDescription("When every stockpile is full, send overflow timber/ore/stone/marble to your designated dump site instead of dropping it at your feet.", null,
-                new ConfigurationManagerAttributes {Order = 9}));
-        ImmersionMode = Config.Bind(FeaturesSection, "Immersive Mode", true,
-            new ConfigDescription("When on, teleporting excess resources costs a small amount of energy. Turn off to make teleports free.", null,
-                new ConfigurationManagerAttributes {Order = 8}));
+        TeleportToDumpSiteWhenAllStockPilesFull = LocalizedConfig.Bind(Config, FeaturesSection, "Teleport To Dump Site When Full", true, "teleport_to_dump_site_when_full", order: 9);
+        ImmersionMode = LocalizedConfig.Bind(Config, FeaturesSection, "Immersive Mode", true, "immersive_mode", order: 8);
 
-        DesignatedTimberLocation = Config.Bind(LocationsSection, "Designated Timber Location", new Vector3(-3712.003f, 6144f, 1294.643f),
-            new ConfigDescription("World position timber piles up at when stockpiles are full. Easiest to set with the keybind in-game rather than editing by hand.", null,
-                new ConfigurationManagerAttributes {Order = 7}));
-        DesignatedOreLocation = Config.Bind(LocationsSection, "Designated Ore Location", new Vector3(-3712.003f, 6144f, 1294.643f),
-            new ConfigDescription("World position ore piles up at when stockpiles are full. Easiest to set with the keybind in-game.", null,
-                new ConfigurationManagerAttributes {Order = 6}));
-        DesignatedStoneLocation = Config.Bind(LocationsSection, "Designated Stone Location", new Vector3(-3712.003f, 6144f, 1294.643f),
-            new ConfigDescription("World position stone and marble pile up at when stockpiles are full. Easiest to set with the keybind in-game.", null,
-                new ConfigurationManagerAttributes {Order = 5}));
+        DesignatedTimberLocation = LocalizedConfig.Bind(Config, LocationsSection, "Designated Timber Location", new Vector3(-3712.003f, 6144f, 1294.643f), "designated_timber_location", order: 7);
+        DesignatedOreLocation = LocalizedConfig.Bind(Config, LocationsSection, "Designated Ore Location", new Vector3(-3712.003f, 6144f, 1294.643f), "designated_ore_location", order: 6);
+        DesignatedStoneLocation = LocalizedConfig.Bind(Config, LocationsSection, "Designated Stone Location", new Vector3(-3712.003f, 6144f, 1294.643f), "designated_stone_location", order: 5);
 
-        SetTimberLocationKeybind = Config.Bind(KeybindsSection, "Set Timber Location Keybind", new KeyboardShortcut(KeyCode.Alpha7),
-            new ConfigDescription("Keybind for saving your current position as the Timber dump location.", null,
-                new ConfigurationManagerAttributes {Order = 4}));
-        SetOreLocationKeybind = Config.Bind(KeybindsSection, "Set Ore Location Keybind", new KeyboardShortcut(KeyCode.Alpha8),
-            new ConfigDescription("Keybind for saving your current position as the Ore dump location.", null,
-                new ConfigurationManagerAttributes {Order = 3}));
-        SetStoneLocationKeybind = Config.Bind(KeybindsSection, "Set Stone Location Keybind", new KeyboardShortcut(KeyCode.Alpha9),
-            new ConfigDescription("Keybind for saving your current position as the Stone/Marble dump location.", null,
-                new ConfigurationManagerAttributes {Order = 2}));
-        TeleportToggleKeybind = Config.Bind(KeybindsSection, "Toggle Teleport Keybind", new KeyboardShortcut(KeyCode.Alpha6),
-            new ConfigDescription("Keybind for quickly toggling the 'teleport to dump site when full' option on or off without opening the settings.", null,
-                new ConfigurationManagerAttributes {Order = 1}));
+        SetTimberLocationKeybind = LocalizedConfig.Bind(Config, KeybindsSection, "Set Timber Location Keybind", new KeyboardShortcut(KeyCode.Alpha7), "set_timber_location_keybind", order: 4);
+        SetOreLocationKeybind = LocalizedConfig.Bind(Config, KeybindsSection, "Set Ore Location Keybind", new KeyboardShortcut(KeyCode.Alpha8), "set_ore_location_keybind", order: 3);
+        SetStoneLocationKeybind = LocalizedConfig.Bind(Config, KeybindsSection, "Set Stone Location Keybind", new KeyboardShortcut(KeyCode.Alpha9), "set_stone_location_keybind", order: 2);
+        TeleportToggleKeybind = LocalizedConfig.Bind(Config, KeybindsSection, "Toggle Teleport Keybind", new KeyboardShortcut(KeyCode.Alpha6), "toggle_teleport_keybind", order: 1);
 
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes { Order = 0 }));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 0);
     }
 
     internal static void WriteLog(string message, bool error = false)

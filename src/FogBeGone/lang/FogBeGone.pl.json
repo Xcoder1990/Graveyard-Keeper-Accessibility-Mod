@@ -1,0 +1,12 @@
+{
+  "cfg.section.general": "Ogólne",
+  "cfg.section.updates": "Aktualizacje",
+  "cfg.remove_fog.name": "Usuń mgłę",
+  "cfg.remove_fog.desc": "Usuwa mgłę z pogody na zewnątrz i w pomieszczeniach.",
+  "cfg.remove_wind.name": "Usuń wiatr",
+  "cfg.remove_wind.desc": "Usuwa efekty pogodowe wiatru.",
+  "cfg.remove_rain.name": "Usuń deszcz",
+  "cfg.remove_rain.desc": "Usuwa efekty pogodowe deszczu.",
+  "cfg.check_for_updates.name": "Sprawdź aktualizacje",
+  "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
+}

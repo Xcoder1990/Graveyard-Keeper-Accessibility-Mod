@@ -1,4 +1,22 @@
 {
   "CarrotMessage": "Kurde, skończyły mi się marchewki dla osła!",
-  "DebugWarning": "Tryb debugowania jest włączony. Nie zaleca się pozostawiania go włączonego, chyba że masz ku temu powód."
+  "DebugWarning": "Tryb debugowania jest włączony. Nie zaleca się pozostawiania go włączonego, chyba że masz ku temu powód.",
+  "cfg.section.advanced": "Zaawansowane",
+  "cfg.section.delivery_times": "Pory dostawy",
+  "cfg.section.donkey": "Osioł",
+  "cfg.section.updates": "Aktualizacje",
+  "cfg.debug_logging.name": "Logi debugowania",
+  "cfg.debug_logging.desc": "Zapisuje szczegółowe diagnostyki harmonogramu dostaw w konsoli BepInEx - przejścia faz, stan osła, sprawdzanie marchewek, powody ponowień. Włącz przy zgłaszaniu błędu. Wyłącz przy normalnej grze.",
+  "cfg.morning_delivery.name": "Dostawa poranna",
+  "cfg.morning_delivery.desc": "Wyzwala dostawę zwłok na początku fazy poranka (zaraz po wschodzie). Domyślnie: włączone.",
+  "cfg.day_delivery.name": "Dostawa dzienna",
+  "cfg.day_delivery.desc": "Wyzwala dostawę zwłok na początku fazy dnia (około południa). Domyślnie: wyłączone - włącz, aby otrzymać dodatkową dostawę w południe.",
+  "cfg.evening_delivery.name": "Dostawa wieczorna",
+  "cfg.evening_delivery.desc": "Wyzwala dostawę zwłok na początku fazy wieczornej (późne popołudnie). Domyślnie: włączone.",
+  "cfg.night_delivery.name": "Dostawa nocna",
+  "cfg.night_delivery.desc": "Wyzwala dostawę zwłok na początku fazy nocnej (po zachodzie słońca). Domyślnie: wyłączone - inaczej osioł przybywa, gdy idziesz spać.",
+  "cfg.donkey_speed.name": "Prędkość osła",
+  "cfg.donkey_speed.desc": "Jak szybko osioł chodzi na cmentarz i z powrotem. Domyślnie 1; wyższe wartości skracają drogę, więc każda dostawa kończy się w swoim oknie czasowym. Ustaw 10-20, jeśli dostawy przychodzą za późno.",
+  "cfg.check_for_updates.name": "Sprawdź aktualizacje",
+  "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
 }

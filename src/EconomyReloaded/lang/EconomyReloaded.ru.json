@@ -1,0 +1,14 @@
+{
+  "cfg.section.economy": "Экономика",
+  "cfg.section.updates": "Обновления",
+  "cfg.dynamic_buy_pricing.name": "Динамические цены покупки",
+  "cfg.dynamic_buy_pricing.desc": "Если включено, цены растут при низком запасе. Если выключено, всегда базовая цена.",
+  "cfg.buy_price_multiplier.name": "Множитель цены покупки",
+  "cfg.buy_price_multiplier.desc": "Итоговый множитель. 1.0 = база, 0.5 = половина, 2.0 = вдвое.",
+  "cfg.dynamic_sell_pricing.name": "Динамические цены продажи",
+  "cfg.dynamic_sell_pricing.desc": "Если включено, цены падают при наполнении запасов. Если выключено, всегда базовая цена.",
+  "cfg.sell_price_multiplier.name": "Множитель цены продажи",
+  "cfg.sell_price_multiplier.desc": "Итоговый множитель. 0.75 соответствует базовой игре.",
+  "cfg.check_for_updates.name": "Проверять обновления",
+  "cfg.check_for_updates.desc": "Показывать в главном меню уведомление, когда на NexusMods появляется более новая версия этого мода. Нажмите на уведомление, чтобы открыть страницу мода."
+}

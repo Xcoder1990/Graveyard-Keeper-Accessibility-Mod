@@ -1,0 +1,15 @@
+{
+  "cfg.section.dumper": "导出",
+  "cfg.enabled.name": "启用",
+  "cfg.enabled.desc": "主开关。开启后游戏加载的每个 FlowScript 都会导出到 BepInEx/plugins/FlowScriptDumper/dump/。",
+  "cfg.dump_resources_folder.name": "导出 Resources 文件夹",
+  "cfg.dump_resources_folder.desc": "打开主菜单时执行一次 Resources.LoadAll<FlowScript>(\"FlowCanvas\")，并将该文件夹下的所有内容导出。",
+  "cfg.dump_scene_attached_scripts.name": "导出场景脚本",
+  "cfg.dump_scene_attached_scripts.desc": "遍历 FlowScriptEngine._scripts，并导出每个 FlowScriptController 的图。它们是附在游戏场景上的引擎驱动全局。",
+  "cfg.hook_get_graph.name": "挂接 CustomFlowScript.GetGraph",
+  "cfg.hook_get_graph.desc": "对 CustomFlowScript.GetGraph 加 Postfix，使运行时按名加载的任何 flow script 也会被导出（捕获不在 Resources/FlowCanvas/ 下的脚本）。",
+  "cfg.write_reference_sidecars.name": "写入引用辅助文件",
+  "cfg.write_reference_sidecars.desc": "在每个 <name>.json 旁写出 <name>.refs.tsv，列出每个 _objectReferences[i] 指向的对象（类型 + Unity 对象名），可用于解析 JSON 中的 \"$ref\":N。",
+  "cfg.pretty_print.name": "美化输出",
+  "cfg.pretty_print.desc": "缩进 JSON 提升可读性。关闭：原样写出游戏保存的单行字符串。"
+}

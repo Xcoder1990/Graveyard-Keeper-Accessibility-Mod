@@ -1,4 +1,10 @@
 {
   "Name": "Pozzo di pietra",
-  "PumpName": "Pozzo con pompa"
+  "PumpName": "Pozzo con pompa",
+  "cfg.section.unlocks": "Sblocchi",
+  "cfg.section.updates": "Aggiornamenti",
+  "cfg.require_engineer_for_pump_well.name": "Richiedi tech Ingegnere per il pozzo a pompa",
+  "cfg.require_engineer_for_pump_well.desc": "Mantiene il requisito originale della tech Ingegnere prima di poter costruire il pozzo a pompa. Disattiva per sbloccare il pozzo a pompa fin dall'inizio, insieme al pozzo base.",
+  "cfg.check_for_updates.name": "Controlla aggiornamenti",
+  "cfg.check_for_updates.desc": "Mostra un avviso nel menu principale quando è disponibile una nuova versione di questo mod su NexusMods. Clicca sull'avviso per aprire la pagina del mod."
 }

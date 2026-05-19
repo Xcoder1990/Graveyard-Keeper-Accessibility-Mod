@@ -1,4 +1,10 @@
 {
   "Name": "石井",
-  "PumpName": "压泵井"
+  "PumpName": "压泵井",
+  "cfg.section.unlocks": "解锁",
+  "cfg.section.updates": "更新",
+  "cfg.require_engineer_for_pump_well.name": "抽水井需要工程师科技",
+  "cfg.require_engineer_for_pump_well.desc": "保留原版“工程师”科技作为抽水井的解锁条件。关闭后从一开始就能建造抽水井，与普通井同时解锁。",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。"
 }

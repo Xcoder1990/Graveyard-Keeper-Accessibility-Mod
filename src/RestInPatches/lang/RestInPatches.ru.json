@@ -1,0 +1,20 @@
+{
+  "Conflict.PlayerJudderFix.Feature": "Сглаживание движения",
+  "Conflict.PlayerJudderFix.Note": "Rest In Patches уже сглаживает движение игрока. Player Judder Fix избыточен при совместной установке.",
+  "Conflict.FootprintPerformance.Feature": "Поведение следов",
+  "Conflict.FootprintPerformance.Note": "Rest In Patches уже содержит исправления следов. Footprint Performance избыточен при совместной установке.",
+  "cfg.section.application": "Приложение",
+  "cfg.section.drops": "Дропы",
+  "cfg.section.footprints": "Следы",
+  "cfg.section.updates": "Обновления",
+  "cfg.keep_running_in_background.name": "Работать в фоне",
+  "cfg.keep_running_in_background.desc": "Продолжает симуляцию, когда окно не в фокусе.",
+  "cfg.mute_when_unfocused.name": "Заглушать без фокуса",
+  "cfg.mute_when_unfocused.desc": "Заглушает весь звук, пока окно игры не в фокусе.",
+  "cfg.max_footprints.name": "Макс. следов",
+  "cfg.max_footprints.desc": "Макс. число следов перед удалением самых старых. 0 отключает ограничение.",
+  "cfg.apply_trigger_to_all_drops.name": "Применять триггер ко всем дропам",
+  "cfg.apply_trigger_to_all_drops.desc": "Не даёт сложенным дропам физически разъезжаться каждый кадр. По умолчанию только камни, мрамор, руда и ящики. Включите для всех.",
+  "cfg.check_for_updates.name": "Проверять обновления",
+  "cfg.check_for_updates.desc": "Показывать в главном меню уведомление, когда на NexusMods появляется более новая версия этого мода. Нажмите на уведомление, чтобы открыть страницу мода."
+}

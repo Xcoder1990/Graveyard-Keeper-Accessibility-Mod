@@ -1,5 +1,15 @@
 {
+  "cfg.section.advanced": "Avanzado",
+  "cfg.section.harvest": "Cosecha",
+  "cfg.section.updates": "Actualizaciones",
+  "cfg.debug_logging.name": "Registro de depuración",
+  "cfg.debug_logging.desc": "Escribe información de diagnóstico detallada en el log de BepInEx mientras juegas. Actívalo antes de reportar un error para que el log tenga el contexto necesario.",
+  "cfg.require_farmer_perk.name": "Requerir habilidad Granjero",
+  "cfg.require_farmer_perk.desc": "Activado: las parcelas cercanas solo se cosechan en masa después de desbloquear la habilidad Granjero en el árbol tecnológico. Coincide con el comportamiento original del mod. Desactivado: cada cosecha siega de inmediato las parcelas vecinas del mismo cultivo, incluso antes de desbloquear la habilidad - útil si quieres la comodidad desde el primer día.",
+  "cfg.cascade_radius_tiles.name": "Radio de cascada (casillas)",
+  "cfg.cascade_radius_tiles.desc": "Hasta dónde se extiende la cascada de cosecha desde la parcela que pulsaste, en casillas del juego. 1 alcanza las 8 parcelas adyacentes (3x3 = 9 en total). 2 alcanza un 5x5 (25 parcelas). Valores mayores incluyen más vecinas pero comprueban más objetos por cosecha, así que mantenlo bajo salvo que tengas huertos muy grandes.",
+  "cfg.check_for_updates.name": "Buscar actualizaciones",
+  "cfg.check_for_updates.desc": "Muestra un aviso en el menú principal cuando hay una versión más nueva de este mod en NexusMods. Haz clic en el aviso para abrir la página del mod.",
   "Stage1Header": "Recolección mejorada",
-  "Stage1Des": "Mejora tus habilidades de jardinería para cosechar automáticamente las parcelas que rodean la parcela en la que estás trabajando.",
-  "DebugWarning": "Ten en cuenta que el modo de depuración está activado. No se recomienda dejarlo activado a menos que tengas un propósito para ello."
+  "Stage1Des": "Mejora tus habilidades de jardinería para cosechar automáticamente las parcelas que rodean la parcela en la que estás trabajando."
 }

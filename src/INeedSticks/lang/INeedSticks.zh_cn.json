@@ -1,3 +1,6 @@
 {
+  "cfg.section.updates": "更新",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。",
   "WoodenStickName": "木棍"
 }

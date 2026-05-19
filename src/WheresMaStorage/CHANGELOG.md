@@ -3,6 +3,10 @@
 ## 2.1.17 | 17 May 2026
 
 - Fixed a launch crash on the 32-bit GOG build with certain mod combinations
+- Cellar crates no longer get swept over to your house by the loose-loot mover
+- Stack sizes now stay at your configured values when Oyasumi Infinite Stack is also installed
+- Added a main-menu notice when a known conflicting mod is loaded alongside this one
+- Mod settings menu (F1) labels now follow your in-game language
 
 ## 2.1.16 | 3 May 2026
 

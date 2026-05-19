@@ -1,0 +1,14 @@
+{
+  "cfg.section.user_interface": "用户界面",
+  "cfg.section.visual_feedback": "视觉反馈",
+  "cfg.section.audio_feedback": "声音反馈",
+  "cfg.section.updates": "更新",
+  "cfg.always_show_xp_bar.name": "始终显示经验条",
+  "cfg.always_show_xp_bar.desc": "始终显示经验条，即使当前没有获得经验。",
+  "cfg.show_point_gain_above_keeper.name": "在主角头上显示获得的点数",
+  "cfg.show_point_gain_above_keeper.desc": "在主角头上显示获得的点数。",
+  "cfg.still_play_collect_audio.name": "仍然播放收集音效",
+  "cfg.still_play_collect_audio.desc": "当点数显示在主角头上时，仍然播放收集音效。",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。"
+}

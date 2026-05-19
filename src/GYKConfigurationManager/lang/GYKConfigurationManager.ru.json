@@ -1,0 +1,33 @@
+{
+  "cm.window.title": "Настройки плагинов / модов",
+  "cm.cat.shortcuts": "Сочетания клавиш",
+  "cm.plugins_no_options": "Плагины без доступных настроек",
+
+  "cm.tip.click_to_expand": "Подсказка: Кликни по названию плагина, чтобы развернуть его. Кликни по названию настройки или группы, чтобы увидеть описание.",
+  "cm.tip.drag_window": "Подсказка: Это окно можно перетащить, чтобы переместить. После перемещения оно остаётся открытым во время игры.",
+
+  "cm.filter.normal": "Обычные настройки",
+  "cm.filter.keybinds": "Сочетания клавиш",
+  "cm.filter.advanced": "Расширенные настройки",
+  "cm.filter.debug": "Отладочная информация",
+
+  "cm.button.open_log": "Открыть лог",
+  "cm.button.close": "Закрыть",
+  "cm.button.clear": "Очистить",
+  "cm.button.cancel": "Отмена",
+  "cm.button.expand_all": "Развернуть всё",
+  "cm.button.collapse_all": "Свернуть всё",
+  "cm.button.url": "URL",
+  "cm.button.reset": "Сброс",
+  "cm.button.set": "Назначить...",
+  "cm.button.set_tooltip": "Нажми любую клавишу на клавиатуре, чтобы назначить её.",
+
+  "cm.label.search": "Поиск",
+  "cm.label.hex": "Hex",
+  "cm.label.press_any_key": "Нажми любую клавишу",
+  "cm.label.press_any_key_combo": "Нажми сочетание клавиш",
+  "cm.label.draw_failure": "Не удалось отобразить это поле. Подробности в логе.",
+
+  "cm.bool.enabled": "Включено",
+  "cm.bool.disabled": "Выключено"
+}

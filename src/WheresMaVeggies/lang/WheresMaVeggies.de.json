@@ -1,5 +1,15 @@
 {
+  "cfg.section.advanced": "Erweitert",
+  "cfg.section.harvest": "Ernte",
+  "cfg.section.updates": "Aktualisierungen",
+  "cfg.debug_logging.name": "Debug-Logging",
+  "cfg.debug_logging.desc": "Schreibt während des Spielens ausführliche Diagnoseinformationen ins BepInEx-Log. Aktiviere dies vor einer Fehlermeldung, damit das Log den nötigen Kontext enthält.",
+  "cfg.require_farmer_perk.name": "Farmer-Perk erforderlich",
+  "cfg.require_farmer_perk.desc": "An: Beete in der Nähe werden nur dann gesammelt geerntet, wenn du den Farmer-Perk im Techtree freigeschaltet hast. Das entspricht dem ursprünglichen Verhalten des Mods. Aus: Jede Ernte erntet sofort benachbarte Beete derselben Kultur, auch bevor der Perk freigeschaltet ist - praktisch, wenn du den Komfort von Anfang an willst.",
+  "cfg.cascade_radius_tiles.name": "Kaskadenradius (Felder)",
+  "cfg.cascade_radius_tiles.desc": "Wie weit die Ernte-Kaskade vom angeklickten Beet reicht, in Spielkacheln. 1 erfasst die 8 angrenzenden Beete (3x3 = 9 Beete insgesamt). 2 erfasst ein 5x5 (25 Beete). Höhere Werte ziehen mehr Nachbarn ein, prüfen aber pro Ernte mehr Weltobjekte - lass den Wert niedrig, außer du hast sehr große Felder.",
+  "cfg.check_for_updates.name": "Auf Updates prüfen",
+  "cfg.check_for_updates.desc": "Zeigt im Hauptmenü einen Hinweis an, wenn auf NexusMods eine neuere Version dieses Mods verfügbar ist. Klicke auf den Hinweis, um die Modseite zu öffnen.",
   "Stage1Header": "Verbessertes Sammeln",
-  "Stage1Des": "Verbessert Ihre Gartenfähigkeiten, um die Parzellen rund um die Parzelle, an der Sie gerade arbeiten, automatisch zu ernten.",
-  "DebugWarning": "Bitte beachten Sie, dass der Debug-Modus aktiviert ist. Es wird nicht empfohlen, diesen eingeschaltet zu lassen, es sei denn, Sie haben einen Zweck dafür."
+  "Stage1Des": "Verbessert Ihre Gartenfähigkeiten, um die Parzellen rund um die Parzelle, an der Sie gerade arbeiten, automatisch zu ernten."
 }

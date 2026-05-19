@@ -1,4 +1,22 @@
 {
   "CarrotMessage": "Blimey! I'm out of carrots for the donkey!",
-  "DebugWarning": "Please note you have debug mode turned on. It isn't recommended to leave this on unless you have a purpose for it."
+  "DebugWarning": "Please note you have debug mode turned on. It isn't recommended to leave this on unless you have a purpose for it.",
+  "cfg.section.advanced": "Advanced",
+  "cfg.section.delivery_times": "Delivery Times",
+  "cfg.section.donkey": "Donkey",
+  "cfg.section.updates": "Updates",
+  "cfg.debug_logging.name": "Debug Logging",
+  "cfg.debug_logging.desc": "Write detailed delivery-scheduling diagnostics to the BepInEx console - phase transitions, donkey state, carrot checks, and retry reasons. Turn this on when reporting bugs. Leave off for normal play.",
+  "cfg.morning_delivery.name": "Morning Delivery",
+  "cfg.morning_delivery.desc": "Trigger a body delivery at the start of the morning phase (just after sunrise). Default: on.",
+  "cfg.day_delivery.name": "Day Delivery",
+  "cfg.day_delivery.desc": "Trigger a body delivery at the start of the daytime phase (around midday). Default: off - turn on if you want an extra mid-day delivery on top of the morning/evening ones.",
+  "cfg.evening_delivery.name": "Evening Delivery",
+  "cfg.evening_delivery.desc": "Trigger a body delivery at the start of the evening phase (late afternoon). Default: on.",
+  "cfg.night_delivery.name": "Night Delivery",
+  "cfg.night_delivery.desc": "Trigger a body delivery at the start of the night phase (after sunset). Default: off - the donkey would otherwise arrive right as you are heading to bed.",
+  "cfg.donkey_speed.name": "Donkey Speed",
+  "cfg.donkey_speed.desc": "How fast the donkey walks to the cemetery and back. Vanilla speed is 1; higher values shorten the round trip so each delivery finishes well within its time slot. Raise this to 10-20 if deliveries feel like they arrive too late.",
+  "cfg.check_for_updates.name": "Check for Updates",
+  "cfg.check_for_updates.desc": "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page."
 }

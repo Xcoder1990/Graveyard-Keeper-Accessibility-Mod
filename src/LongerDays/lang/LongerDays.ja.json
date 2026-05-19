@@ -1,0 +1,8 @@
+{
+  "cfg.section.day_length": "1 日の長さ",
+  "cfg.section.updates": "アップデート",
+  "cfg.day_length.name": "1 日の長さ",
+  "cfg.day_length.desc": "1 日の長さを設定します。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
+}

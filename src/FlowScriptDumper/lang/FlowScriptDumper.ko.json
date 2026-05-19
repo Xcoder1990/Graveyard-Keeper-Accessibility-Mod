@@ -1,0 +1,15 @@
+{
+  "cfg.section.dumper": "덤프",
+  "cfg.enabled.name": "활성화",
+  "cfg.enabled.desc": "마스터 스위치. 켜두면 게임이 불러오는 모든 FlowScript가 BepInEx/plugins/FlowScriptDumper/dump/에 덤프됩니다.",
+  "cfg.dump_resources_folder.name": "Resources 폴더 덤프",
+  "cfg.dump_resources_folder.desc": "메인 메뉴를 열 때 Resources.LoadAll<FlowScript>(\"FlowCanvas\")를 한 번 실행하여 해당 폴더 아래 모두 덤프합니다.",
+  "cfg.dump_scene_attached_scripts.name": "씬에 붙은 스크립트 덤프",
+  "cfg.dump_scene_attached_scripts.desc": "FlowScriptEngine._scripts를 순회하며 각 FlowScriptController의 그래프를 덤프합니다. 이는 게임 씬에 붙은 엔진 구동 글로벌입니다.",
+  "cfg.hook_get_graph.name": "CustomFlowScript.GetGraph 후킹",
+  "cfg.hook_get_graph.desc": "CustomFlowScript.GetGraph에 Postfix를 걸어 런타임에 이름으로 불러오는 flow script도 덤프합니다(Resources/FlowCanvas/ 아래에 없는 것도 잡아냄).",
+  "cfg.write_reference_sidecars.name": "참조 사이드카 작성",
+  "cfg.write_reference_sidecars.desc": "각 <name>.json 옆에 _objectReferences[i] 항목이 가리키는 대상(타입 + Unity 오브젝트 이름)을 적은 <name>.refs.tsv를 함께 작성합니다. JSON 안의 \"$ref\":N 토큰을 해석할 때 사용합니다.",
+  "cfg.pretty_print.name": "보기 좋게 정리",
+  "cfg.pretty_print.desc": "JSON을 들여써서 읽기 좋게 합니다. 끄기: 게임이 저장한 원본의 한 줄 문자열을 그대로 기록합니다."
+}

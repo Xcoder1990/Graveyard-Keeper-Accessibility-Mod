@@ -1,4 +1,22 @@
 {
   "CarrotMessage": "哎呀，胡萝卜给驴吃完了！！",
-  "DebugWarning": "请注意，调试模式已开启。除非有特定目的，否则不建议保持开启状态。"
+  "DebugWarning": "请注意，调试模式已开启。除非有特定目的，否则不建议保持开启状态。",
+  "cfg.section.advanced": "高级",
+  "cfg.section.delivery_times": "送达时段",
+  "cfg.section.donkey": "驴子",
+  "cfg.section.updates": "更新",
+  "cfg.debug_logging.name": "调试日志",
+  "cfg.debug_logging.desc": "向 BepInEx 控制台输出送达调度的详细诊断信息 - 时段切换、驴的状态、胡萝卜检查与重试原因。报 BUG 时开启，平时关闭。",
+  "cfg.morning_delivery.name": "清晨送达",
+  "cfg.morning_delivery.desc": "在清晨时段开始时（日出后）触发一次遗体送达。默认开启。",
+  "cfg.day_delivery.name": "白天送达",
+  "cfg.day_delivery.desc": "在白天时段开始（接近正午）时触发一次遗体送达。默认关闭 - 想要在清晨/傍晚之外再多一次中午送达时再开。",
+  "cfg.evening_delivery.name": "傍晚送达",
+  "cfg.evening_delivery.desc": "在傍晚时段开始（下午晚些时候）时触发一次遗体送达。默认开启。",
+  "cfg.night_delivery.name": "夜间送达",
+  "cfg.night_delivery.desc": "在夜间时段开始（日落后）时触发一次遗体送达。默认关闭 - 否则驴会在你正要睡觉时到达。",
+  "cfg.donkey_speed.name": "驴子速度",
+  "cfg.donkey_speed.desc": "驴子往返墓地的速度。原版速度为 1；数值越大单次往返越短，使每次送达能在时段内完成。觉得送达太迟时可调到 10-20。",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。"
 }

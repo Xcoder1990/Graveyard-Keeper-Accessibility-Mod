@@ -1,0 +1,33 @@
+{
+  "cm.window.title": "Configurações de plugins / mods",
+  "cm.cat.shortcuts": "Atalhos de teclado",
+  "cm.plugins_no_options": "Plugins sem opções disponíveis",
+
+  "cm.tip.click_to_expand": "Dica: Clique no nome de um plugin para expandi-lo. Clique no nome de configurações ou grupos para ver suas descrições.",
+  "cm.tip.drag_window": "Dica: Você pode arrastar esta janela para movê-la. Ela permanecerá aberta enquanto você interage com o jogo.",
+
+  "cm.filter.normal": "Configurações normais",
+  "cm.filter.keybinds": "Atalhos de teclado",
+  "cm.filter.advanced": "Configurações avançadas",
+  "cm.filter.debug": "Informações de depuração",
+
+  "cm.button.open_log": "Abrir log",
+  "cm.button.close": "Fechar",
+  "cm.button.clear": "Limpar",
+  "cm.button.cancel": "Cancelar",
+  "cm.button.expand_all": "Expandir tudo",
+  "cm.button.collapse_all": "Recolher tudo",
+  "cm.button.url": "URL",
+  "cm.button.reset": "Redefinir",
+  "cm.button.set": "Definir...",
+  "cm.button.set_tooltip": "Pressione qualquer tecla do teclado para defini-la.",
+
+  "cm.label.search": "Buscar",
+  "cm.label.hex": "Hex",
+  "cm.label.press_any_key": "Pressione qualquer tecla",
+  "cm.label.press_any_key_combo": "Pressione uma combinação de teclas",
+  "cm.label.draw_failure": "Falha ao exibir este campo. Verifique o log para detalhes.",
+
+  "cm.bool.enabled": "Ativado",
+  "cm.bool.disabled": "Desativado"
+}

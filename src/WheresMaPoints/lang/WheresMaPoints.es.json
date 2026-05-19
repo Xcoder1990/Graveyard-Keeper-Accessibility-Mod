@@ -1,0 +1,14 @@
+{
+  "cfg.section.user_interface": "Interfaz de usuario",
+  "cfg.section.visual_feedback": "Retroalimentación visual",
+  "cfg.section.audio_feedback": "Retroalimentación de audio",
+  "cfg.section.updates": "Actualizaciones",
+  "cfg.always_show_xp_bar.name": "Mostrar siempre la barra de XP",
+  "cfg.always_show_xp_bar.desc": "Muestra la barra de experiencia constantemente, incluso sin ganancia activa.",
+  "cfg.show_point_gain_above_keeper.name": "Mostrar ganancia de puntos sobre el Keeper",
+  "cfg.show_point_gain_above_keeper.desc": "Muestra los puntos obtenidos sobre la cabeza del guardián.",
+  "cfg.still_play_collect_audio.name": "Reproducir audio de recolección",
+  "cfg.still_play_collect_audio.desc": "Sigue reproduciendo el sonido de recolección cuando la ganancia de puntos se muestra sobre la cabeza del guardián.",
+  "cfg.check_for_updates.name": "Buscar actualizaciones",
+  "cfg.check_for_updates.desc": "Muestra un aviso en el menú principal cuando hay una versión más nueva de este mod en NexusMods. Haz clic en el aviso para abrir la página del mod."
+}

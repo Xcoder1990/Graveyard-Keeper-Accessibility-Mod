@@ -1,4 +1,22 @@
 {
   "CarrotMessage": "Accidenti! Ho finito le carote per l'asino!!",
-  "DebugWarning": "Nota: la modalità debug è attivata. Non è consigliato lasciarla attiva a meno che tu non abbia un motivo specifico."
+  "DebugWarning": "Nota: la modalità debug è attivata. Non è consigliato lasciarla attiva a meno che tu non abbia un motivo specifico.",
+  "cfg.section.advanced": "Avanzate",
+  "cfg.section.delivery_times": "Orari di consegna",
+  "cfg.section.donkey": "Asino",
+  "cfg.section.updates": "Aggiornamenti",
+  "cfg.debug_logging.name": "Log di debug",
+  "cfg.debug_logging.desc": "Scrive diagnostiche dettagliate di pianificazione consegne nella console BepInEx: transizioni di fase, stato dell'asino, controlli sulle carote e motivi di ritentativo. Attivalo per i bug report. Disattiva per il gioco normale.",
+  "cfg.morning_delivery.name": "Consegna del mattino",
+  "cfg.morning_delivery.desc": "Avvia una consegna di cadavere all'inizio della fase mattutina (subito dopo l'alba). Predefinito: acceso.",
+  "cfg.day_delivery.name": "Consegna del giorno",
+  "cfg.day_delivery.desc": "Avvia una consegna di cadavere all'inizio della fase diurna (intorno a mezzogiorno). Predefinito: spento - attivalo se vuoi una consegna in più a metà giornata.",
+  "cfg.evening_delivery.name": "Consegna serale",
+  "cfg.evening_delivery.desc": "Avvia una consegna di cadavere all'inizio della fase serale (tardo pomeriggio). Predefinito: acceso.",
+  "cfg.night_delivery.name": "Consegna notturna",
+  "cfg.night_delivery.desc": "Avvia una consegna di cadavere all'inizio della fase notturna (dopo il tramonto). Predefinito: spento - altrimenti l'asino arriva proprio mentre vai a dormire.",
+  "cfg.donkey_speed.name": "Velocità dell'asino",
+  "cfg.donkey_speed.desc": "Quanto velocemente l'asino va al cimitero e torna. Velocità vanilla 1; valori più alti riducono il viaggio così ogni consegna sta nel suo slot. Aumenta a 10-20 se le consegne sembrano arrivare in ritardo.",
+  "cfg.check_for_updates.name": "Controlla aggiornamenti",
+  "cfg.check_for_updates.desc": "Mostra un avviso nel menu principale quando è disponibile una nuova versione di questo mod su NexusMods. Clicca sull'avviso per aprire la pagina del mod."
 }

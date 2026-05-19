@@ -7,12 +7,6 @@ public class Plugin : BaseUnityPlugin
     private const string GeneralSection  = "── General ──";
     private const string UpdatesSection  = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["00. Advanced"] = AdvancedSection,
-        ["01. General"]  = GeneralSection,
-    };
-
     private const string Donkey = "donkey";
     private const string NpcPrefix = "[wgo] ";
     internal static TimestampedLogger Log { get; private set; }
@@ -27,83 +21,25 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Log = new TimestampedLogger(Logger);
-        MigrateRenamedSections();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
 
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Write detailed diagnostic info to the BepInEx log. Turn on before reporting bugs.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 100);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        NpcCollision = Config.Bind(GeneralSection, "NPC", false,
-            new ConfigDescription("Allow NPCs to block your path. Turn off to walk straight through every NPC instead of nudging around them.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        NpcCollision = LocalizedConfig.Bind(Config, GeneralSection, "NPC", false, "npc_collision", order: 100);
         NpcCollision.SettingChanged += (_, _) => GameStartedPlaying();
 
-        DropHeaviesAwayFromPlayer = Config.Bind(GeneralSection, "Drop Heavies Away From Player", true,
-            new ConfigDescription("Logs, stones, and mined blocks land next to the tree or rock instead of flying at your feet.", null,
-                new ConfigurationManagerAttributes {Order = 90}));
+        DropHeaviesAwayFromPlayer = LocalizedConfig.Bind(Config, GeneralSection, "Drop Heavies Away From Player", true, "drop_heavies_away_from_player", order: 90);
+        HeavyCollisionGracePeriod = LocalizedConfig.Bind(Config, GeneralSection, "Heavy Drop Grace Period", true, "heavy_drop_grace_period", order: 80);
+        GracePeriodSeconds = LocalizedConfig.Bind(Config, GeneralSection, "Grace Period Seconds", 1.5f, "grace_period_seconds", new AcceptableValueRange<float>(0.25f, 5f), order: 79, dispNamePrefix: "    └ ", extra: a => a.ShowRangeAsPercent = false);
 
-        HeavyCollisionGracePeriod = Config.Bind(GeneralSection, "Heavy Drop Grace Period", true,
-            new ConfigDescription("A freshly-dropped log, stone, or block can't push you for a short moment after it lands. You can still push them around afterwards.", null,
-                new ConfigurationManagerAttributes {Order = 80}));
-
-        GracePeriodSeconds = Config.Bind(GeneralSection, "Grace Period Seconds", 1.5f,
-            new ConfigDescription("Seconds before a freshly-dropped log, stone, or block can push you again.",
-                new AcceptableValueRange<float>(0.25f, 5f),
-                new ConfigurationManagerAttributes {Order = 79, ShowRangeAsPercent = false, DispName = "    └ Grace Period Seconds"}));
-
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes {Order = 0}));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates");
 
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
         SceneManager.sceneLoaded += (_, _) => GameStartedPlaying();
-    }
-
-    private void MigrateRenamedSections()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string content;
-        try
-        {
-            content = File.ReadAllText(path);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
-            return;
-        }
-
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
-        {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
-        }
-        if (renamed == 0) return;
-
-        try
-        {
-            File.WriteAllText(path, content);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
-            return;
-        }
-
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
-        Config.Reload();
     }
 
     internal static void GameStartedPlaying()

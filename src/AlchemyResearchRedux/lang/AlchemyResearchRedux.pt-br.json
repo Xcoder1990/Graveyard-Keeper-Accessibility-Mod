@@ -1,0 +1,8 @@
+{
+  "cfg.section.advanced": "Avançado",
+  "cfg.section.updates": "Atualizações",
+  "cfg.debug_logging.name": "Log de depuração",
+  "cfg.debug_logging.desc": "Escreve diagnósticos detalhados de receitas de alquimia no console do BepInEx. Mantenha desativado para jogo normal.",
+  "cfg.check_for_updates.name": "Verificar atualizações",
+  "cfg.check_for_updates.desc": "Mostra um aviso no menu principal quando há uma nova versão deste mod no NexusMods. Clique no aviso para abrir a página do mod."
+}

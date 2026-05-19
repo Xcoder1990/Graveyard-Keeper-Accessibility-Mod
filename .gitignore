@@ -1054,9 +1054,6 @@ _ul
 *.py
 *.xlsx
 
-# Local-only dev mods (not in the .sln, not shipped)
-src/FlowScriptDumper/
-
 # NexusMods upload MSBuild target (when present)
 **/upload.target
 
@@ -1074,6 +1071,17 @@ src/FlowScriptDumper/
 **/decompiled_assembly/
 
 # Per-mod Nexus page summary (local copy used to sync the website blurb), and the
-# diff scratchpad written by nexus-compare.ps1 — both are personal dev aids.
+# diff scratchpad written by nexus-compare.ps1 - both are personal dev aids.
 **/desc-summary.txt
 nexus-desc-compare.md
+
+# Local research dir holding extracted third-party mod archives - never for redistribution
+phase3-analysis/
+
+# Saved-from-browser web page dumps that ended up in screenshots dirs
+**/TeraCopy_files/
+
+# Nexus tooling output at repo root
+/nexus-discover-*.csv
+/nexus-thumb-image*.png
+/nexus-thumb-image*.webp

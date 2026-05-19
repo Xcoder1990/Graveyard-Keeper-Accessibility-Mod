@@ -1,5 +1,15 @@
 {
+  "cfg.section.advanced": "Avançado",
+  "cfg.section.harvest": "Colheita",
+  "cfg.section.updates": "Atualizações",
+  "cfg.debug_logging.name": "Log de depuração",
+  "cfg.debug_logging.desc": "Escreve informações de diagnóstico detalhadas no log do BepInEx enquanto você joga. Ative antes de reportar um bug para o log conter o contexto necessário.",
+  "cfg.require_farmer_perk.name": "Exigir talento Fazendeiro",
+  "cfg.require_farmer_perk.desc": "Ligado: as plantações próximas só são colhidas em massa depois que você desbloqueia o talento Fazendeiro na árvore tecnológica. Mantém o comportamento original do mod. Desligado: cada colheita já ceifa as plantações vizinhas do mesmo cultivo, mesmo antes de desbloquear o talento - útil se você quer a comodidade desde o primeiro dia.",
+  "cfg.cascade_radius_tiles.name": "Raio de cascata (blocos)",
+  "cfg.cascade_radius_tiles.desc": "Quão longe a cascata de colheita alcança a partir do canteiro clicado, medido em blocos do jogo. 1 pega os 8 canteiros adjacentes (3x3 = 9 no total). 2 pega um 5x5 (25 canteiros). Valores maiores incluem mais vizinhos, mas verificam mais objetos por colheita; mantenha baixo a menos que tenha plantios muito grandes.",
+  "cfg.check_for_updates.name": "Verificar atualizações",
+  "cfg.check_for_updates.desc": "Mostra um aviso no menu principal quando há uma nova versão deste mod no NexusMods. Clique no aviso para abrir a página do mod.",
   "Stage1Header": "Coleta Aprimorada",
-  "Stage1Des": "Aprimora suas habilidades de jardinagem para colher automaticamente as parcelas ao redor da parcela em que você está trabalhando.",
-  "DebugWarning": "Observe que o modo de depuração está ativado. Não é recomendado deixá-lo ativado a menos que você tenha um propósito para isso."
+  "Stage1Des": "Aprimora suas habilidades de jardinagem para colher automaticamente as parcelas ao redor da parcela em que você está trabalhando."
 }

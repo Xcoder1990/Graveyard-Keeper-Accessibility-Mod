@@ -1,0 +1,15 @@
+{
+  "cfg.section.dumper": "Дампер",
+  "cfg.enabled.name": "Включено",
+  "cfg.enabled.desc": "Главный переключатель. При включении каждый FlowScript, загружаемый игрой, выгружается в BepInEx/plugins/FlowScriptDumper/dump/.",
+  "cfg.dump_resources_folder.name": "Выгрузить папку Resources",
+  "cfg.dump_resources_folder.desc": "Один раз при открытии главного меню вызывает Resources.LoadAll<FlowScript>(\"FlowCanvas\") и выгружает всё содержимое папки.",
+  "cfg.dump_scene_attached_scripts.name": "Выгрузить скрипты сцены",
+  "cfg.dump_scene_attached_scripts.desc": "Проходит по FlowScriptEngine._scripts и выгружает граф каждого FlowScriptController. Это управляемые движком глобали, прикреплённые к игровой сцене.",
+  "cfg.hook_get_graph.name": "Перехват CustomFlowScript.GetGraph",
+  "cfg.hook_get_graph.desc": "Postfix на CustomFlowScript.GetGraph: любой flow script, загружаемый по имени в рантайме, тоже выгружается (включая то, что не лежит в Resources/FlowCanvas/).",
+  "cfg.write_reference_sidecars.name": "Писать сайдкар-файл ссылок",
+  "cfg.write_reference_sidecars.desc": "Рядом с каждым <name>.json пишет <name>.refs.tsv со списком того, на что указывает каждый _objectReferences[i] (тип + имя объекта Unity). Помогает разрешать \"$ref\":N в JSON.",
+  "cfg.pretty_print.name": "Читаемый формат",
+  "cfg.pretty_print.desc": "Выставляет отступы в JSON для читаемости. Выкл: пишет исходную однострочную строку, как её сохранила игра."
+}

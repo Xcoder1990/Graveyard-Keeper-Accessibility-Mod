@@ -3,10 +3,7 @@ namespace TheSeedEqualizer;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    // Section names: plain "── Name ──" style. Sections render in CM in the order their first
-    // Config.Bind call runs, so Advanced is bound first. Legacy headers (both the pre-1.3.11
-    // "0X. Name" style and the interim "── N. Name ──" form) get rewritten to these by
-    // MigrateRenamedSections() on first launch so existing user customisations are preserved.
+    // Section names sort alphabetically in CM. Bind order picks the first one as the default expanded view.
     private const string AdvancedSection       = "── Advanced ──";
     private const string PlayerGardensSection  = "── Player Gardens ──";
     private const string ZombieGardensSection  = "── Zombie Gardens ──";
@@ -15,23 +12,6 @@ public class Plugin : BaseUnityPlugin
     private const string AllGardensSection     = "── All Gardens ──";
     private const string TrackingSection       = "── Tracking ──";
     private const string UpdatesSection        = "── Updates ──";
-
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["00. Advanced"]             = AdvancedSection,
-        ["01. Zombie Gardens"]       = ZombieGardensSection,
-        ["02. Player Gardens"]       = PlayerGardensSection,
-        ["03. Refugee Gardens"]      = RefugeeGardensSection,
-        ["04. Waste"]                = WasteSection,
-        ["05. All Gardens"]          = AllGardensSection,
-        ["── 1. Advanced ──"]        = AdvancedSection,
-        ["── 2. Player Gardens ──"]  = PlayerGardensSection,
-        ["── 3. Zombie Gardens ──"]  = ZombieGardensSection,
-        ["── 4. Refugee Gardens ──"] = RefugeeGardensSection,
-        ["── 5. Waste ──"]           = WasteSection,
-        ["── 6. All Gardens ──"]     = AllGardensSection,
-        ["── 7. Updates ──"]         = UpdatesSection,
-    };
 
     internal static TimestampedLogger Log { get; private set; }
 
@@ -54,9 +34,8 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        MigrateRenamedSections();
-        InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        InitConfiguration();
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
@@ -73,108 +52,29 @@ public class Plugin : BaseUnityPlugin
 
     private static void OnSeedSettingChanged(object sender, EventArgs e) => Helpers.Reconcile();
 
-    private void MigrateRenamedSections()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string content;
-        try
-        {
-            content = File.ReadAllText(path);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
-            return;
-        }
-
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
-        {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
-        }
-        if (renamed == 0) return;
-
-        try
-        {
-            File.WriteAllText(path, content);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
-            return;
-        }
-
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── N. Name ──' style. Existing user values preserved.");
-        Config.Reload();
-    }
-
     private void InitConfiguration()
     {
-        // ── 1. Advanced ──
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Write detailed diagnostic info to the BepInEx log while you play. Turn this on before reporting a bug so the log has the context I need to help.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 100);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        // ── 2. Player Gardens ──
-        ModifyPlayerGardens = Config.Bind(PlayerGardensSection, "Modify Player Gardens", false,
-            new ConfigDescription("On: your own garden plots drop a fairer amount of seeds - at minimum the same number you planted, plus a bonus. Off: vanilla seed yields apply to your gardens.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        ModifyPlayerGardens = LocalizedConfig.Bind(Config, PlayerGardensSection, "Modify Player Gardens", false, "modify_player_gardens", order: 100);
 
-        // ── 3. Zombie Gardens ──
-        ModifyZombieGardens = Config.Bind(ZombieGardensSection, "Modify Zombie Gardens", true,
-            new ConfigDescription("On: zombie garden beds return at least as many seeds as you fed in, plus a bonus, so they don't bleed your seed stock dry. Off: vanilla zombie garden yields apply.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        ModifyZombieGardens = LocalizedConfig.Bind(Config, ZombieGardensSection, "Modify Zombie Gardens", true, "modify_zombie_gardens", order: 100);
+        ModifyZombieVineyards = LocalizedConfig.Bind(Config, ZombieGardensSection, "Modify Zombie Vineyards", true, "modify_zombie_vineyards", order: 99);
 
-        ModifyZombieVineyards = Config.Bind(ZombieGardensSection, "Modify Zombie Vineyards", true,
-            new ConfigDescription("On: zombie vineyards return at least as many seeds as you fed in, plus a bonus. Off: vanilla zombie vineyard yields apply.", null,
-                new ConfigurationManagerAttributes {Order = 99}));
+        ModifyRefugeeGardens = LocalizedConfig.Bind(Config, RefugeeGardensSection, "Modify Refugee Gardens", true, "modify_refugee_gardens", order: 100);
 
-        // ── 4. Refugee Gardens ──
-        ModifyRefugeeGardens = Config.Bind(RefugeeGardensSection, "Modify Refugee Gardens", true,
-            new ConfigDescription("On: refugee garden plots return at least as many seeds as you fed in, plus a bonus. Off: vanilla refugee garden yields apply.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        AddWasteToZombieGardens = LocalizedConfig.Bind(Config, WasteSection, "Add Waste To Zombie Gardens", true, "add_waste_to_zombie_gardens", order: 100);
+        AddWasteToZombieVineyards = LocalizedConfig.Bind(Config, WasteSection, "Add Waste To Zombie Vineyards", true, "add_waste_to_zombie_vineyards", order: 99);
 
-        // ── 5. Waste ──
-        AddWasteToZombieGardens = Config.Bind(WasteSection, "Add Waste To Zombie Gardens", true,
-            new ConfigDescription("On: zombie garden harvests also drop 3–5 crop waste, which is otherwise hard to come by. Off: zombie gardens drop only their normal output.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        BoostPotentialSeedOutput = LocalizedConfig.Bind(Config, AllGardensSection, "Boost Potential Seed Output", true, "boost_potential_seed_output", order: 100);
+        BoostGrowSpeedWhenRaining = LocalizedConfig.Bind(Config, AllGardensSection, "Boost Grow Speed When Raining", true, "boost_grow_speed_when_raining", order: 99);
 
-        AddWasteToZombieVineyards = Config.Bind(WasteSection, "Add Waste To Zombie Vineyards", true,
-            new ConfigDescription("On: zombie vineyards also drop 3–5 crop waste per harvest. Off: zombie vineyards drop only their normal output.", null,
-                new ConfigurationManagerAttributes {Order = 99}));
+        TrackPlantCycles = LocalizedConfig.Bind(Config, TrackingSection, "Track Plant Cycles", true, "track_plant_cycles", order: 100);
+        DebugTracking = LocalizedConfig.Bind(Config, TrackingSection, "Verbose Tracking Logs", false, "verbose_tracking_logs", order: 99);
 
-        // ── 6. All Gardens ──
-        BoostPotentialSeedOutput = Config.Bind(AllGardensSection, "Boost Potential Seed Output", true,
-            new ConfigDescription("On: lifts the upper end of every modified garden's seed roll by an extra 2 (so the random max is +4 instead of +2). Off: keeps the smaller +2 bonus.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
-
-        BoostGrowSpeedWhenRaining = Config.Bind(AllGardensSection, "Boost Grow Speed When Raining", true,
-            new ConfigDescription("On: garden, vineyard and refugee planting crafts grow twice as fast while it's raining. Off: rain has no effect on garden growth speed.", null,
-                new ConfigurationManagerAttributes {Order = 99}));
-
-        // ── 7. Tracking ──
-        TrackPlantCycles = Config.Bind(TrackingSection, "Track Plant Cycles", true,
-            new ConfigDescription("On: every plant and harvest is recorded to BepInEx/plugins/TheSeedEqualizer/ledger.json - one entry per bed showing seeds in vs seeds returned, plus running totals per crop. Off: no tracking. Existing ledger file is preserved either way.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
-
-        DebugTracking = Config.Bind(TrackingSection, "Verbose Tracking Logs", false,
-            new ConfigDescription("On: each spend, harvest, and cancel is also written as an info line to the BepInEx log. Off: only file-write errors are logged. Independent of the main Debug Logging toggle in Advanced.", null,
-                new ConfigurationManagerAttributes {Order = 99}));
-
-        // ── 8. Updates ──
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 100);
     }
 
 }

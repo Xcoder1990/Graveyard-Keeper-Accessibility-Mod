@@ -3,6 +3,9 @@
 ## 3.5.6 | 17 May 2026
 
 - Fixed a launch crash on the 32-bit GOG build with certain mod combinations
+- Energy cost changes now apply after Energy Edit when both are installed, so this mod's setting has the final say (multipliers compound)
+- Added a main-menu notice when Energy Edit is installed alongside this mod
+- Mod settings menu (F1) labels now follow your in-game language
 
 ## 3.5.5 | 3 May 2026
 

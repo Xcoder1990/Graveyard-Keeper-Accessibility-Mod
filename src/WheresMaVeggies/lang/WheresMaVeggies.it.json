@@ -1,5 +1,15 @@
 {
+  "cfg.section.advanced": "Avanzate",
+  "cfg.section.harvest": "Raccolto",
+  "cfg.section.updates": "Aggiornamenti",
+  "cfg.debug_logging.name": "Log di debug",
+  "cfg.debug_logging.desc": "Scrive informazioni diagnostiche dettagliate nel log di BepInEx mentre giochi. Attivalo prima di segnalare un bug per fornire il contesto necessario.",
+  "cfg.require_farmer_perk.name": "Richiedi perk Contadino",
+  "cfg.require_farmer_perk.desc": "Acceso: i campi vicini vengono raccolti in massa solo dopo aver sbloccato il perk Contadino nell'albero tech. Corrisponde al comportamento originale del mod. Spento: ogni raccolta miete subito i campi vicini con la stessa coltura, anche prima dello sblocco - utile se vuoi la comodità sin dal primo giorno.",
+  "cfg.cascade_radius_tiles.name": "Raggio cascata (tile)",
+  "cfg.cascade_radius_tiles.desc": "Quanto si estende la cascata di raccolta dall'aiuola cliccata, in tile di gioco. 1 prende le 8 aiuole adiacenti (3x3 = 9 totali). 2 prende un 5x5 (25 aiuole). Valori più alti coinvolgono più vicine ma controllano più oggetti per raccolta: tienilo basso a meno che tu non abbia campi molto grandi.",
+  "cfg.check_for_updates.name": "Controlla aggiornamenti",
+  "cfg.check_for_updates.desc": "Mostra un avviso nel menu principale quando è disponibile una nuova versione di questo mod su NexusMods. Clicca sull'avviso per aprire la pagina del mod.",
   "Stage1Header": "Raccolta potenziata",
-  "Stage1Des": "Migliora le tue abilità di giardinaggio per raccogliere automaticamente gli appezzamenti che circondano l'appezzamento su cui stai lavorando.",
-  "DebugWarning": "Nota: la modalità debug è attivata. Non è consigliato lasciarla attiva a meno che tu non abbia un motivo specifico."
+  "Stage1Des": "Migliora le tue abilità di giardinaggio per raccogliere automaticamente gli appezzamenti che circondano l'appezzamento su cui stai lavorando."
 }

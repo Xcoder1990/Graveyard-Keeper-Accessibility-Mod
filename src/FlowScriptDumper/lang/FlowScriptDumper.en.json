@@ -1,0 +1,15 @@
+{
+  "cfg.section.dumper": "Dumper",
+  "cfg.enabled.name": "Enabled",
+  "cfg.enabled.desc": "Master switch. When on, every FlowScript the game loads is dumped to BepInEx/plugins/FlowScriptDumper/dump/.",
+  "cfg.dump_resources_folder.name": "Dump Resources Folder",
+  "cfg.dump_resources_folder.desc": "Run Resources.LoadAll<FlowScript>(\"FlowCanvas\") once on main menu open and dump everything under that folder.",
+  "cfg.dump_scene_attached_scripts.name": "Dump Scene-Attached Scripts",
+  "cfg.dump_scene_attached_scripts.desc": "Walk FlowScriptEngine._scripts and dump each FlowScriptController graph. These are the engine-driven globals attached to the gameplay scene.",
+  "cfg.hook_get_graph.name": "Hook CustomFlowScript.GetGraph",
+  "cfg.hook_get_graph.desc": "Postfix CustomFlowScript.GetGraph so any flow script loaded by name at runtime also gets dumped (catches anything that is not under Resources/FlowCanvas/).",
+  "cfg.write_reference_sidecars.name": "Write Reference Sidecars",
+  "cfg.write_reference_sidecars.desc": "Alongside each <name>.json, write <name>.refs.tsv listing what each _objectReferences[i] entry points at (type + Unity object name). Lets you resolve \"$ref\":N tokens in the JSON.",
+  "cfg.pretty_print.name": "Pretty Print",
+  "cfg.pretty_print.desc": "Indent the JSON for readability. Off: write the raw single-line string the game stored."
+}

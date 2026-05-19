@@ -3,5 +3,20 @@
   "DebugWarning": "Tryb debugowania jest włączony. Nie zaleca się pozostawiania go włączonego, chyba że masz ku temu powód.",
   "No": "Nie",
   "ResetButton": "Zresetuj drzewa",
-  "Yes": "Tak"
+  "Yes": "Tak",
+  "cfg.section.advanced": "Zaawansowane",
+  "cfg.section.trees": "Drzewa",
+  "cfg.section.stumps": "Pniaki",
+  "cfg.section.reset": "Resetuj",
+  "cfg.section.updates": "Aktualizacje",
+  "cfg.debug_logging.name": "Logi debugowania",
+  "cfg.debug_logging.desc": "Zapisuje szczegółowe informacje diagnostyczne do logu BepInEx podczas gry. Włącz przed zgłoszeniem błędu.",
+  "cfg.tree_search_distance.name": "Promień wyszukiwania drzew",
+  "cfg.tree_search_distance.desc": "Jak daleko szukać wokół zapamiętanego drzewa. Domyślne 2 łapie to samo drzewo bez sąsiadów.",
+  "cfg.instant_stump_removal.name": "Natychmiastowe usuwanie pniaków",
+  "cfg.instant_stump_removal.desc": "Włączone: pniaki znikają przy upadku. Wyłączone: pozostają, dopóki ich nie usuniesz.",
+  "cfg.reset_trees.name": "Zresetuj drzewa",
+  "cfg.reset_trees.desc": "Przywraca każde ścięte drzewo przy następnym uruchomieniu. Zapis ściętych drzew jest czyszczony.",
+  "cfg.check_for_updates.name": "Sprawdź aktualizacje",
+  "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
 }

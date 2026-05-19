@@ -1,5 +1,27 @@
 {
   "DebugWarning": "Ten en cuenta que el modo de depuración está activado. No se recomienda dejarlo activado a menos que tengas un propósito para ello.",
   "Description": "¡Construyo donde quiero!",
-  "Header": "Crea en cualquier lugar"
+  "Header": "Crea en cualquier lugar",
+  "Conflict.MoveObjects.Feature": "Flujo de construcción",
+  "Conflict.MoveObjects.Note": "Activa 'I Build Where I Want Compatibility' en los ajustes de Move Objects.",
+  "cfg.section.advanced": "Avanzado",
+  "cfg.section.collision": "Colisión",
+  "cfg.section.display": "Pantalla",
+  "cfg.section.keybinds": "Atajos",
+  "cfg.section.controller": "Mando",
+  "cfg.section.updates": "Actualizaciones",
+  "cfg.debug_logging.name": "Registro de depuración",
+  "cfg.debug_logging.desc": "Escribe diagnósticos detallados del menú de construcción en la consola de BepInEx. Déjalo desactivado para jugar.",
+  "cfg.building_collision.name": "Colisión de edificios",
+  "cfg.building_collision.desc": "Aplica colisión entre edificios. Desactívalo para que las estructuras puedan solaparse.",
+  "cfg.grid.name": "Cuadrícula",
+  "cfg.grid.desc": "Muestra la cuadrícula del modo construcción al colocar estructuras.",
+  "cfg.grey_overlay.name": "Superposición gris",
+  "cfg.grey_overlay.desc": "Muestra la superposición gris del modo eliminación al derribar estructuras.",
+  "cfg.menu_key_bind.name": "Atajo del menú",
+  "cfg.menu_key_bind.desc": "Atajo de teclado para abrir el menú de construir en cualquier sitio.",
+  "cfg.menu_controller_button.name": "Botón de mando del menú",
+  "cfg.menu_controller_button.desc": "Botón del mando para abrir el menú de construir en cualquier sitio.",
+  "cfg.check_for_updates.name": "Buscar actualizaciones",
+  "cfg.check_for_updates.desc": "Muestra un aviso en el menú principal cuando hay una versión más nueva de este mod en NexusMods. Haz clic en el aviso para abrir la página del mod."
 }

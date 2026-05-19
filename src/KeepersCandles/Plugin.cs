@@ -15,25 +15,6 @@ public class Plugin : BaseUnityPlugin
     private const string ControlsSection = "── Controls ──";
     private const string UpdatesSection  = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["00. Advanced"]     = AdvancedSection,
-        ["01. Distance"]     = CandlesSection,
-        ["02. Features"]     = ChurchSection,
-        ["03. Keybinds"]     = ControlsSection,
-        ["── 1. Advanced ──"] = AdvancedSection,
-        ["── 2. Candles ──"]  = CandlesSection,
-        ["── 3. Church ──"]   = ChurchSection,
-        ["── 4. Controls ──"] = ControlsSection,
-        ["── 5. Updates ──"]  = UpdatesSection,
-    };
-
-    private static readonly Dictionary<string, string> ControlKeyRenames = new()
-    {
-        ["Extinguish Keybind"]           = "Extinguish Candle Keybind",
-        ["Extinguish Controller Button"] = "Extinguish Candle Controller Button",
-    };
-
     internal static readonly List<GameObject> ChurchColumnsList = [];
 
     internal static TimestampedLogger Log { get; private set; }
@@ -55,9 +36,8 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
-        MigrateConfig();
-        InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        InitConfiguration();
         SceneManager.sceneLoaded += (_, _) => Patches.OnGameBalanceLoaded();
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
@@ -65,131 +45,30 @@ public class Plugin : BaseUnityPlugin
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
-    private void MigrateConfig()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string[] lines;
-        try
-        {
-            lines = File.ReadAllLines(path);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not read {path}: {ex.Message}");
-            return;
-        }
-
-        var sectionsRenamed = 0;
-        var keysRenamed = 0;
-        var inControlsSection = false;
-
-        for (var i = 0; i < lines.Length; i++)
-        {
-            var line = lines[i];
-            var trimmed = line.TrimStart();
-
-            if (trimmed.StartsWith("[") && trimmed.Contains("]"))
-            {
-                var end = trimmed.IndexOf(']');
-                var header = trimmed.Substring(1, end - 1);
-                if (SectionRenames.TryGetValue(header, out var newName))
-                {
-                    lines[i] = $"[{newName}]";
-                    header = newName;
-                    sectionsRenamed++;
-                }
-                inControlsSection = header == ControlsSection;
-                continue;
-            }
-
-            if (!inControlsSection) continue;
-            if (trimmed.StartsWith("#") || trimmed.Length == 0) continue;
-
-            var eq = line.IndexOf('=');
-            if (eq <= 0) continue;
-
-            var keyName = line.Substring(0, eq).TrimEnd();
-            if (!ControlKeyRenames.TryGetValue(keyName, out var newKey)) continue;
-
-            lines[i] = $"{newKey} {line.Substring(eq)}";
-            keysRenamed++;
-        }
-
-        if (sectionsRenamed == 0 && keysRenamed == 0) return;
-
-        try
-        {
-            File.WriteAllLines(path, lines);
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"[Migration] Could not write {path}: {ex.Message}");
-            return;
-        }
-
-        Log.LogInfo($"[Migration] Renamed {sectionsRenamed} section header(s) and {keysRenamed} key name(s). Existing user values preserved.");
-        Config.Reload();
-    }
-
     private void InitConfiguration()
     {
-        // ── 1. Advanced ──
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Write detailed diagnostic info to the BepInEx log while you play. Turn this on before reporting a bug so the log has the context I need to help.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 100);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        // ── 2. Candles ──
-        ExtinguishDistance = Config.Bind(CandlesSection, "Extinguish Distance", 1f,
-            new ConfigDescription("How close you need to stand to a lit candle before the extinguish key picks it up. Higher values let you grab candles from further away. Snaps to quarter-unit increments.",
-                new AcceptableValueRange<float>(1, 5),
-                new ConfigurationManagerAttributes {Order = 100}));
+        ExtinguishDistance = LocalizedConfig.Bind(Config, CandlesSection, "Extinguish Distance", 1f, "extinguish_distance", new AcceptableValueRange<float>(1, 5), order: 100);
         ExtinguishDistance.SettingChanged += (_, _) =>
         {
             ExtinguishDistance.Value = Mathf.Round(ExtinguishDistance.Value * 4) / 4;
         };
 
-        DirectionalArrow = Config.Bind(CandlesSection, "Directional Arrow", true,
-            new ConfigDescription("On: when a lit candle is nearby but out of reach, a pointer arrow appears above it to guide you in. Off: no arrow, you'll only see a speech bubble when you're too far.", null,
-                new ConfigurationManagerAttributes {Order = 99}));
+        DirectionalArrow = LocalizedConfig.Bind(Config, CandlesSection, "Directional Arrow", true, "directional_arrow", order: 99);
         DirectionalArrow.SettingChanged += (_, _) => Patches.ResetArrow();
 
-        // ── 3. Church ──
-        ChurchColumns = Config.Bind(ChurchSection, "Church Columns", true,
-            new ConfigDescription("On: the stone columns running down the middle of the church are visible as normal. Off: the columns are hidden, giving you an unobstructed view of the altar and candles.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        ChurchColumns = LocalizedConfig.Bind(Config, ChurchSection, "Church Columns", true, "church_columns", order: 100);
         ChurchColumns.SettingChanged += (_, _) => Patches.ChurchColumnsToggle();
 
-        // ── 4. Controls ──
-        ExtinguishCandleKeyBind = Config.Bind(ControlsSection, "Extinguish Candle Keybind", new KeyboardShortcut(KeyCode.C),
-            new ConfigDescription("Keyboard key you press to extinguish the nearest lit candle when you're in range.", null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        ExtinguishCandleKeyBind = LocalizedConfig.Bind(Config, ControlsSection, "Extinguish Candle Keybind", new KeyboardShortcut(KeyCode.C), "extinguish_candle_keybind", order: 100);
+        ExtinguishCandleControllerButton = LocalizedConfig.Bind(Config, ControlsSection, "Extinguish Candle Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.DUp), "extinguish_candle_controller_button", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), order: 99);
+        ExtinguishIncenseKeyBind = LocalizedConfig.Bind(Config, ControlsSection, "Extinguish Incense Keybind", new KeyboardShortcut(KeyCode.None), "extinguish_incense_keybind", order: 98);
+        ExtinguishIncenseControllerButton = LocalizedConfig.Bind(Config, ControlsSection, "Extinguish Incense Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.None), "extinguish_incense_controller_button", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), order: 97);
 
-        ExtinguishCandleControllerButton = Config.Bind(ControlsSection, "Extinguish Candle Controller Button",
-            Enum.GetName(typeof(GamePadButton), GamePadButton.DUp),
-            new ConfigDescription("Controller button you press to extinguish the nearest lit candle when you're in range.",
-                new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))),
-                new ConfigurationManagerAttributes {Order = 99}));
-
-        ExtinguishIncenseKeyBind = Config.Bind(ControlsSection, "Extinguish Incense Keybind", new KeyboardShortcut(KeyCode.None),
-            new ConfigDescription("Keyboard key you press to extinguish the nearest lit incense when you're in range. Unbound by default: set a key here if you want to extinguish incenses. Leave unbound to only extinguish candles.", null,
-                new ConfigurationManagerAttributes {Order = 98}));
-
-        ExtinguishIncenseControllerButton = Config.Bind(ControlsSection, "Extinguish Incense Controller Button",
-            Enum.GetName(typeof(GamePadButton), GamePadButton.None),
-            new ConfigDescription("Controller button you press to extinguish the nearest lit incense when you're in range. Unbound by default: set a button here if you want to extinguish incenses on a controller.",
-                new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))),
-                new ConfigurationManagerAttributes {Order = 97}));
-
-        // ── 5. Updates ──
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes {Order = 100}));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 100);
     }
 
     internal static bool CanFindCandles()

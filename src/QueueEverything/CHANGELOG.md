@@ -3,6 +3,7 @@
 ## 2.1.15 | 17 May 2026
 
 - Fixed a launch crash on the 32-bit GOG build with certain mod combinations
+- Mod settings menu (F1) labels now follow your in-game language
 
 ## 2.1.14 | 3 May 2026
 

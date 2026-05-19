@@ -1,0 +1,10 @@
+{
+  "cfg.section.dumper": "导出",
+  "cfg.section.updates": "更新",
+  "cfg.enabled.name": "启用",
+  "cfg.enabled.desc": "主开关。开启后游戏启动时会把整个原版 GameBalance 导出到 BepInEx/plugins/GameBalanceDumper/dump/。",
+  "cfg.pretty_print.name": "美化输出",
+  "cfg.pretty_print.desc": "开启：缩进 JSON 提升可读性。关闭：单行压缩输出（文件更小、写入更快）。",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。"
+}

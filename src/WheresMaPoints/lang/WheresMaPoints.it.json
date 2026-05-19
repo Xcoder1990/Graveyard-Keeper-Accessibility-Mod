@@ -1,0 +1,14 @@
+{
+  "cfg.section.user_interface": "Interfaccia utente",
+  "cfg.section.visual_feedback": "Feedback visivo",
+  "cfg.section.audio_feedback": "Feedback audio",
+  "cfg.section.updates": "Aggiornamenti",
+  "cfg.always_show_xp_bar.name": "Mostra sempre la barra XP",
+  "cfg.always_show_xp_bar.desc": "Mostra costantemente la barra dell'esperienza, anche senza guadagno attivo.",
+  "cfg.show_point_gain_above_keeper.name": "Mostra punti guadagnati sopra il Keeper",
+  "cfg.show_point_gain_above_keeper.desc": "Mostra i punti guadagnati sopra la testa del Keeper.",
+  "cfg.still_play_collect_audio.name": "Riproduci comunque audio di raccolta",
+  "cfg.still_play_collect_audio.desc": "Riproduce comunque l'audio di raccolta quando i punti guadagnati appaiono sopra la testa del Keeper.",
+  "cfg.check_for_updates.name": "Controlla aggiornamenti",
+  "cfg.check_for_updates.desc": "Mostra un avviso nel menu principale quando è disponibile una nuova versione di questo mod su NexusMods. Clicca sull'avviso per aprire la pagina del mod."
+}

@@ -1,0 +1,17 @@
+{
+  "cfg.section.advanced": "Avancé",
+  "cfg.section.general": "Général",
+  "cfg.section.updates": "Mises à jour",
+  "cfg.debug_logging.name": "Journal de débogage",
+  "cfg.debug_logging.desc": "Écrit des informations de diagnostic détaillées dans le log BepInEx. Active avant de signaler des bugs.",
+  "cfg.npc_collision.name": "Collision PNJ",
+  "cfg.npc_collision.desc": "Permet aux PNJ de bloquer ton chemin. Désactive pour traverser tout PNJ sans le contourner.",
+  "cfg.drop_heavies_away_from_player.name": "Lâcher les objets lourds loin du joueur",
+  "cfg.drop_heavies_away_from_player.desc": "Bûches, pierres et blocs minés tombent à côté de l'arbre ou du rocher, pas à tes pieds.",
+  "cfg.heavy_drop_grace_period.name": "Délai de grâce après lâcher d'objets lourds",
+  "cfg.heavy_drop_grace_period.desc": "Une bûche, pierre ou bloc fraîchement lâché ne peut pas te pousser pendant un court moment après son atterrissage. Tu peux toujours les déplacer ensuite.",
+  "cfg.grace_period_seconds.name": "Délai de grâce (secondes)",
+  "cfg.grace_period_seconds.desc": "Secondes avant qu'une bûche, pierre ou bloc fraîchement lâché puisse te pousser à nouveau.",
+  "cfg.check_for_updates.name": "Vérifier les mises à jour",
+  "cfg.check_for_updates.desc": "Affiche un avis dans le menu principal lorsqu'une nouvelle version de ce mod est disponible sur NexusMods. Clique sur l'avis pour ouvrir la page du mod."
+}

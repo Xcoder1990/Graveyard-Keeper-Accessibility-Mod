@@ -1,3 +1,6 @@
 {
+  "cfg.section.updates": "Actualizaciones",
+  "cfg.check_for_updates.name": "Buscar actualizaciones",
+  "cfg.check_for_updates.desc": "Muestra un aviso en el menú principal cuando hay una versión más nueva de este mod en NexusMods. Haz clic en el aviso para abrir la página del mod.",
   "WoodenStickName": "Palo de madera"
 }

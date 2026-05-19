@@ -1,5 +1,27 @@
 {
   "DebugWarning": "Обратите внимание, что режим отладки включён. Не рекомендуется оставлять его включённым без необходимости.",
   "Description": "Я строю там, где хочу!",
-  "Header": "Создавайте где угодно"
+  "Header": "Создавайте где угодно",
+  "Conflict.MoveObjects.Feature": "Режим строительства",
+  "Conflict.MoveObjects.Note": "Включите 'I Build Where I Want Compatibility' в настройках Move Objects.",
+  "cfg.section.advanced": "Расширенные",
+  "cfg.section.collision": "Столкновения",
+  "cfg.section.display": "Отображение",
+  "cfg.section.keybinds": "Клавиши",
+  "cfg.section.controller": "Геймпад",
+  "cfg.section.updates": "Обновления",
+  "cfg.debug_logging.name": "Отладочный лог",
+  "cfg.debug_logging.desc": "Записывает подробные диагностические сведения о меню строительства в консоль BepInEx. Оставьте выключенным.",
+  "cfg.building_collision.name": "Столкновения строений",
+  "cfg.building_collision.desc": "Включает столкновения между строениями. Выключите, чтобы постройки могли пересекаться.",
+  "cfg.grid.name": "Сетка",
+  "cfg.grid.desc": "Показывает сетку режима строительства при размещении объектов.",
+  "cfg.grey_overlay.name": "Серое наложение",
+  "cfg.grey_overlay.desc": "Показывает серое наложение режима удаления при сносе строений.",
+  "cfg.menu_key_bind.name": "Клавиша меню",
+  "cfg.menu_key_bind.desc": "Клавиша для открытия меню «строить где угодно».",
+  "cfg.menu_controller_button.name": "Кнопка геймпада для меню",
+  "cfg.menu_controller_button.desc": "Кнопка геймпада для открытия меню «строить где угодно».",
+  "cfg.check_for_updates.name": "Проверять обновления",
+  "cfg.check_for_updates.desc": "Показывать в главном меню уведомление, когда на NexusMods появляется более новая версия этого мода. Нажмите на уведомление, чтобы открыть страницу мода."
 }

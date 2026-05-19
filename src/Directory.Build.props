@@ -75,6 +75,11 @@
         <None Include="CHANGELOG.md" Condition="Exists('CHANGELOG.md')" />
     </ItemGroup>
 
+    <!-- Auto-include any per-mod lang JSON files alongside the DLL -->
+    <ItemGroup>
+        <Content Include="lang\*.json" Condition="Exists('lang')" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
     <!-- Shared source files (exclude CustomTextures which has its own references) -->
     <ItemGroup Condition="'$(MSBuildProjectName)' != 'CustomTextures'">
         <Compile Include="..\Shared\MainMenuPatch.cs" Link="MainMenuPatch.cs"/>
@@ -82,6 +87,11 @@
         <Compile Include="..\Shared\UpdateCheckerUI.cs" Link="UpdateCheckerUI.cs"/>
         <Compile Include="..\Shared\TimestampedLogger.cs" Link="TimestampedLogger.cs"/>
         <Compile Include="..\Shared\SettingsChangeLogger.cs" Link="SettingsChangeLogger.cs"/>
+        <Compile Include="..\Shared\ConflictWarningRegistry.cs" Link="ConflictWarningRegistry.cs"/>
+        <Compile Include="..\Shared\ConflictWarningUI.cs" Link="ConflictWarningUI.cs"/>
+        <Compile Include="..\Shared\Localisation.cs" Link="Localisation.cs"/>
+        <Compile Include="..\Shared\LocalizedConfig.cs" Link="LocalizedConfig.cs"/>
+        <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs"/>
     </ItemGroup>
 
     <!-- Newtonsoft.Json is required by Shared/UpdateChecker.cs (JsonUtility can't

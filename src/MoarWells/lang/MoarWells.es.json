@@ -1,4 +1,10 @@
 {
   "Name": "Pozo de piedra",
-  "PumpName": "Pozo con bomba"
+  "PumpName": "Pozo con bomba",
+  "cfg.section.unlocks": "Desbloqueos",
+  "cfg.section.updates": "Actualizaciones",
+  "cfg.require_engineer_for_pump_well.name": "Requerir tec. de Ingeniero para el pozo con bomba",
+  "cfg.require_engineer_for_pump_well.desc": "Mantiene el requisito original de la tecnología Ingeniero antes de poder construir el pozo con bomba. Desactívalo para desbloquear el pozo con bomba desde el inicio, junto al pozo básico.",
+  "cfg.check_for_updates.name": "Buscar actualizaciones",
+  "cfg.check_for_updates.desc": "Muestra un aviso en el menú principal cuando hay una versión más nueva de este mod en NexusMods. Haz clic en el aviso para abrir la página del mod."
 }

@@ -34,9 +34,9 @@ public class Plugin : BaseUnityPlugin
     {
         Log = new TimestampedLogger(Logger);
         LogHelper.Log = Log;
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         InitConfiguration();
         InitInternalConfiguration();
-        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
@@ -49,49 +49,18 @@ public class Plugin : BaseUnityPlugin
 
     private void InitConfiguration()
     {
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription(
-                "Write detailed delivery-scheduling diagnostics to the BepInEx console - phase transitions, donkey state, carrot checks, and retry reasons. Turn this on when reporting bugs so the log shows what the mod is actually seeing. Leave off for normal play.",
-                null,
-                new ConfigurationManagerAttributes {Order = 1}));
+        Debug = LocalizedConfig.Bind(Config, AdvancedSection, "Debug Logging", false, "debug_logging", order: 1);
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        MorningDelivery = Config.Bind(DeliveryTimesSection, "Morning Delivery", true,
-            new ConfigDescription(
-                "Trigger a body delivery at the start of the morning phase (just after sunrise). Default: on.",
-                null,
-                new ConfigurationManagerAttributes {Order = 6}));
+        MorningDelivery = LocalizedConfig.Bind(Config, DeliveryTimesSection, "Morning Delivery", true, "morning_delivery", order: 6);
+        DayDelivery = LocalizedConfig.Bind(Config, DeliveryTimesSection, "Day Delivery", false, "day_delivery", order: 5);
+        EveningDelivery = LocalizedConfig.Bind(Config, DeliveryTimesSection, "Evening Delivery", true, "evening_delivery", order: 4);
+        NightDelivery = LocalizedConfig.Bind(Config, DeliveryTimesSection, "Night Delivery", false, "night_delivery", order: 3);
 
-        DayDelivery = Config.Bind(DeliveryTimesSection, "Day Delivery", false,
-            new ConfigDescription(
-                "Trigger a body delivery at the start of the daytime phase (around midday). Default: off - turn on if you want an extra mid-day delivery on top of the morning/evening ones.",
-                null,
-                new ConfigurationManagerAttributes {Order = 5}));
+        DonkeySpeed = LocalizedConfig.Bind(Config, DonkeySection, "Donkey Speed", 2, "donkey_speed", new AcceptableValueRange<int>(2, 20), order: 2);
 
-        EveningDelivery = Config.Bind(DeliveryTimesSection, "Evening Delivery", true,
-            new ConfigDescription(
-                "Trigger a body delivery at the start of the evening phase (late afternoon). Default: on.",
-                null,
-                new ConfigurationManagerAttributes {Order = 4}));
-
-        NightDelivery = Config.Bind(DeliveryTimesSection, "Night Delivery", false,
-            new ConfigDescription(
-                "Trigger a body delivery at the start of the night phase (after sunset). Default: off - the donkey would otherwise arrive right as you're heading to bed.",
-                null,
-                new ConfigurationManagerAttributes {Order = 3}));
-
-        DonkeySpeed = Config.Bind(DonkeySection, "Donkey Speed", 2,
-            new ConfigDescription(
-                "How fast the donkey walks to the cemetery and back. Vanilla speed is 1; higher values shorten the round trip so each delivery finishes well within its time slot. Raise this to 10–20 if deliveries feel like they arrive too late.",
-                new AcceptableValueRange<int>(2, 20),
-                new ConfigurationManagerAttributes {Order = 2}));
-
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
-            new ConfigDescription(
-                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-                null,
-                new ConfigurationManagerAttributes {Order = 1}));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates", order: 1);
     }
 
     private void InitInternalConfiguration()

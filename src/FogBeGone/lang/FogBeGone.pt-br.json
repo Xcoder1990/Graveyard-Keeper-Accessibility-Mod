@@ -1,0 +1,12 @@
+{
+  "cfg.section.general": "Geral",
+  "cfg.section.updates": "Atualizações",
+  "cfg.remove_fog.name": "Remover neblina",
+  "cfg.remove_fog.desc": "Remove a neblina do clima externo e interno.",
+  "cfg.remove_wind.name": "Remover vento",
+  "cfg.remove_wind.desc": "Remove os efeitos climáticos de vento.",
+  "cfg.remove_rain.name": "Remover chuva",
+  "cfg.remove_rain.desc": "Remove os efeitos climáticos de chuva.",
+  "cfg.check_for_updates.name": "Verificar atualizações",
+  "cfg.check_for_updates.desc": "Mostra um aviso no menu principal quando há uma nova versão deste mod no NexusMods. Clique no aviso para abrir a página do mod."
+}

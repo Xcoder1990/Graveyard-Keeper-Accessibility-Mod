@@ -6,11 +6,6 @@ public class Plugin : BaseUnityPlugin
     private const string DayLengthSection = "── Day Length ──";
     private const string UpdatesSection   = "── Updates ──";
 
-    private static readonly Dictionary<string, string> SectionRenames = new()
-    {
-        ["01. Day Length"] = DayLengthSection,
-    };
-
     internal const float MadnessSeconds = 1350f;
     internal const float EvenLongerSeconds = 1125f;
     internal const float DoubleLengthSeconds = 900f;
@@ -24,46 +19,18 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Log = new TimestampedLogger(Logger);
-        MigrateRenamedSections();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
 
-        DayLength = Config.Bind(DayLengthSection, "Day Length", 675f, new ConfigDescription($"Set the length of a day", new AcceptableValueList<float>(675f, 900f, 1125f, 1350f), new ConfigurationManagerAttributes {Order = 1, CustomDrawer = LengthSlider}));
+        DayLength = LocalizedConfig.Bind(Config, DayLengthSection, "Day Length", 675f, "day_length",
+            new AcceptableValueList<float>(675f, 900f, 1125f, 1350f), order: 1,
+            extra: a => a.CustomDrawer = LengthSlider);
         Seconds = DayLength.Value;
 
-        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true, new ConfigDescription(
-            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-            null,
-            new ConfigurationManagerAttributes { Order = 0 }));
+        CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates");
 
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
-    }
-
-    private void MigrateRenamedSections()
-    {
-        var path = Config.ConfigFilePath;
-        if (!File.Exists(path)) return;
-
-        string content;
-        try { content = File.ReadAllText(path); }
-        catch (Exception ex) { Log.LogWarning($"[Migration] Could not read {path}: {ex.Message}"); return; }
-
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
-        {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
-        }
-        if (renamed == 0) return;
-
-        try { File.WriteAllText(path, content); }
-        catch (Exception ex) { Log.LogWarning($"[Migration] Could not write {path}: {ex.Message}"); return; }
-
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
-        Config.Reload();
     }
 
     private static void LengthSlider(ConfigEntryBase entry)

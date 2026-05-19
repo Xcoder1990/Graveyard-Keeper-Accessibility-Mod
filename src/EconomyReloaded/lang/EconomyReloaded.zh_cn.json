@@ -1,0 +1,14 @@
+{
+  "cfg.section.economy": "经济",
+  "cfg.section.updates": "更新",
+  "cfg.dynamic_buy_pricing.name": "动态买价",
+  "cfg.dynamic_buy_pricing.desc": "开启后库存减少买价会上升。关闭则始终按基础价。",
+  "cfg.buy_price_multiplier.name": "买价倍率",
+  "cfg.buy_price_multiplier.desc": "最终倍率。1.0 = 基础，0.5 = 半价，2.0 = 双倍。",
+  "cfg.dynamic_sell_pricing.name": "动态卖价",
+  "cfg.dynamic_sell_pricing.desc": "开启后库存增加卖价会下降。关闭则始终按基础卖价。",
+  "cfg.sell_price_multiplier.name": "卖价倍率",
+  "cfg.sell_price_multiplier.desc": "最终倍率。0.75 与原版一致。",
+  "cfg.check_for_updates.name": "检查更新",
+  "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。"
+}

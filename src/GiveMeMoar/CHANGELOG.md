@@ -3,6 +3,10 @@
 ## 1.2.17 | 17 May 2026
 
 - Fixed a launch crash on the 32-bit GOG build with certain mod combinations
+- Resource multipliers now apply after Even More Resources when both are installed, so this mod's settings have the final say (multipliers compound)
+- Mod settings menu (F1) labels now follow your in-game language
+- Added a main-menu notice when Even More Resources is installed alongside this mod
+- Fixed Craft Output Multiplier not working at the anvil, sawhorse, furnace and other crafting stations
 
 ## 1.2.16 | 10 May 2026
 

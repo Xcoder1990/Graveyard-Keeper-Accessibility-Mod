@@ -1,0 +1,14 @@
+{
+  "cfg.section.regeneration": "Régénération",
+  "cfg.section.updates": "Mises à jour",
+  "cfg.show_regeneration_updates.name": "Afficher les mises à jour de régénération",
+  "cfg.show_regeneration_updates.desc": "Affiche des messages lors de la régénération de la vie et de l'énergie.",
+  "cfg.life_regeneration_rate.name": "Taux de régénération de vie",
+  "cfg.life_regeneration_rate.desc": "Définit la quantité de vie régénérée par tick. Mets 0 pour désactiver.",
+  "cfg.energy_regeneration_rate.name": "Taux de régénération d'énergie",
+  "cfg.energy_regeneration_rate.desc": "Définit la quantité d'énergie régénérée par tick. Mets 0 pour désactiver.",
+  "cfg.regeneration_delay.name": "Délai de régénération",
+  "cfg.regeneration_delay.desc": "Définit le délai en secondes entre chaque tick de régénération.",
+  "cfg.check_for_updates.name": "Vérifier les mises à jour",
+  "cfg.check_for_updates.desc": "Affiche un avis dans le menu principal lorsqu'une nouvelle version de ce mod est disponible sur NexusMods. Clique sur l'avis pour ouvrir la page du mod."
+}

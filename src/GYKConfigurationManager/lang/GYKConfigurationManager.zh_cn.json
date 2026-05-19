@@ -1,0 +1,33 @@
+{
+  "cm.window.title": "插件 / 模组设置",
+  "cm.cat.shortcuts": "键盘快捷键",
+  "cm.plugins_no_options": "无可用选项的插件",
+
+  "cm.tip.click_to_expand": "提示：点击插件名称可展开。点击设置或分组名称可查看说明。",
+  "cm.tip.drag_window": "提示：可以拖动此窗口来移动位置。移动后窗口在你操作游戏时仍会保持打开。",
+
+  "cm.filter.normal": "普通设置",
+  "cm.filter.keybinds": "键盘快捷键",
+  "cm.filter.advanced": "高级设置",
+  "cm.filter.debug": "调试信息",
+
+  "cm.button.open_log": "打开日志",
+  "cm.button.close": "关闭",
+  "cm.button.clear": "清除",
+  "cm.button.cancel": "取消",
+  "cm.button.expand_all": "全部展开",
+  "cm.button.collapse_all": "全部折叠",
+  "cm.button.url": "URL",
+  "cm.button.reset": "重置",
+  "cm.button.set": "设置...",
+  "cm.button.set_tooltip": "按键盘上的任意键来设置。",
+
+  "cm.label.search": "搜索",
+  "cm.label.hex": "Hex",
+  "cm.label.press_any_key": "请按任意键",
+  "cm.label.press_any_key_combo": "请按组合键",
+  "cm.label.draw_failure": "无法显示此项。详情请查看日志。",
+
+  "cm.bool.enabled": "已启用",
+  "cm.bool.disabled": "已禁用"
+}

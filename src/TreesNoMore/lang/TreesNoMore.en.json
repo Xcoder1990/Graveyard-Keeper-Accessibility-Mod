@@ -3,5 +3,20 @@
   "DebugWarning": "Please note you have debug mode turned on. It isn't recommended to leave this on unless you have a purpose for it.",
   "No": "No",
   "ResetButton": "Reset Trees",
-  "Yes": "Yes"
+  "Yes": "Yes",
+  "cfg.section.advanced": "Advanced",
+  "cfg.section.trees": "Trees",
+  "cfg.section.stumps": "Stumps",
+  "cfg.section.reset": "Reset",
+  "cfg.section.updates": "Updates",
+  "cfg.debug_logging.name": "Debug Logging",
+  "cfg.debug_logging.desc": "Write detailed diagnostic info to the BepInEx log while you play. Turn this on before reporting a bug.",
+  "cfg.tree_search_distance.name": "Tree Search Distance",
+  "cfg.tree_search_distance.desc": "How far around a remembered tree to look when deciding whether the world copy should be removed. Default 2 catches the same tree without grabbing its neighbours.",
+  "cfg.instant_stump_removal.name": "Instant Stump Removal",
+  "cfg.instant_stump_removal.desc": "On: stumps disappear the moment a tree falls. Off: stumps stay until you remove them yourself.",
+  "cfg.reset_trees.name": "Reset Trees",
+  "cfg.reset_trees.desc": "Restore every felled tree on the next game launch. The mod's record of which trees you've chopped is wiped.",
+  "cfg.check_for_updates.name": "Check for Updates",
+  "cfg.check_for_updates.desc": "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page."
 }

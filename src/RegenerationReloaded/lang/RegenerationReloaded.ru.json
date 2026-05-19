@@ -1,0 +1,14 @@
+{
+  "cfg.section.regeneration": "Регенерация",
+  "cfg.section.updates": "Обновления",
+  "cfg.show_regeneration_updates.name": "Показывать сообщения о регенерации",
+  "cfg.show_regeneration_updates.desc": "Показывает уведомления при регенерации здоровья и энергии.",
+  "cfg.life_regeneration_rate.name": "Скорость регенерации жизни",
+  "cfg.life_regeneration_rate.desc": "Задаёт количество здоровья, восстанавливаемое за тик. 0 - выключено.",
+  "cfg.energy_regeneration_rate.name": "Скорость регенерации энергии",
+  "cfg.energy_regeneration_rate.desc": "Задаёт количество энергии, восстанавливаемое за тик. 0 - выключено.",
+  "cfg.regeneration_delay.name": "Задержка регенерации",
+  "cfg.regeneration_delay.desc": "Задаёт задержку между тиками регенерации в секундах.",
+  "cfg.check_for_updates.name": "Проверять обновления",
+  "cfg.check_for_updates.desc": "Показывать в главном меню уведомление, когда на NexusMods появляется более новая версия этого мода. Нажмите на уведомление, чтобы открыть страницу мода."
+}

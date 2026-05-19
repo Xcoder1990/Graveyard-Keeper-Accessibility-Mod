@@ -1,5 +1,27 @@
 {
   "DebugWarning": "デバッグモードがオンになっています。目的がない限り、オフのままにすることをおすすめします。",
   "Description": "好きな場所に作ります！",
-  "Header": "どこでもクラフト"
+  "Header": "どこでもクラフト",
+  "Conflict.MoveObjects.Feature": "建築フロー",
+  "Conflict.MoveObjects.Note": "Move Objects の設定で「I Build Where I Want Compatibility」を有効にしてください。",
+  "cfg.section.advanced": "詳細設定",
+  "cfg.section.collision": "衝突",
+  "cfg.section.display": "表示",
+  "cfg.section.keybinds": "キー設定",
+  "cfg.section.controller": "コントローラー",
+  "cfg.section.updates": "アップデート",
+  "cfg.debug_logging.name": "デバッグログ",
+  "cfg.debug_logging.desc": "建築メニューの詳細な診断情報を BepInEx コンソールに記録します。通常プレイ時はオフ。",
+  "cfg.building_collision.name": "建物の衝突",
+  "cfg.building_collision.desc": "建物どうしの衝突を有効にします。オフにすると配置した構造物が重なれます。",
+  "cfg.grid.name": "グリッド",
+  "cfg.grid.desc": "構造物の配置中に建築モードのグリッドを表示します。",
+  "cfg.grey_overlay.name": "グレーオーバーレイ",
+  "cfg.grey_overlay.desc": "構造物の解体時にグレーの除去モードオーバーレイを表示します。",
+  "cfg.menu_key_bind.name": "メニューのキー",
+  "cfg.menu_key_bind.desc": "「どこでも建築」メニューを開くキー。",
+  "cfg.menu_controller_button.name": "メニューのコントローラーボタン",
+  "cfg.menu_controller_button.desc": "「どこでも建築」メニューを開くゲームパッドボタン。",
+  "cfg.check_for_updates.name": "アップデートを確認",
+  "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
 }

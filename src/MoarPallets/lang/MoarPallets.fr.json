@@ -1,4 +1,18 @@
 {
   "Name": "Palette",
-  "ConnectedMessage": "Lié à l'ascenseur"
+  "ConnectedMessage": "Lié à l'ascenseur",
+  "cfg.section.advanced": "Avancé",
+  "cfg.section.notifications": "Notifications",
+  "cfg.section.pallet": "Palette",
+  "cfg.section.updates": "Mises à jour",
+  "cfg.show_pallet_connected_popup.name": "Afficher le popup «palette connectée»",
+  "cfg.show_pallet_connected_popup.desc": "Affiche «Relié à l'ascenseur» au-dessus de chaque palette de la cave.",
+  "cfg.auto_route_loose_crates.name": "Router auto. les caisses libres",
+  "cfg.auto_route_loose_crates.desc": "Au chargement, les caisses libres vont à la palette la plus proche avec de la place. Le reste à l'ascenseur de la cave.",
+  "cfg.auto_route_carried_crates.name": "Router auto. les caisses portées",
+  "cfg.auto_route_carried_crates.desc": "En posant une caisse portée, elle va à la palette la plus proche avec de la place. Le reste à l'ascenseur de la cave.",
+  "cfg.debug_logging.name": "Journal de débogage",
+  "cfg.debug_logging.desc": "Écrit des diagnostics détaillés sur les palettes et zones dans la console BepInEx. Désactive pour le jeu normal.",
+  "cfg.check_for_updates.name": "Vérifier les mises à jour",
+  "cfg.check_for_updates.desc": "Affiche un avis dans le menu principal lorsqu'une nouvelle version de ce mod est disponible sur NexusMods. Clique sur l'avis pour ouvrir la page du mod."
 }

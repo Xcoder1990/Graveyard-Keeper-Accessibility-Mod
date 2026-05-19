@@ -1,0 +1,14 @@
+{
+  "cfg.section.user_interface": "User Interface",
+  "cfg.section.visual_feedback": "Visual Feedback",
+  "cfg.section.audio_feedback": "Audio Feedback",
+  "cfg.section.updates": "Updates",
+  "cfg.always_show_xp_bar.name": "Always Show XP Bar",
+  "cfg.always_show_xp_bar.desc": "Display the experience bar constantly, even without active experience gain.",
+  "cfg.show_point_gain_above_keeper.name": "Show Point Gain Above Keeper",
+  "cfg.show_point_gain_above_keeper.desc": "Display the points earned above the keeper's head.",
+  "cfg.still_play_collect_audio.name": "Still Play Collect Audio",
+  "cfg.still_play_collect_audio.desc": "Keep playing the collect audio when point gain is displayed above the keeper's head.",
+  "cfg.check_for_updates.name": "Check for Updates",
+  "cfg.check_for_updates.desc": "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page."
+}

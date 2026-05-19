@@ -1,4 +1,10 @@
 {
   "Name": "Puits en pierre",
-  "PumpName": "Puits à pompe"
+  "PumpName": "Puits à pompe",
+  "cfg.section.unlocks": "Déblocages",
+  "cfg.section.updates": "Mises à jour",
+  "cfg.require_engineer_for_pump_well.name": "Exiger la tech Ingénieur pour le puits à pompe",
+  "cfg.require_engineer_for_pump_well.desc": "Conserve la condition originale de la tech Ingénieur avant de pouvoir construire le puits à pompe. Désactive pour débloquer le puits à pompe dès le départ, en même temps que le puits simple.",
+  "cfg.check_for_updates.name": "Vérifier les mises à jour",
+  "cfg.check_for_updates.desc": "Affiche un avis dans le menu principal lorsqu'une nouvelle version de ce mod est disponible sur NexusMods. Clique sur l'avis pour ouvrir la page du mod."
 }

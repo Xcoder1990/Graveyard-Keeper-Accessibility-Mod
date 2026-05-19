@@ -1,0 +1,33 @@
+{
+  "cm.window.title": "Ustawienia pluginów / modów",
+  "cm.cat.shortcuts": "Skróty klawiszowe",
+  "cm.plugins_no_options": "Pluginy bez dostępnych opcji",
+
+  "cm.tip.click_to_expand": "Wskazówka: Kliknij nazwę pluginu, aby go rozwinąć. Kliknij nazwę ustawienia lub grupy, aby zobaczyć opis.",
+  "cm.tip.drag_window": "Wskazówka: Możesz przeciągnąć to okno, aby je przesunąć. Pozostanie otwarte, gdy używasz gry.",
+
+  "cm.filter.normal": "Zwykłe ustawienia",
+  "cm.filter.keybinds": "Skróty klawiszowe",
+  "cm.filter.advanced": "Zaawansowane ustawienia",
+  "cm.filter.debug": "Informacje diagnostyczne",
+
+  "cm.button.open_log": "Otwórz log",
+  "cm.button.close": "Zamknij",
+  "cm.button.clear": "Wyczyść",
+  "cm.button.cancel": "Anuluj",
+  "cm.button.expand_all": "Rozwiń wszystkie",
+  "cm.button.collapse_all": "Zwiń wszystkie",
+  "cm.button.url": "URL",
+  "cm.button.reset": "Resetuj",
+  "cm.button.set": "Ustaw...",
+  "cm.button.set_tooltip": "Naciśnij dowolny klawisz na klawiaturze, aby go przypisać.",
+
+  "cm.label.search": "Szukaj",
+  "cm.label.hex": "Hex",
+  "cm.label.press_any_key": "Naciśnij dowolny klawisz",
+  "cm.label.press_any_key_combo": "Naciśnij kombinację klawiszy",
+  "cm.label.draw_failure": "Nie udało się wyświetlić tego pola. Sprawdź log po szczegóły.",
+
+  "cm.bool.enabled": "Włączone",
+  "cm.bool.disabled": "Wyłączone"
+}

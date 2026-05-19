@@ -1,4 +1,22 @@
 {
   "CarrotMessage": "Blimey ! Je n'ai plus de carottes pour l'âne ! !",
-  "DebugWarning": "Veuillez noter que le mode débogage est activé. Il n'est pas recommandé de le laisser activé sauf si vous en avez besoin."
+  "DebugWarning": "Veuillez noter que le mode débogage est activé. Il n'est pas recommandé de le laisser activé sauf si vous en avez besoin.",
+  "cfg.section.advanced": "Avancé",
+  "cfg.section.delivery_times": "Horaires de livraison",
+  "cfg.section.donkey": "Âne",
+  "cfg.section.updates": "Mises à jour",
+  "cfg.debug_logging.name": "Journal de débogage",
+  "cfg.debug_logging.desc": "Écrit des diagnostics détaillés de planification des livraisons dans la console BepInEx : transitions de phase, état de l'âne, vérifications des carottes, raisons de nouvelle tentative. Active-le pour signaler des bugs. Désactive pour le jeu normal.",
+  "cfg.morning_delivery.name": "Livraison du matin",
+  "cfg.morning_delivery.desc": "Déclenche une livraison de corps au début de la phase du matin (juste après le lever du soleil). Par défaut : activé.",
+  "cfg.day_delivery.name": "Livraison du jour",
+  "cfg.day_delivery.desc": "Déclenche une livraison de corps au début de la phase du jour (vers midi). Par défaut : désactivé - active si tu veux une livraison supplémentaire en milieu de journée.",
+  "cfg.evening_delivery.name": "Livraison du soir",
+  "cfg.evening_delivery.desc": "Déclenche une livraison de corps au début de la phase du soir (fin d'après-midi). Par défaut : activé.",
+  "cfg.night_delivery.name": "Livraison de nuit",
+  "cfg.night_delivery.desc": "Déclenche une livraison de corps au début de la phase nocturne (après le coucher du soleil). Par défaut : désactivé - sinon l'âne arrive juste quand tu te couches.",
+  "cfg.donkey_speed.name": "Vitesse de l'âne",
+  "cfg.donkey_speed.desc": "Vitesse à laquelle l'âne va au cimetière et revient. Vitesse vanilla : 1 ; des valeurs plus élevées raccourcissent l'aller-retour pour que chaque livraison se termine dans son créneau. Monte à 10-20 si les livraisons arrivent trop tard.",
+  "cfg.check_for_updates.name": "Vérifier les mises à jour",
+  "cfg.check_for_updates.desc": "Affiche un avis dans le menu principal lorsqu'une nouvelle version de ce mod est disponible sur NexusMods. Clique sur l'avis pour ouvrir la page du mod."
 }

@@ -2,7 +2,10 @@
 
 ## 1.7.13 | 17 May 2026
 
-- Fixed mid-game buildables from other mods (such as MoarWells' pump well) not appearing in the build-anywhere menu
+- Fixed mid-game buildables from other mods not appearing in the build-anywhere menu
+- Fixed buildables with duplicate names being missing from the build-anywhere menu
+- Added a main-menu hint when Move Objects (No Rebuilding) is installed alongside this mod, pointing to Move Objects' opt-in compatibility setting
+- Mod settings menu (F1) labels now follow your in-game language
 
 ## 1.7.12 | 3 May 2026
 

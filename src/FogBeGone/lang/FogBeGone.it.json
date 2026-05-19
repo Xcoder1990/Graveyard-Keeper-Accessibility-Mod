@@ -1,0 +1,12 @@
+{
+  "cfg.section.general": "Generale",
+  "cfg.section.updates": "Aggiornamenti",
+  "cfg.remove_fog.name": "Rimuovi nebbia",
+  "cfg.remove_fog.desc": "Rimuove la nebbia dal meteo esterno e interno.",
+  "cfg.remove_wind.name": "Rimuovi vento",
+  "cfg.remove_wind.desc": "Rimuove gli effetti meteorologici del vento.",
+  "cfg.remove_rain.name": "Rimuovi pioggia",
+  "cfg.remove_rain.desc": "Rimuove gli effetti meteorologici della pioggia.",
+  "cfg.check_for_updates.name": "Controlla aggiornamenti",
+  "cfg.check_for_updates.desc": "Mostra un avviso nel menu principale quando è disponibile una nuova versione di questo mod su NexusMods. Clicca sull'avviso per aprire la pagina del mod."
+}
