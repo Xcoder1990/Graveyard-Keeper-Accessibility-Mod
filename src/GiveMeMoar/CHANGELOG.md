@@ -7,6 +7,7 @@
 - Mod settings menu (F1) labels now follow your in-game language
 - Added a main-menu notice when Even More Resources is installed alongside this mod
 - Fixed Craft Output Multiplier not working at the anvil, sawhorse, furnace and other crafting stations
+- Korean translation refreshed, thanks to 은월민트
 
 ## 1.2.16 | 10 May 2026
 
