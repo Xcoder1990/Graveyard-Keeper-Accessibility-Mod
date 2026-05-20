@@ -4,7 +4,6 @@
   "Conflict.FootprintPerformance.Feature": "Zachowanie śladów stóp",
   "Conflict.FootprintPerformance.Note": "Rest In Patches zawiera już poprawki śladów stóp. Footprint Performance jest zbędny, gdy oba są zainstalowane.",
   "cfg.section.application": "Aplikacja",
-  "cfg.section.drops": "Wypady",
   "cfg.section.footprints": "Ślady stóp",
   "cfg.section.updates": "Aktualizacje",
   "cfg.keep_running_in_background.name": "Działaj w tle",
@@ -13,8 +12,6 @@
   "cfg.mute_when_unfocused.desc": "Wycisza całe audio, gdy okno gry nie jest aktywne.",
   "cfg.max_footprints.name": "Maks. śladów",
   "cfg.max_footprints.desc": "Maks. liczba śladów przed usunięciem najstarszych. 0 wyłącza limit.",
-  "cfg.apply_trigger_to_all_drops.name": "Zastosuj trigger do wszystkich wypadów",
-  "cfg.apply_trigger_to_all_drops.desc": "Zapobiega rozsuwaniu się ułożonych wypadów co klatkę. Domyślnie tylko kamienie, marmur, ruda i skrzynie. Włącz dla wszystkich.",
   "cfg.check_for_updates.name": "Sprawdź aktualizacje",
   "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
 }

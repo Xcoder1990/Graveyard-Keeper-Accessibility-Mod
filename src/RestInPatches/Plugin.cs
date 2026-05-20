@@ -4,7 +4,6 @@ namespace RestInPatches;
 public class Plugin : BaseUnityPlugin
 {
     private const string ApplicationSection = "── Application ──";
-    private const string DropsSection       = "── Drops ──";
     private const string FootprintsSection  = "── Footprints ──";
     private const string UpdatesSection     = "── Updates ──";
 
@@ -15,7 +14,6 @@ public class Plugin : BaseUnityPlugin
     private static ConfigEntry<bool> KeepRunningInBackground { get; set; }
     private static ConfigEntry<bool> MuteWhenUnfocused { get; set; }
     internal static ConfigEntry<int> MaxFootprints { get; private set; }
-    internal static ConfigEntry<bool> ApplyTriggerToAllDrops { get; private set; }
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     private void Awake()
@@ -79,8 +77,6 @@ public class Plugin : BaseUnityPlugin
         };
 
         MaxFootprints = LocalizedConfig.Bind(Config, FootprintsSection, "Max Footprints", 1000, "max_footprints", new AcceptableValueRange<int>(0, 10000));
-        ApplyTriggerToAllDrops = LocalizedConfig.Bind(Config, DropsSection, "Apply Trigger To All Drops", false, "apply_trigger_to_all_drops");
-        ApplyTriggerToAllDrops.SettingChanged += (_, _) => Patches.DropColliderPatches.ReapplyAllExistingDrops();
 
         CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates");
     }

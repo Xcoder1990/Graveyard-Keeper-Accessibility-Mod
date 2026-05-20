@@ -4,7 +4,6 @@
   "Conflict.FootprintPerformance.Feature": "足跡の挙動",
   "Conflict.FootprintPerformance.Note": "Rest In Patches にはすでに足跡の修正が含まれています。両方をインストールすると Footprint Performance は重複します。",
   "cfg.section.application": "アプリケーション",
-  "cfg.section.drops": "ドロップ",
   "cfg.section.footprints": "足跡",
   "cfg.section.updates": "アップデート",
   "cfg.keep_running_in_background.name": "バックグラウンドで実行を続ける",
@@ -13,8 +12,6 @@
   "cfg.mute_when_unfocused.desc": "ゲームウィンドウが非アクティブの間、すべての音声をミュートします。",
   "cfg.max_footprints.name": "足跡の最大数",
   "cfg.max_footprints.desc": "保持する足跡の最大数。超過分は古いものから削除。0 で上限なし。",
-  "cfg.apply_trigger_to_all_drops.name": "すべてのドロップにトリガーを適用",
-  "cfg.apply_trigger_to_all_drops.desc": "積み重なったドロップが毎フレーム物理的に離れるのを防ぎます。既定は石、大理石、鉱石、木箱のみ。オンですべてのドロップに拡張。",
   "cfg.check_for_updates.name": "アップデートを確認",
   "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
 }
