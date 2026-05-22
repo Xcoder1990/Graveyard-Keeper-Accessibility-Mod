@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-05-21T17:11:48Z",
-  "generated_by": "update-manifest.yml@76161d94",
+  "generated_at": "2026-05-22T05:40:38Z",
+  "generated_by": "update-manifest.yml@b93f90ae",
   "game_domain": "graveyardkeeper",
   "mods": [
     {
@@ -18,11 +18,11 @@
       "plugin_guid": "p1xel8ted.gyk.alchemyresearchredux",
       "nexus_mod_id": 90,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/90",
-      "latest_version": "",
-      "latest_file_id": 0,
-      "latest_file_name": "",
-      "uploaded_unix": 0,
-      "status": "error"
+      "latest_version": "0.1.7",
+      "latest_file_id": 1164,
+      "latest_file_name": "Alchemy Research Redux",
+      "uploaded_unix": 1779190280,
+      "status": "ok"
     },
     {
       "plugin_guid": "p1xel8ted.gyk.appletreesenhanced",
@@ -128,11 +128,11 @@
       "plugin_guid": "p1xel8ted.gyk.getouttamyway",
       "nexus_mod_id": 88,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/88",
-      "latest_version": "",
-      "latest_file_id": 0,
-      "latest_file_name": "",
-      "uploaded_unix": 0,
-      "status": "error"
+      "latest_version": "0.1.7",
+      "latest_file_id": 1175,
+      "latest_file_name": "Get Outta Ma Way",
+      "uploaded_unix": 1779190532,
+      "status": "ok"
     },
     {
       "plugin_guid": "p1xel8ted.gyk.givememoar",
@@ -148,11 +148,11 @@
       "plugin_guid": "p1xel8ted.gyk.gravechangesredux",
       "nexus_mod_id": 89,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/89",
-      "latest_version": "",
-      "latest_file_id": 0,
-      "latest_file_name": "",
-      "uploaded_unix": 0,
-      "status": "error"
+      "latest_version": "0.1.10",
+      "latest_file_id": 1177,
+      "latest_file_name": "Grave Changes Redux",
+      "uploaded_unix": 1779190601,
+      "status": "ok"
     },
     {
       "plugin_guid": "p1xel8ted.gyk.ibuildwhereiwant",
