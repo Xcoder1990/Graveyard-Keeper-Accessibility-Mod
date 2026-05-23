@@ -29,8 +29,9 @@ public static class Patches
 
         var stashedCount = 0;
         var drained = 0;
-        // Super Strong Mod refills the slot from its stack after each insert, so keep stashing
-        // until the carry empties or every pile is full. A normal single carry runs this once.
+        // Super Strong Mod refills the slot from its stack after each item leaves, so keep going
+        // until the carry empties. Each item goes to the nearest stockpile with room, or to the
+        // dump site (your feet if teleport's off) when every pile is full. A normal carry runs once.
         while (__instance.has_overhead && Plugin.OverheadItemIsHeavy(__instance.overhead_item) && drained++ < StackDrainLimit)
         {
             var item = __instance.overhead_item;
@@ -46,24 +47,21 @@ public static class Patches
                 break;
             }
 
-            if (!placed) break;
-        }
+            if (placed) continue;
 
-        if (stashedCount > 0) Plugin.ShowLootAddedIcon(new Item(itemId) { value = stashedCount });
-
-        if (__instance.overhead_item != null || stashedCount == 0)
-        {
             if (Plugin.TeleportToDumpSiteWhenAllStockPilesFull.Value)
             {
-                Plugin.TeleportItem(__instance, __instance.overhead_item);
+                Plugin.TeleportItem(__instance, item);
                 if (Plugin.DebugEnabled) Plugin.WriteLog($"[DropOverhead] fallback → teleport {itemId} to dump site");
             }
             else
             {
-                Plugin.DropObjectAndNull(__instance, __instance.overhead_item);
+                Plugin.DropObjectAndNull(__instance, item);
                 if (Plugin.DebugEnabled) Plugin.WriteLog($"[DropOverhead] fallback → drop {itemId} (teleport disabled)");
             }
         }
+
+        if (stashedCount > 0) Plugin.ShowLootAddedIcon(new Item(itemId) { value = stashedCount });
 
         return false;
     }
