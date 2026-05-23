@@ -12,6 +12,10 @@
   "cfg.heavy_drop_grace_period.desc": "Toras, pedras ou blocos recém-soltos não conseguem te empurrar por um instante após pousarem. Você ainda pode movê-los depois.",
   "cfg.grace_period_seconds.name": "Segundos do período de carência",
   "cfg.grace_period_seconds.desc": "Segundos antes que uma tora, pedra ou bloco recém-solto possa te empurrar novamente.",
+  "cfg.walk_through_heavy_drops.name": "Atravessar itens pesados soltados",
+  "cfg.walk_through_heavy_drops.desc": "Permite atravessar toras, pedras, minério e caixas soltados em vez de esbarrar neles, e impede que pilhas grandes deslizem para cantos inacessíveis. Ainda dá para pegar.",
+  "cfg.include_every_dropped_item.name": "Incluir todos os itens soltados",
+  "cfg.include_every_dropped_item.desc": "Estende a travessia a qualquer item soltado, não só aos pesados.",
   "cfg.check_for_updates.name": "Verificar atualizações",
   "cfg.check_for_updates.desc": "Mostra um aviso no menu principal quando há uma nova versão deste mod no NexusMods. Clique no aviso para abrir a página do mod."
 }

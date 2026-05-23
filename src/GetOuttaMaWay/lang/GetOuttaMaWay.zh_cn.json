@@ -12,6 +12,10 @@
   "cfg.heavy_drop_grace_period.desc": "刚落地的原木、石块或方块在短时间内不会把你推开。之后仍然可以推它们。",
   "cfg.grace_period_seconds.name": "宽限期（秒）",
   "cfg.grace_period_seconds.desc": "刚落地的原木、石块或方块再次能推动你前所需的秒数。",
+  "cfg.walk_through_heavy_drops.name": "穿过掉落的重物",
+  "cfg.walk_through_heavy_drops.desc": "让你穿过掉落的原木、石头、矿石和箱子，而不是被它们挡住，并防止成堆的重物滑到够不到的角落。仍然可以拾取。",
+  "cfg.include_every_dropped_item.name": "包含所有掉落物",
+  "cfg.include_every_dropped_item.desc": "将穿过效果扩展到所有掉落物，而不仅是重物。",
   "cfg.check_for_updates.name": "检查更新",
   "cfg.check_for_updates.desc": "当 NexusMods 上有此模组的更新版本时，在主菜单显示提示。点击提示可打开模组页面。"
 }

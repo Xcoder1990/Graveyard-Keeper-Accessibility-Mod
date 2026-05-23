@@ -12,6 +12,10 @@
   "cfg.heavy_drop_grace_period.desc": "Un tronco, piedra o bloque recién soltado no puede empujarte durante un instante tras caer. Sigues pudiendo moverlos después.",
   "cfg.grace_period_seconds.name": "Segundos del periodo de gracia",
   "cfg.grace_period_seconds.desc": "Segundos antes de que un tronco, piedra o bloque recién soltado pueda empujarte de nuevo.",
+  "cfg.walk_through_heavy_drops.name": "Atravesar objetos pesados soltados",
+  "cfg.walk_through_heavy_drops.desc": "Te permite atravesar troncos, piedras, mineral y cajas soltados en vez de chocar con ellos, y evita que los montones grandes se deslicen a rincones inaccesibles. Se pueden recoger igual.",
+  "cfg.include_every_dropped_item.name": "Incluir todos los objetos soltados",
+  "cfg.include_every_dropped_item.desc": "Extiende el atravesar a cualquier objeto soltado, no solo a los pesados.",
   "cfg.check_for_updates.name": "Buscar actualizaciones",
   "cfg.check_for_updates.desc": "Muestra un aviso en el menú principal cuando hay una versión más nueva de este mod en NexusMods. Haz clic en el aviso para abrir la página del mod."
 }

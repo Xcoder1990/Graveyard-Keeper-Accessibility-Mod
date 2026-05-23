@@ -12,6 +12,10 @@
   "cfg.heavy_drop_grace_period.desc": "Ein frisch abgelegter Stamm, Stein oder Block kann dich für einen kurzen Moment nach dem Landen nicht schieben. Du kannst sie danach weiterhin verschieben.",
   "cfg.grace_period_seconds.name": "Schonzeit (Sekunden)",
   "cfg.grace_period_seconds.desc": "Sekunden, bevor ein frisch abgelegter Stamm, Stein oder Block dich erneut schieben kann.",
+  "cfg.walk_through_heavy_drops.name": "Durch schwere Drops hindurchlaufen",
+  "cfg.walk_through_heavy_drops.desc": "Lass dich durch abgelegte Stämme, Steine, Erz und Kisten hindurchlaufen, statt an ihnen hängenzubleiben, und verhindere, dass große Haufen davon in schwer erreichbare Ecken rutschen. Aufheben geht weiterhin.",
+  "cfg.include_every_dropped_item.name": "Alle abgelegten Gegenstände einbeziehen",
+  "cfg.include_every_dropped_item.desc": "Erweitert das Hindurchlaufen auf jeden abgelegten Gegenstand, nicht nur auf schwere.",
   "cfg.check_for_updates.name": "Auf Updates prüfen",
   "cfg.check_for_updates.desc": "Zeigt im Hauptmenü einen Hinweis an, wenn auf NexusMods eine neuere Version dieses Mods verfügbar ist. Klicke auf den Hinweis, um die Modseite zu öffnen."
 }

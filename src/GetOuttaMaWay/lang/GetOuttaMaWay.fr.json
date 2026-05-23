@@ -12,6 +12,10 @@
   "cfg.heavy_drop_grace_period.desc": "Une bûche, pierre ou bloc fraîchement lâché ne peut pas te pousser pendant un court moment après son atterrissage. Tu peux toujours les déplacer ensuite.",
   "cfg.grace_period_seconds.name": "Délai de grâce (secondes)",
   "cfg.grace_period_seconds.desc": "Secondes avant qu'une bûche, pierre ou bloc fraîchement lâché puisse te pousser à nouveau.",
+  "cfg.walk_through_heavy_drops.name": "Traverser les objets lourds lâchés",
+  "cfg.walk_through_heavy_drops.desc": "Te permet de traverser les bûches, pierres, minerai et caisses lâchés au lieu de les heurter, et empêche les gros tas de glisser dans des coins inaccessibles. Ils restent ramassables.",
+  "cfg.include_every_dropped_item.name": "Inclure tous les objets lâchés",
+  "cfg.include_every_dropped_item.desc": "Étend la traversée à tout objet lâché, pas seulement aux lourds.",
   "cfg.check_for_updates.name": "Vérifier les mises à jour",
   "cfg.check_for_updates.desc": "Affiche un avis dans le menu principal lorsqu'une nouvelle version de ce mod est disponible sur NexusMods. Clique sur l'avis pour ouvrir la page du mod."
 }

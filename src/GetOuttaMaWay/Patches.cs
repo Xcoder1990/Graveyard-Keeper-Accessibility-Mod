@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace GetOuttaMaWay;
 
 [Harmony]
@@ -124,5 +126,103 @@ public static class Patches
         }
         Physics2D.IgnoreCollision(heavy, player, false);
         if (Plugin.DebugEnabled) Plugin.Log.LogInfo($"[RestoreGrace] grace ended for heavy '{heavyId}', collision restored");
+    }
+
+    // Heavy drops settle into solid colliders, and stacked piles (the quarry is the worst
+    // case) get shoved apart by the physics solver every frame, which drifts them into spots
+    // the player can't reach and tanks performance. Turning the collider into a trigger keeps
+    // pickup working but stops the per-frame shoving, so the piles stay put and you walk
+    // through them.
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(DropResGameObject), nameof(DropResGameObject.DoDrop),
+        [typeof(Item), typeof(int), typeof(bool)])]
+    public static void DropResGameObject_DoDrop_TriggerPostfix(DropResGameObject __instance)
+    {
+        if (__instance == null || __instance.res == null) return;
+        if (!ShouldWalkThrough(__instance.res)) return;
+        SetColliderTrigger(__instance, true);
+    }
+
+    // Re-apply to every live drop. Called when the player flips either setting and on scene
+    // load, so rock already sitting in a save gets caught too, not just new drops.
+    internal static void ReapplyHeavyDropTriggers()
+    {
+        var list = DropsList._instance;
+        if (list == null || list.drops == null) return;
+        foreach (var drop in list.drops)
+        {
+            if (!drop) continue;
+            var item = drop.res;
+            if (item == null) continue;
+            if (ShouldWalkThrough(item))
+            {
+                SetColliderTrigger(drop, true);
+            }
+            else
+            {
+                RevertColliderTrigger(drop);
+            }
+        }
+    }
+
+    private static bool ShouldWalkThrough(Item item)
+    {
+        if (item == null || item.definition == null) return false;
+        if (!Plugin.WalkThroughHeavyDrops.Value) return false;
+        if (Plugin.IncludeEveryDroppedItem.Value) return true;
+        return item.definition.is_big;
+    }
+
+    // Remember the collider's original trigger state the first time we touch it, so flipping
+    // the setting off restores whatever was really there. Entries are GC'd with the collider.
+    private sealed class OriginalState
+    {
+        public bool IsTrigger;
+    }
+    private static readonly ConditionalWeakTable<Collider2D, OriginalState> OriginalTriggers = new();
+
+    private static void SetColliderTrigger(DropResGameObject drop, bool isTrigger)
+    {
+        if (!drop) return;
+        var cap = drop.GetComponent<CapsuleCollider2D>();
+        if (cap)
+        {
+            ApplyToCollider(cap, isTrigger);
+        }
+        var circ = drop.GetComponent<CircleCollider2D>();
+        if (circ)
+        {
+            ApplyToCollider(circ, isTrigger);
+        }
+    }
+
+    private static void RevertColliderTrigger(DropResGameObject drop)
+    {
+        if (!drop) return;
+        var cap = drop.GetComponent<CapsuleCollider2D>();
+        if (cap)
+        {
+            RestoreCollider(cap);
+        }
+        var circ = drop.GetComponent<CircleCollider2D>();
+        if (circ)
+        {
+            RestoreCollider(circ);
+        }
+    }
+
+    private static void ApplyToCollider(Collider2D col, bool isTrigger)
+    {
+        if (!OriginalTriggers.TryGetValue(col, out _))
+        {
+            OriginalTriggers.Add(col, new OriginalState { IsTrigger = col.isTrigger });
+        }
+        col.isTrigger = isTrigger;
+    }
+
+    private static void RestoreCollider(Collider2D col)
+    {
+        if (!OriginalTriggers.TryGetValue(col, out var orig)) return;
+        col.isTrigger = orig.IsTrigger;
     }
 }

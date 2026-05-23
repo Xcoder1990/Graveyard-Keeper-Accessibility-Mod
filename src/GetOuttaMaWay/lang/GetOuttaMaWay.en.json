@@ -12,6 +12,10 @@
   "cfg.heavy_drop_grace_period.desc": "A freshly-dropped log, stone, or block can't push you for a short moment after it lands. You can still push them around afterwards.",
   "cfg.grace_period_seconds.name": "Grace Period Seconds",
   "cfg.grace_period_seconds.desc": "Seconds before a freshly-dropped log, stone, or block can push you again.",
+  "cfg.walk_through_heavy_drops.name": "Walk Through Heavy Drops",
+  "cfg.walk_through_heavy_drops.desc": "Lets you walk through dropped logs, stones, ore and crates instead of bumping into them, and stops big piles of them from sliding into hard-to-reach spots. They can still be picked up.",
+  "cfg.include_every_dropped_item.name": "Include Every Dropped Item",
+  "cfg.include_every_dropped_item.desc": "Extends the walk-through to every dropped item, not just heavy ones.",
   "cfg.check_for_updates.name": "Check for Updates",
   "cfg.check_for_updates.desc": "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page."
 }

@@ -12,6 +12,10 @@
   "cfg.heavy_drop_grace_period.desc": "켜기: 새로 떨어진 통나무, 돌, 블록이 잠시 동안 플레이어를 밀치지 못하게 합니다. 그 이후에는 다시 밀칠 수 있습니다.",
   "cfg.grace_period_seconds.name": "유예 시간 (초)",
   "cfg.grace_period_seconds.desc": "새로 떨어진 통나무, 돌, 블록이 다시 플레이어를 밀칠 수 있게 되기까지 걸리는 시간(초)입니다.",
+  "cfg.walk_through_heavy_drops.name": "무거운 낙하물 통과하기",
+  "cfg.walk_through_heavy_drops.desc": "떨어진 통나무, 돌, 광석, 상자에 부딪히지 않고 통과할 수 있으며, 더미가 닿지 않는 곳으로 밀려나는 것을 막습니다. 줍는 것은 그대로 가능합니다.",
+  "cfg.include_every_dropped_item.name": "모든 낙하물 포함",
+  "cfg.include_every_dropped_item.desc": "통과를 무거운 물건뿐 아니라 모든 낙하물로 확장합니다.",
   "cfg.check_for_updates.name": "업데이트 확인",
   "cfg.check_for_updates.desc": "넥서스모드에 이 모드의 최신 버전이 나오면 메인 메뉴에 알림을 띄웁니다. 알림을 누르면 모드 페이지가 열립니다."
 }

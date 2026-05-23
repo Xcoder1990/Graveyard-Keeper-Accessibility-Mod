@@ -13,6 +13,8 @@ public class Plugin : BaseUnityPlugin
     internal static bool DebugEnabled;
     private static ConfigEntry<bool> Debug { get; set; }
     private static ConfigEntry<bool> NpcCollision { get; set; }
+    internal static ConfigEntry<bool> WalkThroughHeavyDrops { get; private set; }
+    internal static ConfigEntry<bool> IncludeEveryDroppedItem { get; private set; }
     internal static ConfigEntry<bool> DropHeaviesAwayFromPlayer { get; private set; }
     internal static ConfigEntry<bool> HeavyCollisionGracePeriod { get; private set; }
     internal static ConfigEntry<float> GracePeriodSeconds { get; private set; }
@@ -34,12 +36,21 @@ public class Plugin : BaseUnityPlugin
         HeavyCollisionGracePeriod = LocalizedConfig.Bind(Config, GeneralSection, "Heavy Drop Grace Period", true, "heavy_drop_grace_period", order: 80);
         GracePeriodSeconds = LocalizedConfig.Bind(Config, GeneralSection, "Grace Period Seconds", 1.5f, "grace_period_seconds", new AcceptableValueRange<float>(0.25f, 5f), order: 79, dispNamePrefix: "    └ ", extra: a => a.ShowRangeAsPercent = false);
 
+        WalkThroughHeavyDrops = LocalizedConfig.Bind(Config, GeneralSection, "Walk Through Heavy Drops", true, "walk_through_heavy_drops", order: 70);
+        WalkThroughHeavyDrops.SettingChanged += (_, _) => Patches.ReapplyHeavyDropTriggers();
+        IncludeEveryDroppedItem = LocalizedConfig.Bind(Config, GeneralSection, "Include Every Dropped Item", false, "include_every_dropped_item", order: 69, dispNamePrefix: "    └ ");
+        IncludeEveryDroppedItem.SettingChanged += (_, _) => Patches.ReapplyHeavyDropTriggers();
+
         CheckForUpdates = LocalizedConfig.Bind(Config, UpdatesSection, "Check for Updates", true, "check_for_updates");
 
         UpdateChecker.Register(Info, CheckForUpdates);
         SettingsChangeLogger.Register(Config, Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
-        SceneManager.sceneLoaded += (_, _) => GameStartedPlaying();
+        SceneManager.sceneLoaded += (_, _) =>
+        {
+            GameStartedPlaying();
+            Patches.ReapplyHeavyDropTriggers();
+        };
     }
 
     internal static void GameStartedPlaying()

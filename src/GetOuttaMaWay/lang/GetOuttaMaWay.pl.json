@@ -12,6 +12,10 @@
   "cfg.heavy_drop_grace_period.desc": "Świeżo upuszczone kłody, kamienie i bloki przez chwilę po wylądowaniu nie mogą cię popychać. Później wciąż możesz je przesuwać.",
   "cfg.grace_period_seconds.name": "Czas ochronny (sekundy)",
   "cfg.grace_period_seconds.desc": "Sekundy, zanim świeżo upuszczona kłoda, kamień lub blok znów może cię popchnąć.",
+  "cfg.walk_through_heavy_drops.name": "Przechodzenie przez ciężkie wyrzucone przedmioty",
+  "cfg.walk_through_heavy_drops.desc": "Pozwala przechodzić przez wyrzucone kłody, kamienie, rudę i skrzynie zamiast się o nie zderzać, i zapobiega zsuwaniu się dużych stosów w niedostępne miejsca. Nadal można je podnieść.",
+  "cfg.include_every_dropped_item.name": "Uwzględnij każdy wyrzucony przedmiot",
+  "cfg.include_every_dropped_item.desc": "Rozszerza przechodzenie na każdy wyrzucony przedmiot, nie tylko ciężkie.",
   "cfg.check_for_updates.name": "Sprawdź aktualizacje",
   "cfg.check_for_updates.desc": "Wyświetla powiadomienie w menu głównym, gdy na NexusMods pojawi się nowsza wersja tego moda. Kliknij powiadomienie, aby otworzyć stronę moda."
 }

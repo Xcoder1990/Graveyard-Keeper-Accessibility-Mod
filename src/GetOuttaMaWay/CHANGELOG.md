@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.8 | 23 May 2026
+
+- New "Walk Through Heavy Drops" option, on by default: dropped logs, stones, ore and crates no longer block your path
+
 ## 0.1.7 | 19 May 2026
 
 - Fixed a launch crash on the 32-bit GOG build with certain mod combinations

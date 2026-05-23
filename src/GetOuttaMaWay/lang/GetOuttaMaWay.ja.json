@@ -12,6 +12,10 @@
   "cfg.heavy_drop_grace_period.desc": "落ちたばかりの丸太・石・ブロックは、着地から少しの間プレイヤーを押せなくなります。後からは押し動かせます。",
   "cfg.grace_period_seconds.name": "猶予時間（秒）",
   "cfg.grace_period_seconds.desc": "落ちたばかりの丸太・石・ブロックが再びプレイヤーを押せるようになるまでの秒数。",
+  "cfg.walk_through_heavy_drops.name": "重い落下物をすり抜ける",
+  "cfg.walk_through_heavy_drops.desc": "落ちた丸太・石・鉱石・木箱にぶつからずにすり抜けられます。大量に積もっても手の届かない場所へ滑っていくのを防ぎます。拾うことは引き続き可能です。",
+  "cfg.include_every_dropped_item.name": "すべての落下物を対象にする",
+  "cfg.include_every_dropped_item.desc": "すり抜けを重い物だけでなく、すべての落下物に広げます。",
   "cfg.check_for_updates.name": "アップデートを確認",
   "cfg.check_for_updates.desc": "NexusMods にこの MOD の新しいバージョンが公開されると、メインメニューに通知を表示します。通知をクリックすると MOD ページが開きます。"
 }
