@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3 | 23 May 2026
+
+- Removed the dropped-item walk-through setting; it now lives in the Get Outta Ma Way mod
+
 ## 0.1.2 | 19 May 2026
 
 - The +/- arrows are now also restored on items already sitting in your craft queue, not just the recipe list
