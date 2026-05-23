@@ -65,7 +65,7 @@ public static class Patches
         {
             if (closestDistance <= Plugin.ExtinguishDistance.Value)
             {
-                var unlit = Plugin.GetUnlitCandle(closest.components.craft.last_craft_id);
+                var unlit = Plugin.GetUnlitReplacement(closest);
                 if (unlit.IsNullOrWhiteSpace())
                 {
                     Helpers.Log($"Could not find unlit {typeLabel} for {closest.obj_id}. Last craft ID: {closest.components.craft.last_craft_id}. Please report this!", true);
@@ -209,11 +209,19 @@ public static class Patches
         var fixedCount = 0;
         foreach (var wgo in WorldMap._objs.Where(wgo => Plugin.ShouldProcess(wgo.obj_id) || Plugin.ShouldProcess(wgo.obj_def.id)))
         {
-            var keyword = wgo.obj_id.Contains(Plugin.Candelabrum) ? Plugin.Candelabrum : Plugin.Incense;
-            var split = wgo.obj_id.Split([keyword], StringSplitOptions.None);
-            var postfix = split.Last();
-            var underscoreCount = postfix.Count(c => c == '_');
-            if (underscoreCount < 2) continue;
+            bool lit;
+            if (Plugin.MatchesKeyword(wgo.obj_id, Plugin.Incense))
+            {
+                // c_obj_incense_N is the lit burner; the _place version is the empty build state.
+                lit = !wgo.obj_id.EndsWith("_place");
+            }
+            else
+            {
+                // candelabrum_N_q has two underscores after the keyword; the bare candelabrum_N has one.
+                var postfix = wgo.obj_id.Split([Plugin.Candelabrum], StringSplitOptions.None).Last();
+                lit = postfix.Count(c => c == '_') >= 2;
+            }
+            if (!lit) continue;
             if (Plugin.DebugEnabled)
             {
                 Helpers.Log($"[FixCandles] correcting '{wgo.obj_id}' crafting status → true");

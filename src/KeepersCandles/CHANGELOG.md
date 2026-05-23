@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.11 | 23 May 2026
+
+- Fixed incense burners that couldn't be extinguished after saving and reloading
+
 ## 0.1.10 | 19 May 2026
 
 - Fixed a launch crash on the 32-bit GOG build with certain mod combinations

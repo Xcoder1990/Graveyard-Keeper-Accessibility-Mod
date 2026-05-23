@@ -98,6 +98,19 @@ public class Plugin : BaseUnityPlugin
         return parts[0];
     }
 
+    internal static string GetUnlitReplacement(WorldGameObject wgo)
+    {
+        // Incense burner: lit "c_obj_incense_2" turns back into empty "c_obj_incense_2_place".
+        // If it already ends in _place it's empty, so there's nothing to extinguish.
+        if (MatchesKeyword(wgo.obj_id, Incense))
+        {
+            return wgo.obj_id.EndsWith("_place") ? string.Empty : wgo.obj_id + "_place";
+        }
+
+        // Candelabrum: pull the bare candelabrum out of the running craft id.
+        return GetUnlitCandle(wgo.components.craft.last_craft_id);
+    }
+
     internal static List<WorldGameObject> GetCandles()  => GetLitBurners(Candelabrum);
     internal static List<WorldGameObject> GetIncenses() => GetLitBurners(Incense);
 
