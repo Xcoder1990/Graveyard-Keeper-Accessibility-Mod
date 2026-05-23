@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-05-22T05:40:38Z",
-  "generated_by": "update-manifest.yml@b93f90ae",
+  "generated_at": "2026-05-23T05:28:26Z",
+  "generated_by": "update-manifest.yml@944ce9e0",
   "game_domain": "graveyardkeeper",
   "mods": [
     {
@@ -38,10 +38,10 @@
       "plugin_guid": "p1xel8ted.gyk.autolootheavies",
       "nexus_mod_id": 51,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/51",
-      "latest_version": "3.5.7",
-      "latest_file_id": 1166,
+      "latest_version": "3.5.8",
+      "latest_file_id": 1203,
       "latest_file_name": "Auto-Loot Heavies",
-      "uploaded_unix": 1779190318,
+      "uploaded_unix": 1779504979,
       "status": "ok"
     },
     {
@@ -128,10 +128,10 @@
       "plugin_guid": "p1xel8ted.gyk.getouttamyway",
       "nexus_mod_id": 88,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/88",
-      "latest_version": "0.1.7",
-      "latest_file_id": 1175,
+      "latest_version": "0.1.8",
+      "latest_file_id": 1204,
       "latest_file_name": "Get Outta Ma Way",
-      "uploaded_unix": 1779190532,
+      "uploaded_unix": 1779505683,
       "status": "ok"
     },
     {
@@ -178,10 +178,10 @@
       "plugin_guid": "p1xel8ted.gyk.keeperscandles",
       "nexus_mod_id": 87,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/87",
-      "latest_version": "0.1.10",
-      "latest_file_id": 1180,
+      "latest_version": "0.1.11",
+      "latest_file_id": 1202,
       "latest_file_name": "Keepers Candles",
-      "uploaded_unix": 1779190660,
+      "uploaded_unix": 1779498257,
       "status": "ok"
     },
     {
@@ -218,10 +218,10 @@
       "plugin_guid": "p1xel8ted.gyk.moarpallets",
       "nexus_mod_id": 157,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/157",
-      "latest_version": "0.1.0",
-      "latest_file_id": 1199,
+      "latest_version": "0.1.1",
+      "latest_file_id": 1206,
       "latest_file_name": "Moar Pallets",
-      "uploaded_unix": 1779191287,
+      "uploaded_unix": 1779505763,
       "status": "ok"
     },
     {
@@ -298,10 +298,10 @@
       "plugin_guid": "p1xel8ted.gyk.restinpatches",
       "nexus_mod_id": 125,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/125",
-      "latest_version": "0.1.2",
-      "latest_file_id": 1198,
+      "latest_version": "0.1.3",
+      "latest_file_id": 1205,
       "latest_file_name": "Rest In Patches",
-      "uploaded_unix": 1779191043,
+      "uploaded_unix": 1779505727,
       "status": "ok"
     },
     {
@@ -368,10 +368,10 @@
       "plugin_guid": "p1xel8ted.gyk.wheresmastorage",
       "nexus_mod_id": 62,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/62",
-      "latest_version": "2.1.17",
-      "latest_file_id": 1197,
+      "latest_version": "2.1.18",
+      "latest_file_id": 1207,
       "latest_file_name": "Where's Ma Storage",
-      "uploaded_unix": 1779191005,
+      "uploaded_unix": 1779505824,
       "status": "ok"
     },
     {
