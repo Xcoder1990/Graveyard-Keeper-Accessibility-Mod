@@ -55,21 +55,6 @@ public class Plugin : BaseUnityPlugin
     internal static bool CanSave { get; set; }
     internal static string CurrentSave { get; set; }
     internal static readonly Dictionary<string, Vector3> SaveLocationsDictionary = new();
-    internal static bool IsInDungeon
-    {
-        get
-        {
-            if (!MainGame.me || !MainGame.me.dungeon_root) return false;
-            if (!MainGame.me.dungeon_root.dungeon_is_loaded_now) return false;
-
-            // A teleport stone can leave dungeon_is_loaded_now true after the player is
-            // back on the surface. Use current_zone instead - dungeons have no WorldZone.
-            var pc = MainGame.me.player_component;
-            if (pc != null && pc.current_zone != null) return false;
-
-            return true;
-        }
-    }
 
     private static readonly string[] TutorialQuests =
     [
@@ -202,7 +187,7 @@ public class Plugin : BaseUnityPlugin
             yield break;
         }
 
-        if (IsInDungeon)
+        if (DungeonState.IsInDungeon)
         {
             WriteLog("[SaveNow] New day save skipped: in dungeon");
             yield break;
@@ -242,7 +227,7 @@ public class Plugin : BaseUnityPlugin
             yield break;
         }
 
-        if (IsInDungeon)
+        if (DungeonState.IsInDungeon)
         {
             WriteLog("[SaveNow] Manual save skipped: in dungeon");
             Lang.Reload();

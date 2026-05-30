@@ -134,7 +134,7 @@ public static class Patches
             return true;
         }
 
-        if (Plugin.DebugEnabled) Plugin.WriteLog($"[SaveAndExit] intercepting (ExitToDesktop={Plugin.ExitToDesktop.Value}, SaveOnExit={Plugin.SaveOnExit.Value}, InDungeon={Plugin.IsInDungeon})");
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"[SaveAndExit] intercepting (ExitToDesktop={Plugin.ExitToDesktop.Value}, SaveOnExit={Plugin.SaveOnExit.Value}, InDungeon={DungeonState.IsInDungeon})");
 
         Lang.Reload();
 
@@ -159,7 +159,7 @@ public static class Patches
         string CreateMessageText()
         {
             var baseMessage = Plugin.ExitToDesktop.Value ? Lang.Get("SaveAreYouSureDesktop") : Lang.Get("SaveAreYouSureMenu");
-            var progressMessage = !Plugin.SaveOnExit.Value || Plugin.IsInDungeon
+            var progressMessage = !Plugin.SaveOnExit.Value || DungeonState.IsInDungeon
                 ? Lang.Get("SaveProgressNotSaved")
                 : Lang.Get("SaveProgressSaved");
 
@@ -168,7 +168,7 @@ public static class Patches
 
         void SaveAndExit(InGameMenuGUI instance)
         {
-            if (!Plugin.SaveOnExit.Value || Plugin.IsInDungeon)
+            if (!Plugin.SaveOnExit.Value || DungeonState.IsInDungeon)
             {
                 PerformExit(instance);
             }
