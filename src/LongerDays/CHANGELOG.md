@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.13 | 27 May 2026
+
+- Fixed timed buffs and debuffs lasting longer than their timer showed at higher day-length settings
+
 ## 1.6.12 | 19 May 2026
 
 - Fixed a launch crash on the 32-bit GOG build with certain mod combinations

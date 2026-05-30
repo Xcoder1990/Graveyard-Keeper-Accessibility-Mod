@@ -36,6 +36,50 @@ public static class Patches
         }
     }
 
+    // Buffs time their length and on-screen timer off a hard-coded 450-second day, so a longer
+    // day makes a debuff last longer while its damage keeps ticking in real seconds (a "1 minute"
+    // poison can triple and kill). Hand back the mod's day length so buffs keep their normal
+    // wall-clock duration at any setting. One per IL type the game loads the 450 constant as.
+    public static double DayLengthSecondsDouble()
+    {
+        return Plugin.Seconds;
+    }
+
+    public static float DayLengthSecondsFloat()
+    {
+        return Plugin.Seconds;
+    }
+
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(BuffsLogics), nameof(BuffsLogics.AddBuff))]
+    private static IEnumerable<CodeInstruction> AddBuffTranspiler(IEnumerable<CodeInstruction> instructions)
+    {
+        foreach (var instruction in instructions)
+        {
+            if (instruction.opcode == OpCodes.Ldc_R8 && instruction.operand is double d && d == 450.0)
+            {
+                instruction.opcode = OpCodes.Call;
+                instruction.operand = AccessTools.Method(typeof(Patches), nameof(DayLengthSecondsDouble));
+            }
+            yield return instruction;
+        }
+    }
+
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(PlayerBuff), nameof(PlayerBuff.GetTimerText))]
+    private static IEnumerable<CodeInstruction> GetTimerTextTranspiler(IEnumerable<CodeInstruction> instructions)
+    {
+        foreach (var instruction in instructions)
+        {
+            if (instruction.opcode == OpCodes.Ldc_R4 && instruction.operand is float f && f == 450f)
+            {
+                instruction.opcode = OpCodes.Call;
+                instruction.operand = AccessTools.Method(typeof(Patches), nameof(DayLengthSecondsFloat));
+            }
+            yield return instruction;
+        }
+    }
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(TimeOfDay), nameof(TimeOfDay.FromTimeKToSeconds))]
     public static void TimeOfDay_FromTimeKToSeconds(float time_in_time_k, ref float __result)
