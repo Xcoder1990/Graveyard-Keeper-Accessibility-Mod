@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.ineedsticks</BepInExPluginGuid>
         <BepInExPluginName>I Neeeed Sticks!</BepInExPluginName>
-        <NexusGroupId>570379</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

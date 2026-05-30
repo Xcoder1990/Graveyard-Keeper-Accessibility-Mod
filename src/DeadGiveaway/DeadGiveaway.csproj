@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.deadgiveaway</BepInExPluginGuid>
         <BepInExPluginName>Dead Giveaway!</BepInExPluginName>
-        <NexusGroupId>0</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

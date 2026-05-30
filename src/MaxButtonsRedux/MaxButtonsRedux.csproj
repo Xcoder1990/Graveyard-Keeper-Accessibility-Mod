@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.maxbuttonsredux</BepInExPluginGuid>
         <BepInExPluginName>Max Buttons Redux</BepInExPluginName>
-        <NexusGroupId>602659</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

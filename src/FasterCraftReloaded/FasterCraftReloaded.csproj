@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.fastercraftreloaded</BepInExPluginGuid>
         <BepInExPluginName>FasterCraft Reloaded</BepInExPluginName>
-        <NexusGroupId>677521</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

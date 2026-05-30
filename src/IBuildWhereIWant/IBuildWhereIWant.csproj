@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.ibuildwhereiwant</BepInExPluginGuid>
         <BepInExPluginName>I Build Where I Want!</BepInExPluginName>
-        <NexusGroupId>609505</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
     </ItemGroup>

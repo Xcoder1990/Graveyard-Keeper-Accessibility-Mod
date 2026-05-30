@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.decompdelight</BepInExPluginGuid>
         <BepInExPluginName>Decomp Delight!</BepInExPluginName>
-        <NexusGroupId>975694</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

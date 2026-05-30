@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.thoughtfulreminders</BepInExPluginGuid>
         <BepInExPluginName>Thoughtful Reminders</BepInExPluginName>
-        <NexusGroupId>529420</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

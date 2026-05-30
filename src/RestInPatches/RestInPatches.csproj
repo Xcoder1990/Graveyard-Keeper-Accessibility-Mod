@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.restinpatches</BepInExPluginGuid>
         <BepInExPluginName>Rest In Patches</BepInExPluginName>
-        <NexusGroupId>7296647</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

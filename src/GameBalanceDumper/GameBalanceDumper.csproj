@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.gamebalancedumper</BepInExPluginGuid>
         <BepInExPluginName>Game Balance Dumper</BepInExPluginName>
-        <NexusGroupId>0</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\LogHelper.cs" Link="LogHelper.cs"/>

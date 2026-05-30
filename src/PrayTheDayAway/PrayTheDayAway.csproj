@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.praythedayaway</BepInExPluginGuid>
         <BepInExPluginName>Pray The Day Away!</BepInExPluginName>
-        <NexusGroupId>790978</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

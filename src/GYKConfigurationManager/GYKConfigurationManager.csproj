@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.configurationmanager</BepInExPluginGuid>
         <BepInExPluginName>Configuration Manager (GYK)</BepInExPluginName>
-        <NexusGroupId>0</NexusGroupId>
         <AssemblyName>GYKConfigurationManager</AssemblyName>
         <RootNamespace>ConfigurationManager</RootNamespace>
     </PropertyGroup>

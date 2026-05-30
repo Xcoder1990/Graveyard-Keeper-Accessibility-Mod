@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.theseedequalizer</BepInExPluginGuid>
         <BepInExPluginName>The Seed Equalizer!</BepInExPluginName>
-        <NexusGroupId>597310</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

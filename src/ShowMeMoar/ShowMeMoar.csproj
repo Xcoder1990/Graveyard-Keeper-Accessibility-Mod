@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.showmemoar</BepInExPluginGuid>
         <BepInExPluginName>Show Me Moar!</BepInExPluginName>
-        <NexusGroupId>896251</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

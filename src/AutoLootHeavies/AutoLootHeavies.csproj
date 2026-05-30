@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.autolootheavies</BepInExPluginGuid>
         <BepInExPluginName>Auto-Loot Heavies!</BepInExPluginName>
-        <NexusGroupId>523438</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

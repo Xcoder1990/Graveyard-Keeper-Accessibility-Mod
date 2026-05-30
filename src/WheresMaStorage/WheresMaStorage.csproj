@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.wheresmastorage</BepInExPluginGuid>
         <BepInExPluginName>Where's Ma' Storage!</BepInExPluginName>
-        <NexusGroupId>637183</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

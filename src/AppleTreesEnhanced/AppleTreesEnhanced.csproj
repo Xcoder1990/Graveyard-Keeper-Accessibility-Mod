@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.appletreesenhanced</BepInExPluginGuid>
         <BepInExPluginName>Apple Tree's Enhanced!</BepInExPluginName>
-        <NexusGroupId>562084</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

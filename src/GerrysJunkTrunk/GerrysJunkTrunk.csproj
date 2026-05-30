@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.gerrysjunktrunk</BepInExPluginGuid>
         <BepInExPluginName>Gerry's Junk Trunk</BepInExPluginName>
-        <NexusGroupId>669136</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

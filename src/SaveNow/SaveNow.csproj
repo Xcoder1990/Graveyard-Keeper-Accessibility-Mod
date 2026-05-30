@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.savenow</BepInExPluginGuid>
         <BepInExPluginName>Save Now!</BepInExPluginName>
-        <NexusGroupId>495841</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

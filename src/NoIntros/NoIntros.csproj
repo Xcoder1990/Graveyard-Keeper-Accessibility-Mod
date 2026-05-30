@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.nointros</BepInExPluginGuid>
         <BepInExPluginName>No Intros!</BepInExPluginName>
-        <NexusGroupId>512143</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

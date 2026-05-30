@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.newgameatbottom</BepInExPluginGuid>
         <BepInExPluginName>New Game at Bottom!</BepInExPluginName>
-        <NexusGroupId>503179</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

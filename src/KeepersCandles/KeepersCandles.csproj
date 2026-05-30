@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.keeperscandles</BepInExPluginGuid>
         <BepInExPluginName>Keeper's Candles!</BepInExPluginName>
-        <NexusGroupId>978619</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\LogHelper.cs" Link="LogHelper.cs"/>

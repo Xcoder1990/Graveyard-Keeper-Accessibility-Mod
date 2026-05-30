@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.gravechangesredux</BepInExPluginGuid>
         <BepInExPluginName>Grave Changes Redux</BepInExPluginName>
-        <NexusGroupId>983692</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

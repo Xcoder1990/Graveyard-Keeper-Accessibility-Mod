@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.exhaustless</BepInExPluginGuid>
         <BepInExPluginName>Exhaust-less!</BepInExPluginName>
-        <NexusGroupId>497017</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

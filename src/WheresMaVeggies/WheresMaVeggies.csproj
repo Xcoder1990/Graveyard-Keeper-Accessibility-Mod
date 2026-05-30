@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.wheresmaveggies</BepInExPluginGuid>
         <BepInExPluginName>Where's Ma' Veggies!</BepInExPluginName>
-        <NexusGroupId>867271</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

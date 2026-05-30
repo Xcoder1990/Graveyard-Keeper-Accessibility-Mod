@@ -4,9 +4,6 @@
     <!-- User Configuration (git-ignored local paths + NexusMods API key) -->
     <Import Project="Environment.props" Condition="Exists('Environment.props')" />
 
-    <!-- NexusMods Upload Target (reads NexusGroupId from csproj + NexusModsApiKey from Environment.props) -->
-    <Import Project="upload.target" Condition="Exists('upload.target')" />
-
     <!-- Storefront switch: 'steam' (default) builds against libs/steam/Assembly-CSharp*.dll
          and deploys to both BepInExPluginsPath and GogBepInExPluginsPath via mirror.target.
          'gog' is a verify-only build (-p:Storefront=gog): references libs/gog/Assembly-CSharp*.dll,

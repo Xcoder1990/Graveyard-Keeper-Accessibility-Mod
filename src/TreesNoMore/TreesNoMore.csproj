@@ -2,7 +2,6 @@
     <PropertyGroup>
         <BepInExPluginGuid>p1xel8ted.gyk.treesnomore</BepInExPluginGuid>
         <BepInExPluginName>Trees, No More!</BepInExPluginName>
-        <NexusGroupId>522169</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
