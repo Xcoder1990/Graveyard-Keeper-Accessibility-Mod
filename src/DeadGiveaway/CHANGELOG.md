@@ -2,6 +2,11 @@
 
 ## 0.1.0 | 30 May 2026
 
-- Initial release
-- Shows each zombie's work efficiency over its head, toggled with a key or controller button
-- Pick any mix of percentage, skulls and the zombie's current job
+- Shows each zombie's work efficiency over its head, as a percentage, the raw skull count, or both.
+- An optional line shows each zombie's current job, or "Idle" when it isn't working a station.
+- Porters also show what they're hauling, e.g. Porter station (2x Wood).
+- Toggle the labels with a key (default B) or a controller button, and pick whether they start visible.
+- Numbers are colour-coded from red (low) to green (high), or plain white if you prefer.
+- Adjust text size, nudge the labels into place, and set the separator between values.
+- Mod settings menu (F1) labels follow your in-game language.
+- Localized in 11 languages.
