@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.8 | 30 May 2026
+
+- Fixed being able to teleport out of a dungeon, which could leave you stuck and corrupt the dungeon layout
+
 ## 3.1.7 | 19 May 2026
 
 - Fixed a launch crash on the 32-bit GOG build with certain mod combinations

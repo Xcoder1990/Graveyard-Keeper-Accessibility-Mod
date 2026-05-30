@@ -4,7 +4,6 @@
 public static class Helpers
 {
     internal static bool MakingChoice { get; set; }
-    internal static bool IsInDungeon { get; set; }
 
     private static WorldGameObject Gerry { get; set; }
     private static bool GerryRunning { get; set; }

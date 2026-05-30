@@ -45,13 +45,6 @@ public static class Patches
     }
 
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.Interact))]
-    public static void WorldGameObject_Interact(WorldGameObject __instance)
-    {
-        Helpers.IsInDungeon = __instance.obj_id.ToLowerInvariant().Contains("dungeon_enter");
-    }
-
-    [HarmonyPrefix]
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnEnteredWorldZone))]
     [HarmonyPatch(typeof(BuildModeLogics), nameof(BuildModeLogics.DoPlace))]
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnMetNPC))]
@@ -198,7 +191,7 @@ public static class Patches
 
         Plugin.CachedPlayer ??= ReInput.players.GetPlayer(0);
 
-        if (Plugin.EnableCustomLocations.Value && !Helpers.IsInDungeon)
+        if (Plugin.EnableCustomLocations.Value && !DungeonState.IsInDungeon)
         {
             if (Plugin.SaveCustomLocationKeybind.Value.IsUp() || LazyInput.gamepad_active && Plugin.CachedPlayer.GetButtonDown(Plugin.SaveCustomLocationControllerButton.Value))
             {
@@ -224,7 +217,7 @@ public static class Patches
 
         if (Plugin.CachedHearthstone != null)
         {
-            if (Helpers.IsInDungeon)
+            if (DungeonState.IsInDungeon)
             {
                 Helpers.SpawnGerry(Lang.Get("runtime.cant_use_here"), Vector3.zero);
             }
