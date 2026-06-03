@@ -12,44 +12,51 @@ public class Plugin : BaseUnityPlugin
 
         var harmony = new HarmonyLib.Harmony(MyPluginInfo.PLUGIN_GUID);
 
-        TryPatch(harmony, typeof(MainMenuPatches), nameof(MainMenuPatches.MainMenuGUI_Open_Postfix),
-            typeof(MainMenuGUI), "Open", new[] { typeof(bool) });
-
-        TryPatch(harmony, typeof(MainMenuPatches), nameof(MainMenuPatches.BaseGUI_Hide_Postfix),
-            typeof(BaseGUI), "Hide", new[] { typeof(bool) });
-
-        TryPatch(harmony, typeof(MainMenuPatches),
-            nameof(MainMenuPatches.UIButtonColor_OnHover_Postfix),
+        TryPatch(harmony, typeof(Patches), nameof(Patches.UIButtonColor_OnHover_Postfix),
             typeof(UIButtonColor), "OnHover", new[] { typeof(bool) });
 
         Log.LogInfo("Graveyard Keeper Accessibility loaded");
     }
 
-    private int _rebuildCounter;
+    private int _tickCounter;
 
     private void Update()
     {
-        if (!MainMenuPatches.IsMenuOpen) return;
-
-        if (++_rebuildCounter % 60 == 0)
-            MainMenuPatches.RebuildActiveList();
-
-        if (MainMenuPatches.ButtonOrder.Count == 0) return;
-
-        var count = MainMenuPatches.ButtonOrder.Count;
-        var idx = MainMenuPatches.SelectedIndex;
-
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        try
         {
-            MainMenuPatches.SelectIndex((idx + 1) % count);
+            var guiCheck = ++_tickCounter % 10 == 0;
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+                guiCheck = true;
+
+            if (guiCheck)
+                GUIAccessibility.CheckForNewGUI();
+
+            if (!GUIAccessibility.HasActiveGUI) return;
+
+            var active = GUIAccessibility.GetActiveElements();
+            var count = active.Count;
+            if (count == 0) return;
+
+            var idx = GUIAccessibility.SelectedIndex;
+
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+                GUIAccessibility.SelectIndex((idx + 1) % count);
+            else if (Input.GetKeyDown(KeyCode.UpArrow))
+                GUIAccessibility.SelectIndex((idx - 1 + count) % count);
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+                GUIAccessibility.AdjustLeft();
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+                GUIAccessibility.AdjustRight();
+            else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                GUIAccessibility.ActivateSelected();
+                GUIAccessibility.CheckForNewGUI();
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        catch (Exception ex)
         {
-            MainMenuPatches.SelectIndex((idx - 1 + count) % count);
-        }
-        else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-        {
-            MainMenuPatches.ActivateSelected();
+            Log.LogError($"Update exception: {ex.Message}");
         }
     }
 

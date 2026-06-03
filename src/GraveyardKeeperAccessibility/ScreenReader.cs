@@ -78,7 +78,10 @@ internal static class ScreenReader
             File.WriteAllText(vbsPath,
                 "Set v=CreateObject(\"SAPI.SpVoice\")\r\n" +
                 "Do While Not WScript.StdIn.AtEndOfStream\r\n" +
-                "v.Speak WScript.StdIn.ReadLine,3\r\n" +
+                "On Error Resume Next\r\n" +
+                "s=WScript.StdIn.ReadLine\r\n" +
+                "If Len(s)>0 Then v.Speak s,3\r\n" +
+                "On Error Goto 0\r\n" +
                 "Loop\r\n");
 
             _sapiProcess = new Process();
@@ -109,14 +112,7 @@ internal static class ScreenReader
         if (_tolkAvailable)
             try { Tolk_Unload(); } catch { }
 
-        if (_sapiProcess != null && !_sapiProcess.HasExited)
-            try
-            {
-                _sapiStdin?.Close();
-                _sapiProcess.Kill();
-            }
-            catch { }
-
+        KillSapi();
         _tolkAvailable = false;
         _sapiAvailable = false;
     }
@@ -128,32 +124,41 @@ internal static class ScreenReader
         if (_tolkAvailable)
             return Tolk_Output(text, interrupt);
 
-        if (_sapiAvailable)
-            return SapiSpeak(text);
-
-        return false;
+        return SapiSpeak(text);
     }
 
     private static bool SapiSpeak(string text)
     {
+        if (_sapiProcess == null || _sapiProcess.HasExited)
+        {
+            _log?.LogWarning("SAPI process died, restarting");
+            KillSapi();
+            _sapiAvailable = InitSapi();
+            if (!_sapiAvailable) return false;
+        }
+
         try
         {
-            if (_sapiProcess == null || _sapiProcess.HasExited)
-            {
-                _sapiAvailable = false;
-                return false;
-            }
-
-            var clean = text.Replace("\r", "").Replace("\n", " ");
+            var clean = text.Replace("\r", "").Replace("\n", " ").Replace("\0", "");
+            if (clean.Length > 500) clean = clean.Substring(0, 500);
             _sapiStdin.WriteLine(clean);
             return true;
         }
         catch (Exception ex)
         {
-            _log?.LogWarning($"SAPI speak failed: {ex.Message}");
-            _sapiAvailable = false;
+            _log?.LogWarning($"SAPI write failed: {ex.Message}, restarting");
+            KillSapi();
+            _sapiAvailable = InitSapi();
             return false;
         }
+    }
+
+    private static void KillSapi()
+    {
+        try { _sapiStdin?.Close(); } catch { }
+        try { if (_sapiProcess != null && !_sapiProcess.HasExited) _sapiProcess.Kill(); } catch { }
+        _sapiProcess = null;
+        _sapiStdin = null;
     }
 
     internal static bool SayMenu(string text, bool interrupt = true)

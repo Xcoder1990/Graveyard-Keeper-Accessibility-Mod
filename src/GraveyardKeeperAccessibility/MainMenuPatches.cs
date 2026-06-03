@@ -1,53 +1,215 @@
 namespace GraveyardKeeperAccessibility;
 
-internal static class MainMenuPatches
+internal enum ElementType { Button, Switcher, Slider }
+
+internal class GUIElement
 {
-    internal static bool IsMenuOpen { get; private set; }
+    internal GameObject Go;
+    internal string Label;
+    internal ElementType Type;
+    internal UIButton DecButton;
+    internal UIButton IncButton;
+    internal UISlider Slider;
+    internal UILabel ValueLabel;
 
-    private static readonly Dictionary<GameObject, string> AllButtons = new();
-    internal static readonly Dictionary<GameObject, string> ActiveButtons = new();
-    internal static readonly List<GameObject> ButtonOrder = new();
-    internal static int SelectedIndex = -1;
-
-    public static void MainMenuGUI_Open_Postfix(MainMenuGUI __instance)
+    internal string ReadLabel()
     {
-        if (!__instance) return;
-
-        IsMenuOpen = true;
-        ScreenReader.ClearMenuContext();
-        AllButtons.Clear();
-        SelectedIndex = -1;
-
-        foreach (var button in __instance.GetComponentsInChildren<UIButton>(true))
+        if (ValueLabel != null && ValueLabel.gameObject.activeInHierarchy)
         {
-            var label = button.GetComponentInChildren<UILabel>();
-            if (label == null) continue;
-
-            var text = ScreenReader.StripNguiCodes(label.text);
-            if (string.IsNullOrWhiteSpace(text)) continue;
-
-            AllButtons[button.gameObject] = text;
+            var val = ScreenReader.StripNguiCodes(ValueLabel.text);
+            if (!string.IsNullOrWhiteSpace(val))
+                return Label + ": " + val;
         }
 
-        RebuildActiveList();
-        Plugin.Log.LogInfo($"Main menu opened, {ActiveButtons.Count} active of {AllButtons.Count} total buttons");
-        ScreenReader.Say("Main Menu");
+        if (Slider != null)
+            return Label + ": " + Mathf.RoundToInt(Slider.value * 100);
+
+        return Label;
+    }
+}
+
+internal static class GUIAccessibility
+{
+    private static BaseGUI _currentGUI;
+    internal static readonly List<GUIElement> Elements = new();
+    internal static int SelectedIndex = -1;
+
+    internal static bool HasActiveGUI => _currentGUI != null;
+
+    internal static void OnGUIOpened(BaseGUI gui)
+    {
+        if (gui == _currentGUI) return;
+
+        _currentGUI = gui;
+        ScreenReader.ClearMenuContext();
+        Elements.Clear();
+        SelectedIndex = -1;
+
+        DiscoverElements(gui);
+
+        var guiName = gui.GetType().Name.Replace("GUI", "").Replace("Gui", "");
+        var activeCount = Elements.Count(e => e.Go.activeInHierarchy);
+        Plugin.Log.LogInfo($"GUI opened: {guiName}, {activeCount} elements");
+
+        ScreenReader.Say(guiName);
     }
 
-    public static void BaseGUI_Hide_Postfix(BaseGUI __instance)
+    internal static void OnGUIClosed(BaseGUI gui)
     {
-        if (!(__instance is MainMenuGUI)) return;
-        IsMenuOpen = false;
+        if (gui != _currentGUI) return;
+
+        _currentGUI = null;
         ScreenReader.ClearMenuContext();
-        AllButtons.Clear();
-        ActiveButtons.Clear();
-        ButtonOrder.Clear();
+        Elements.Clear();
         SelectedIndex = -1;
     }
 
-    public static void UIButtonColor_OnHover_Postfix(UIButtonColor __instance, bool isOver)
+    private static void DiscoverElements(BaseGUI gui)
     {
-        if (!IsMenuOpen) return;
+        foreach (var button in gui.GetComponentsInChildren<UIButton>(true))
+        {
+            var slider = button.transform.parent?.GetComponent<UISlider>();
+            if (slider != null) continue;
+
+            var switcher = button.transform.parent;
+            if (switcher != null && (button.name == "dec" || button.name == "inc"))
+            {
+                var row = switcher.parent;
+                if (row != null && !Elements.Any(e => e.Go == row.gameObject))
+                {
+                    var rowLabel = row.Find("label")?.GetComponent<UILabel>();
+                    if (rowLabel == null) continue;
+
+                    var decBtn = switcher.Find("dec")?.GetComponent<UIButton>();
+                    var incBtn = switcher.Find("inc")?.GetComponent<UIButton>();
+                    var valLabel = switcher.Find("label")?.GetComponent<UILabel>();
+
+                    Elements.Add(new GUIElement
+                    {
+                        Go = row.gameObject,
+                        Label = ScreenReader.StripNguiCodes(rowLabel.text),
+                        Type = ElementType.Switcher,
+                        DecButton = decBtn,
+                        IncButton = incBtn,
+                        ValueLabel = valLabel
+                    });
+                }
+                continue;
+            }
+
+            var ownLabel = button.GetComponentInChildren<UILabel>();
+            if (ownLabel == null) continue;
+            var text = ScreenReader.StripNguiCodes(ownLabel.text);
+            if (string.IsNullOrWhiteSpace(text) || text.Length <= 1) continue;
+
+            Elements.Add(new GUIElement
+            {
+                Go = button.gameObject,
+                Label = text,
+                Type = ElementType.Button
+            });
+        }
+
+        foreach (var slider in gui.GetComponentsInChildren<UISlider>(true))
+        {
+            var row = slider.transform.parent;
+            if (row == null) continue;
+            if (Elements.Any(e => e.Go == row.gameObject)) continue;
+
+            var rowLabel = row.Find("label")?.GetComponent<UILabel>();
+            if (rowLabel == null) continue;
+
+            var counter = slider.transform.Find("counter")?.GetComponent<UILabel>();
+
+            Elements.Add(new GUIElement
+            {
+                Go = row.gameObject,
+                Label = ScreenReader.StripNguiCodes(rowLabel.text),
+                Type = ElementType.Slider,
+                Slider = slider,
+                ValueLabel = counter
+            });
+        }
+    }
+
+    internal static List<GUIElement> GetActiveElements()
+    {
+        return Elements.Where(e => e.Go != null && e.Go.activeInHierarchy).ToList();
+    }
+
+    internal static void SelectIndex(int index)
+    {
+        var active = GetActiveElements();
+        if (active.Count == 0) return;
+
+        SelectedIndex = index;
+        var elem = active[SelectedIndex];
+        ScreenReader.Say(elem.ReadLabel());
+    }
+
+    internal static void ActivateSelected()
+    {
+        var active = GetActiveElements();
+        if (SelectedIndex < 0 || SelectedIndex >= active.Count) return;
+
+        var elem = active[SelectedIndex];
+        if (elem.Type == ElementType.Button)
+        {
+            var button = elem.Go.GetComponent<UIButton>();
+            if (button == null) return;
+            button.SetState(UIButtonColor.State.Pressed, false);
+            elem.Go.SendMessage("OnPress", true, SendMessageOptions.DontRequireReceiver);
+            elem.Go.SendMessage("OnPress", false, SendMessageOptions.DontRequireReceiver);
+            elem.Go.SendMessage("OnClick", SendMessageOptions.DontRequireReceiver);
+            button.SetState(UIButtonColor.State.Normal, false);
+        }
+    }
+
+    internal static void AdjustLeft()
+    {
+        var active = GetActiveElements();
+        if (SelectedIndex < 0 || SelectedIndex >= active.Count) return;
+
+        var elem = active[SelectedIndex];
+        if (elem.Type == ElementType.Switcher && elem.DecButton != null)
+        {
+            var go = elem.DecButton.gameObject;
+            go.SendMessage("OnPress", true, SendMessageOptions.DontRequireReceiver);
+            go.SendMessage("OnPress", false, SendMessageOptions.DontRequireReceiver);
+            go.SendMessage("OnClick", SendMessageOptions.DontRequireReceiver);
+            ScreenReader.Say(elem.ReadLabel());
+        }
+        else if (elem.Type == ElementType.Slider && elem.Slider != null)
+        {
+            elem.Slider.value = Mathf.Clamp01(elem.Slider.value - 0.05f);
+            ScreenReader.Say(elem.ReadLabel());
+        }
+    }
+
+    internal static void AdjustRight()
+    {
+        var active = GetActiveElements();
+        if (SelectedIndex < 0 || SelectedIndex >= active.Count) return;
+
+        var elem = active[SelectedIndex];
+        if (elem.Type == ElementType.Switcher && elem.IncButton != null)
+        {
+            var go = elem.IncButton.gameObject;
+            go.SendMessage("OnPress", true, SendMessageOptions.DontRequireReceiver);
+            go.SendMessage("OnPress", false, SendMessageOptions.DontRequireReceiver);
+            go.SendMessage("OnClick", SendMessageOptions.DontRequireReceiver);
+            ScreenReader.Say(elem.ReadLabel());
+        }
+        else if (elem.Type == ElementType.Slider && elem.Slider != null)
+        {
+            elem.Slider.value = Mathf.Clamp01(elem.Slider.value + 0.05f);
+            ScreenReader.Say(elem.ReadLabel());
+        }
+    }
+
+    public static void OnHover(UIButtonColor instance, bool isOver)
+    {
+        if (_currentGUI == null) return;
 
         if (!isOver)
         {
@@ -55,88 +217,42 @@ internal static class MainMenuPatches
             return;
         }
 
-        var go = __instance.gameObject;
-        var label = GetButtonLabel(go);
-        if (label == null) return;
-
-        var idx = ButtonOrder.IndexOf(go);
-        if (idx >= 0)
-            SelectedIndex = idx;
-
-        ScreenReader.SayMenu(label);
+        var go = instance.gameObject;
+        for (int i = 0; i < Elements.Count; i++)
+        {
+            var elem = Elements[i];
+            if (elem.Go == go || go.transform.IsChildOf(elem.Go.transform))
+            {
+                var active = GetActiveElements();
+                var activeIdx = active.IndexOf(elem);
+                if (activeIdx >= 0)
+                {
+                    SelectedIndex = activeIdx;
+                    ScreenReader.SayMenu(elem.ReadLabel());
+                }
+                return;
+            }
+        }
     }
 
-    internal static void RebuildActiveList()
+    internal static void CheckForNewGUI()
     {
-        var prevSelected = (SelectedIndex >= 0 && SelectedIndex < ButtonOrder.Count)
-            ? ButtonOrder[SelectedIndex]
-            : null;
+        if (!GUIElements.me) return;
 
-        ActiveButtons.Clear();
-        ButtonOrder.Clear();
-
-        foreach (var kvp in AllButtons)
+        BaseGUI topGUI = null;
+        foreach (var gui in GUIElements.me.GetComponentsInChildren<BaseGUI>(true))
         {
-            if (kvp.Key == null || !kvp.Key.activeInHierarchy) continue;
-            ActiveButtons[kvp.Key] = kvp.Value;
-            ButtonOrder.Add(kvp.Key);
+            if (!gui.is_shown) continue;
+            if (gui is HUD) continue;
+            topGUI = gui;
         }
 
-        if (prevSelected != null)
-            SelectedIndex = ButtonOrder.IndexOf(prevSelected);
-        else
-            SelectedIndex = -1;
-    }
+        if (topGUI == _currentGUI) return;
 
-    internal static void SelectIndex(int index)
-    {
-        if (ButtonOrder.Count == 0) return;
+        if (_currentGUI != null)
+            OnGUIClosed(_currentGUI);
 
-        if (SelectedIndex >= 0 && SelectedIndex < ButtonOrder.Count)
-        {
-            var prev = ButtonOrder[SelectedIndex].GetComponent<UIButtonColor>();
-            if (prev != null)
-                prev.SetState(UIButtonColor.State.Normal, false);
-        }
-
-        SelectedIndex = index;
-        var go = ButtonOrder[SelectedIndex];
-        var label = ActiveButtons[go];
-
-        var btn = go.GetComponent<UIButtonColor>();
-        if (btn != null)
-            btn.SetState(UIButtonColor.State.Hover, false);
-
-        ScreenReader.Say(label);
-    }
-
-    internal static void ActivateSelected()
-    {
-        if (SelectedIndex < 0 || SelectedIndex >= ButtonOrder.Count) return;
-
-        var go = ButtonOrder[SelectedIndex];
-        var button = go.GetComponent<UIButton>();
-        if (button == null) return;
-
-        button.SetState(UIButtonColor.State.Pressed, false);
-        go.SendMessage("OnPress", true, SendMessageOptions.DontRequireReceiver);
-        go.SendMessage("OnPress", false, SendMessageOptions.DontRequireReceiver);
-        go.SendMessage("OnClick", SendMessageOptions.DontRequireReceiver);
-        button.SetState(UIButtonColor.State.Normal, false);
-    }
-
-    internal static string GetButtonLabel(GameObject go)
-    {
-        if (go == null) return null;
-        if (ActiveButtons.TryGetValue(go, out var label)) return label;
-
-        var parent = go.transform.parent;
-        while (parent != null)
-        {
-            if (ActiveButtons.TryGetValue(parent.gameObject, out label)) return label;
-            parent = parent.parent;
-        }
-
-        return null;
+        if (topGUI != null)
+            OnGUIOpened(topGUI);
     }
 }
