@@ -49,7 +49,15 @@ internal static class GUIAccessibility
 
         var guiName = gui.GetType().Name.Replace("GUI", "").Replace("Gui", "");
         var activeCount = Elements.Count(e => e.Go.activeInHierarchy);
-        Plugin.Log.LogInfo($"GUI opened: {guiName}, {activeCount} elements");
+        Plugin.Log.LogInfo($"[GUI OPENED] {guiName}, {activeCount} elements");
+
+        // Log all UI text for debugging
+        var allLabels = gui.GetComponentsInChildren<UILabel>(true);
+        var textContent = string.Join(" | ", allLabels.Where(l => !string.IsNullOrWhiteSpace(l.text))
+            .Select(l => ScreenReader.StripNguiCodes(l.text).Trim())
+            .Take(10));
+        if (!string.IsNullOrEmpty(textContent))
+            Plugin.Log.LogInfo($"[GUI TEXT] {textContent}");
 
         ScreenReader.Say(guiName);
     }

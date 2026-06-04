@@ -19,11 +19,20 @@ public class Plugin : BaseUnityPlugin
     }
 
     private int _tickCounter;
+    private string _lastSceneName;
 
     private void Update()
     {
         try
         {
+            // Log scene changes
+            var currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            if (currentScene != _lastSceneName)
+            {
+                Log.LogInfo($"[SCENE CHANGE] {_lastSceneName ?? "null"} -> {currentScene}");
+                _lastSceneName = currentScene;
+            }
+
             var guiCheck = ++_tickCounter % 10 == 0;
 
             if (Input.GetKeyDown(KeyCode.Escape))
