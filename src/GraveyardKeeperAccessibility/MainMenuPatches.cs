@@ -77,9 +77,6 @@ internal static class GUIAccessibility
             }
         }
 
-        // Check if any new text appeared on screen (for subtitle/dialogue boxes)
-        TryReadNewDialogueText(allLabels);
-
         ScreenReader.Say(guiName);
     }
 
