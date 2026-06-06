@@ -7,7 +7,9 @@ internal static class ScreenReader
 {
     private static bool _tolkAvailable;
     private static bool _sapiAvailable;
+    private static bool _macAvailable;
     private static Process _sapiProcess;
+    private static Process _macProcess;
     private static StreamWriter _sapiStdin;
     private static string _lastMenuText = "";
     private static ManualLogSource _log;
@@ -38,12 +40,30 @@ internal static class ScreenReader
     internal static void Init(ManualLogSource log)
     {
         _log = log;
+
+        _macAvailable = InitMacSay();
+        if (_macAvailable) return;
+
         _tolkAvailable = InitTolk();
         if (!_tolkAvailable)
             _sapiAvailable = InitSapi();
 
-        if (!_tolkAvailable && !_sapiAvailable)
+        if (!_tolkAvailable && !_sapiAvailable && !_macAvailable)
             log.LogError("No TTS output available");
+    }
+
+    private static bool InitMacSay()
+    {
+        try
+        {
+            if (File.Exists("/usr/bin/say"))
+            {
+                _log.LogInfo("Mac 'say' command found");
+                return true;
+            }
+        }
+        catch { }
+        return false;
     }
 
     private static bool InitTolk()
@@ -109,31 +129,70 @@ internal static class ScreenReader
 
     internal static void Shutdown()
     {
+        KillMacSay();
         if (_tolkAvailable)
             try { Tolk_Unload(); } catch { }
 
         KillSapi();
         _tolkAvailable = false;
         _sapiAvailable = false;
+        _macAvailable = false;
     }
 
     internal static bool Say(string text, bool interrupt = true)
     {
         if (string.IsNullOrWhiteSpace(text)) return false;
 
+        _log?.LogInfo($"[ScreenReader] Reading: \"{text}\"");
+
+        if (_macAvailable)
+            return MacSay(text, interrupt);
+
         if (_tolkAvailable)
-            return Tolk_Output(text, interrupt);
+        {
+            var result = Tolk_Output(text, interrupt);
+            if (!result) _log?.LogWarning("[ScreenReader] Tolk_Output returned false");
+            return result;
+        }
 
         return SapiSpeak(text);
     }
 
+    private static bool MacSay(string text, bool interrupt)
+    {
+        if (interrupt) KillMacSay();
+        try
+        {
+            var clean = text.Replace("\"", "\\\"").Replace("\n", " ").Replace("\r", "").Replace("\0", "");
+            _macProcess = new Process();
+            _macProcess.StartInfo = new ProcessStartInfo
+            {
+                FileName = "/usr/bin/say",
+                Arguments = "\"" + clean + "\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            _macProcess.Start();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _log?.LogWarning($"Mac say failed: {ex.Message}");
+            return false;
+        }
+    }
+
+    private static void KillMacSay()
+    {
+        try { if (_macProcess != null && !_macProcess.HasExited) _macProcess.Kill(); } catch { }
+        _macProcess = null;
+    }
+
     private static bool SapiSpeak(string text)
     {
-        _log?.LogInfo($"[SAPI] Attempting to speak: {text}");
-
         if (_sapiProcess == null || _sapiProcess.HasExited)
         {
-            _log?.LogWarning("[SAPI] Process died, restarting");
+            _log?.LogWarning("SAPI process died, restarting");
             KillSapi();
             _sapiAvailable = InitSapi();
             if (!_sapiAvailable) return false;
@@ -143,15 +202,12 @@ internal static class ScreenReader
         {
             var clean = text.Replace("\r", "").Replace("\n", " ").Replace("\0", "");
             if (clean.Length > 500) clean = clean.Substring(0, 500);
-            _log?.LogInfo($"[SAPI] Writing to stdin: {clean}");
             _sapiStdin.WriteLine(clean);
-            _sapiStdin.Flush();
-            _log?.LogInfo("[SAPI] Write successful");
             return true;
         }
         catch (Exception ex)
         {
-            _log?.LogWarning($"[SAPI] Write failed: {ex.Message}, restarting");
+            _log?.LogWarning($"SAPI write failed: {ex.Message}, restarting");
             KillSapi();
             _sapiAvailable = InitSapi();
             return false;

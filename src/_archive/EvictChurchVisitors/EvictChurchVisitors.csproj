@@ -4,6 +4,7 @@
         <!-- Archived 2026-04: project preserved for historical reference, not built. -->
         <NoBuild>true</NoBuild>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+          <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs" />

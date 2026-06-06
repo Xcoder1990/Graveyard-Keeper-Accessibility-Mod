@@ -1,12 +1,130 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <BepInExPluginGuid>svenja001.gyk.graveyardkeeperaccessibility</BepInExPluginGuid>
-        <BepInExPluginName>Graveyard Keeper Accessibility</BepInExPluginName>
-    </PropertyGroup>
-    <ItemGroup>
-        <Compile Remove="..\Shared\**" />
-    </ItemGroup>
-    <ItemGroup>
-      <PackageReference Include="GraveyardKeeper.GameLibs" Version="*-*" />
-    </ItemGroup>
+     <PropertyGroup>
+         <TargetFramework>netstandard2.0</TargetFramework>
+         <LangVersion>latest</LangVersion>
+         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+         <OutputPath>$(SolutionDir)GamePlugins\</OutputPath>
+         <DefineConstants>$(DefineConstants);MAC_BUILD</DefineConstants>
+     </PropertyGroup>
+     <PropertyGroup Condition="'$(BuildingInsideVisualStudio)'!='true'">
+         <GamePath>/Users/abdullahcobankara/Library/Application Support/Steam/steamapps/common/Graveyard Keeper/Graveyard Keeper.app/Contents/Resources/Data/Managed</GamePath>
+         <BepInExPath>/Users/abdullahcobankara/Downloads/BepInEx-MacOS/BepInEx/core</BepInExPath>
+     </PropertyGroup>
+     <ItemGroup>
+         <Compile Remove="..\Shared\**" />
+     </ItemGroup>
+     <ItemGroup>
+         <Reference Include="Assembly-CSharp">
+             <HintPath>$(GamePath)\Assembly-CSharp.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="Assembly-CSharp-firstpass">
+             <HintPath>$(GamePath)\Assembly-CSharp-firstpass.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="UnityEngine">
+             <HintPath>$(GamePath)\UnityEngine.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="UnityEngine.CoreModule">
+             <HintPath>$(GamePath)\UnityEngine.CoreModule.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="UnityEngine.UI">
+             <HintPath>$(GamePath)\UnityEngine.UI.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="UnityEngine.TextRenderingModule">
+             <HintPath>$(GamePath)\UnityEngine.TextRenderingModule.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="UnityEngine.IMGUIModule">
+             <HintPath>$(GamePath)\UnityEngine.IMGUIModule.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="UnityEngine.AccessibilityModule">
+             <HintPath>$(GamePath)\UnityEngine.AccessibilityModule.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="UnityEngine.InputLegacyModule">
+             <HintPath>$(GamePath)\UnityEngine.InputLegacyModule.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="UnityEngine.InputModule">
+             <HintPath>$(GamePath)\UnityEngine.InputModule.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="UnityEngine.UIModule">
+             <HintPath>$(GamePath)\UnityEngine.UIModule.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="UnityEngine.AnimationModule">
+             <HintPath>$(GamePath)\UnityEngine.AnimationModule.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="UnityEngine.Purchasing">
+             <HintPath>$(GamePath)\UnityEngine.Purchasing.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="Unity.TextMeshPro">
+             <HintPath>$(GamePath)\Unity.TextMeshPro.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="Newtonsoft.Json">
+             <HintPath>$(GamePath)\Newtonsoft.Json.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="LitJson">
+             <HintPath>$(GamePath)\LitJson.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="DOTween">
+             <HintPath>$(GamePath)\DOTween.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="Sirenix.Utilities">
+             <HintPath>$(GamePath)\Sirenix.Utilities.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="Sirenix.Serialization">
+             <HintPath>$(GamePath)\Sirenix.Serialization.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="Sirenix.OdinInspector.Attributes">
+             <HintPath>$(GamePath)\Sirenix.OdinInspector.Attributes.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="BepInEx">
+             <HintPath>$(BepInExPath)\BepInEx.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="BepInEx.Harmony">
+             <HintPath>$(BepInExPath)\BepInEx.Harmony.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="BepInEx.Preloader">
+             <HintPath>$(BepInExPath)\BepInEx.Preloader.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="0Harmony">
+             <HintPath>$(BepInExPath)\0Harmony.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="HarmonyXInterop">
+             <HintPath>$(BepInExPath)\HarmonyXInterop.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="MonoMod.RuntimeDetour">
+             <HintPath>$(BepInExPath)\MonoMod.RuntimeDetour.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+         <Reference Include="MonoMod.Utils">
+             <HintPath>$(BepInExPath)\MonoMod.Utils.dll</HintPath>
+             <Private>false</Private>
+         </Reference>
+     </ItemGroup>
+     <Target Name="Deploy" AfterTargets="Build">
+         <Copy SourceFiles="$(TargetPath)" DestinationFolder="/Users/abdullahcobankara/Library/Application Support/Steam/steamapps/common/Graveyard Keeper/BepInEx/plugins/GraveyardKeeperAccessibility/" />
+     </Target>
 </Project>
